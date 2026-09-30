@@ -19,7 +19,3 @@ están en la carpeta de cada asignatura).
 Los apuntes se han elaborado con ayuda de herramientas de inteligencia artificial a partir del
 material de cada asignatura. Pueden contener errores y no sustituyen al material oficial. Si
 encuentras alguno, se agradece que lo comuniques abriendo un *issue*.
-
-## Licencia
-
-[MIT](LICENSE).
