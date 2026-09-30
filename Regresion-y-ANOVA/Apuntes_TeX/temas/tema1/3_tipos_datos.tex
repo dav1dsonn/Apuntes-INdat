@@ -1,0 +1,103 @@
+% ==============================================================================
+%  1.3  Tipos de datos según su procedencia o presentación
+% ==============================================================================
+\section{Tipos de datos según su procedencia}
+\label{sec:t1-datos}
+
+\subsection{Datos observacionales y experimentales}
+
+Según procedan de estudios no experimentales o experimentales, los datos se clasifican en
+\emph{observacionales} y \emph{experimentales}.
+
+\begin{definicion}[Datos observacionales y experimentales]
+  \begin{itemize}
+    \item \textbf{Datos observacionales}: se obtienen de estudios no experimentales, en los
+      que \emph{no se controlan} las variables explicativas de interés. Esto limita las
+      conclusiones, ya que es muy difícil establecer relaciones causa--efecto.
+    \item \textbf{Datos experimentales}: se obtienen de experimentos controlados y permiten
+      extraer conclusiones más sólidas sobre posibles relaciones causa--efecto. La
+      \emph{aleatorización} es un mecanismo importante para controlar las variables
+      explicativas.
+  \end{itemize}
+\end{definicion}
+
+Un experimento controlado tiene como objetivo comparar el efecto sobre la respuesta de
+distintos \textbf{tratamientos} (combinaciones de niveles de las variables explicativas),
+aplicándolos a diferentes \textbf{unidades experimentales} (individuos u objetos sobre los que
+se realiza la investigación).
+
+\begin{definicion}[Aleatorización]
+  La \textbf{aleatorización} consiste en asignar de forma aleatoria cada unidad
+  experimental a un tratamiento. Es útil porque tiende a equilibrar los posibles efectos de
+  otras variables (no controladas) que podrían afectar a la respuesta.
+\end{definicion}
+
+\begin{ejemplo}[Efecto de fumar en la capacidad pulmonar]
+  \begin{center}
+    \small
+    \begin{tabular}{p{0.45\linewidth}p{0.45\linewidth}}
+      \toprule
+      \textbf{Diseño experimental} & \textbf{Diseño observacional} \\
+      \midrule
+      Elegir 100 personas que actualmente no fumen. & --- \\[2pt]
+      Asignar \textbf{aleatoriamente} 50 de ellas al grupo ``fumadores'' y las otras 50 al
+      grupo ``no fumadores''. & --- \\[2pt]
+      Cada persona del grupo ``fumadores'' fumará un paquete al día durante 10 años. &
+      Encontrar a 50 personas fumadoras de un paquete al día durante 10 años. \\[2pt]
+      Cada persona del grupo ``no fumadores'' permanecerá sin fumar durante 10 años. &
+      Encontrar a 50 personas que no hayan fumado durante 10 años. \\[2pt]
+      Transcurridos los 10 años, medir la capacidad pulmonar de las 100 personas. &
+      Medir la capacidad pulmonar de las 100 personas. \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  En el diseño observacional, los fumadores y los no fumadores pueden diferir en otras
+  variables (edad, trabajo, deporte\ldots) que afectan a la capacidad pulmonar; en el
+  experimental, la aleatorización equilibra esos efectos entre los dos grupos.
+\end{ejemplo}
+
+\paragraph{Estudios muestrales.} Entre ambos tipos de estudio se sitúan los \textbf{estudios
+muestrales}: las inferencias se realizan sobre la población adecuada, pero la presencia de
+variables influyentes no controladas o desconocidas puede dificultar la interpretación de las
+relaciones entre las variables observadas.
+
+\paragraph{Precauciones en el análisis.} Al analizar los datos hay que tener en cuenta:
+\begin{itemize}
+  \item posibles \textbf{cambios en las condiciones de recogida} de los datos (de personal, de
+    máquinas, envejecimiento\ldots) que puedan influir en los resultados;
+  \item la presencia de variables explicativas \textbf{fuertemente correlacionadas} entre sí,
+    cuyos efectos se confunden;
+  \item un \textbf{rango pequeño} de alguna variable importante, que impide establecer su
+    influencia fuera de ese rango.
+\end{itemize}
+
+\subsection{Efectos fijos, aleatorios y mixtos}
+
+Según cómo se recojan las variables explicativas se distingue entre:
+
+\begin{definicion}[Modelos de efectos fijos, aleatorios y mixtos]
+  \begin{itemize}
+    \item \textbf{Modelo de efectos fijos.} Una \emph{variable fija} es aquella que se supone
+      medida sin error, de modo que los valores observados en un estudio serían los mismos en
+      otro. Las variables explicativas toman valores predeterminados, que se controlan en el
+      diseño y la realización del experimento.
+    \item \textbf{Modelo de efectos aleatorios.} Las variables explicativas son \emph{variables
+      aleatorias}, cuyos valores son una muestra aleatoria de todos los valores posibles, y se
+      espera poder generalizar los resultados al resto de valores. Esta generalización debe
+      hacerse con cautela, ya que los resultados solo son válidos en el rango de variación
+      conjunta de las variables implicadas.
+    \item \textbf{Modelo mixto}: combina efectos fijos y aleatorios. En muchas aplicaciones los
+      modelos son mixtos.
+  \end{itemize}
+\end{definicion}
+
+\begin{ejemplo}[Dosis de un fármaco]
+  Se mide la efectividad de un fármaco con dosis de 5, 10 y 15\,mg.
+  \begin{itemize}
+    \item Si esas tres dosis se han elegido intencionadamente y los resultados solo se van a
+      aplicar a ellas, ``dosis'' es un efecto \textbf{fijo}.
+    \item Si se consideran una muestra aleatoria de todas las dosis posibles entre 5 y 15\,mg
+      y los resultados se quieren aplicar a cualquier dosis de ese rango, ``dosis'' es un
+      efecto \textbf{aleatorio}.
+  \end{itemize}
+\end{ejemplo}

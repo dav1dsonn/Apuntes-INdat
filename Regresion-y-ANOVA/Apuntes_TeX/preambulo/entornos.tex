@@ -1,0 +1,77 @@
+% ==============================================================================
+%  Entornos (cajas). Estilo sobrio, inspirado en el repositorio de referencia:
+%  fondo tenue, marco fino y título en negrita dentro de la caja.
+%
+%  Uso:
+%    \begin{definicion}[Título][etiqueta] ... \end{definicion}  (ambos opcionales)
+%    \begin{teorema}[...][...]      ... \end{teorema}      (también: proposicion)
+%    \begin{ejemplo}[...][...]      ... \end{ejemplo}
+%    \begin{demostracion}[...]      ... \end{demostracion}
+%    \begin{nota}[...]              ... \end{nota}
+%    \begin{resumen}[Título]        ... \end{resumen}
+% ==============================================================================
+
+% --- Colores de las cajas --------------------------------------------------------
+\definecolor{fondoDef}{RGB}{237,241,247}   % azul grisáceo muy claro
+\definecolor{fondoTeo}{RGB}{236,236,238}   % gris claro
+\colorlet{fondoDem}{Green!15}              % verde claro (como el repositorio)
+\definecolor{fondoEje}{RGB}{246,245,241}   % gris cálido muy claro
+\definecolor{fondoNot}{RGB}{249,249,249}   % casi blanco
+\definecolor{marco}{RGB}{140,140,145}      % marco gris
+
+% Colores usados en figuras
+\colorlet{colRes}{Maroon}
+
+% --- Estilo base ---------------------------------------------------------------
+\tcbset{
+  baseapuntes/.style={
+    enhanced, breakable,
+    colframe=marco, boxrule=0.4pt, arc=1pt,
+    left=6pt, right=6pt, top=5pt, bottom=5pt,
+    fonttitle=\bfseries, coltitle=black,
+    detach title, before upper={\tcbtitle.\ },
+    before skip=0.8em, after skip=0.8em,
+  }
+}
+
+% --- Entornos numerados (numeración por tema: 1.1, 1.2, ...; contador común) ------
+% Sintaxis: \begin{definicion}[Título opcional][etiqueta opcional]
+%   p.ej.   \begin{definicion}[Correlación de Pearson][def:pearson]
+%   y luego \cref{def:pearson}  ->  "definición 1.1"
+\newcommand{\titulocaja}[2]{#1~\thetcbcounter\ifx\relax#2\relax\else\ (#2)\fi}
+\tcbset{etiqueta/.code={\ifx\relax#1\relax\else\pgfkeysalso{label={#1}}\fi}}
+
+\NewTColorBox[auto counter, number within=chapter, crefname={definición}{definiciones}]
+  {definicion}{ O{} O{} }{baseapuntes, colback=fondoDef,
+  title={\titulocaja{Definición}{#1}}, etiqueta={#2}}
+
+\NewTColorBox[use counter from=definicion, crefname={teorema}{teoremas}]
+  {teorema}{ O{} O{} }{baseapuntes, colback=fondoTeo,
+  title={\titulocaja{Teorema}{#1}}, etiqueta={#2}}
+
+\NewTColorBox[use counter from=definicion, crefname={proposición}{proposiciones}]
+  {proposicion}{ O{} O{} }{baseapuntes, colback=fondoTeo,
+  title={\titulocaja{Proposición}{#1}}, etiqueta={#2}}
+
+\NewTColorBox[use counter from=definicion, crefname={ejemplo}{ejemplos}]
+  {ejemplo}{ O{} O{} }{baseapuntes, colback=fondoEje,
+  title={\titulocaja{Ejemplo}{#1}}, etiqueta={#2}}
+
+% --- Entornos sin numerar -------------------------------------------------------
+\newtcolorbox{demostracion}[1][]{
+  baseapuntes, colback=fondoDem,
+  title={Demostración\ifx\relax#1\relax\else\ (#1)\fi},
+  after upper={\par\hfill$\blacksquare$},
+}
+
+\newtcolorbox{nota}[1][]{
+  baseapuntes, colback=fondoNot,
+  title={Nota\ifx\relax#1\relax\else\ (#1)\fi},
+}
+
+\newtcolorbox{resumen}[1][Resumen]{
+  baseapuntes, unbreakable,   % los resúmenes son cortos: nunca se parten entre páginas
+  colback=white, boxrule=0.8pt,
+  detach title, before upper={{\bfseries #1}\par\smallskip},
+  title={#1},
+}

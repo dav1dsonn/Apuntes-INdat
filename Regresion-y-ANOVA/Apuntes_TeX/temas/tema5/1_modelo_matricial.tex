@@ -1,0 +1,66 @@
+% ==============================================================================
+%  5.1  El modelo de regresión lineal en notación matricial
+% ==============================================================================
+\section{El modelo en notación matricial}
+\label{sec:t5-modelo}
+
+El modelo de regresión lineal simple (\cref{def:rls}) se formula en forma escalar como
+\[
+  Y_i = \beta_0+\beta_1X_i+\varepsilon_i, \qquad \varepsilon_i\iid\Normal(0,\sigma^2), \quad i=1,\ldots,n,
+\]
+es decir, como un sistema de $n$ ecuaciones, una por observación:
+\[
+  \begin{aligned}
+    Y_1 &= \beta_0+\beta_1X_1+\varepsilon_1, \\
+    Y_2 &= \beta_0+\beta_1X_2+\varepsilon_2, \\
+        &\;\;\vdots \\
+    Y_n &= \beta_0+\beta_1X_n+\varepsilon_n .
+  \end{aligned}
+\]
+En \textbf{forma matricial},
+\[
+  \underbrace{\begin{pmatrix} Y_1\\ Y_2\\ \vdots\\ Y_n \end{pmatrix}}_{\vect{Y}_{n\times1}}
+  =
+  \underbrace{\begin{pmatrix} 1 & X_1\\ 1 & X_2\\ \vdots & \vdots\\ 1 & X_n \end{pmatrix}}_{\vect{X}_{n\times2}}
+  \underbrace{\begin{pmatrix} \beta_0\\ \beta_1 \end{pmatrix}}_{\vect{\beta}_{2\times1}}
+  +
+  \underbrace{\begin{pmatrix} \varepsilon_1\\ \varepsilon_2\\ \vdots\\ \varepsilon_n \end{pmatrix}}_{\vect{\varepsilon}_{n\times1}},
+\]
+o, abreviadamente, $\vect{Y}=\vect{X}\vect{\beta}+\vect{\varepsilon}$.
+
+\begin{definicion}[Modelo de regresión lineal en notación matricial][def:t5-modelo]
+  \[
+    \vect{Y} = \vect{X}\vect{\beta}+\vect{\varepsilon},
+    \qquad \vect{\varepsilon}\sim\Normal(\vect{0},\ \sigma^2\vect{I}_n),
+  \]
+  donde
+  \begin{itemize}
+    \item $\vect{Y}_{n\times1}$ es el \textbf{vector de respuestas};
+    \item $\vect{\beta}_{2\times1}$ es el \textbf{vector de parámetros};
+    \item $\vect{X}_{n\times2}$ es la \textbf{matriz de diseño}, conocida;
+    \item $\vect{\varepsilon}_{n\times1}$ es el \textbf{vector de errores}, normal multivariante con
+      media $\vect{0}$ y matriz de varianzas-covarianzas
+      \[
+        \Var(\vect{\varepsilon}) =
+        \begin{pmatrix}
+          \sigma^2 & 0 & \cdots & 0\\
+          0 & \sigma^2 & \cdots & 0\\
+          \vdots & \vdots & \ddots & \vdots\\
+          0 & 0 & \cdots & \sigma^2
+        \end{pmatrix}
+        = \sigma^2\vect{I}_n .
+      \]
+  \end{itemize}
+\end{definicion}
+
+La forma diagonal de $\Var(\vect{\varepsilon})$ recoge a la vez la homogeneidad de varianzas
+($\Var(\varepsilon_i)=\sigma^2$ para todo $i$) y la independencia de los errores
+($\Cov(\varepsilon_i,\varepsilon_j)=0$ para $i\neq j$, que en el caso normal equivale a
+independencia). Equivalentemente, $\vect{Y}\sim\Normal(\vect{X}\vect{\beta},\ \sigma^2\vect{I}_n)$,
+que es la versión matricial de la \cref{prop:t2-dist-Y}.
+
+El modelo es un caso particular del modelo lineal general $\vect{Y}=Z\vect{\theta}+\vect{U}$ del
+Tema 1 (\cref{sec:t1-modelos}), con $Z=\vect{X}$, $\vect{\theta}=\vect{\beta}$ y
+$\vect{U}=\vect{\varepsilon}$. Esta formulación permite extender directamente los resultados al
+caso de varias variables explicativas, añadiendo columnas a $\vect{X}$ y componentes a
+$\vect{\beta}$.

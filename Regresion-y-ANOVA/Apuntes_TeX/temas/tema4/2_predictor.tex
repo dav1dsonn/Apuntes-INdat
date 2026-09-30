@@ -1,0 +1,19 @@
+% ==============================================================================
+%  4.2  Diagnóstico para el predictor X
+% ==============================================================================
+\section{Diagnóstico para el predictor}
+\label{sec:t4-predictor}
+
+El modelo no hace ninguna suposición específica sobre $X$, cuyos valores se consideran
+conocidos (\cref{def:rls}). Por tanto, evaluar la idoneidad de $X$ como predictor no forma
+parte de la validación del modelo propiamente dicha. Sin embargo, es necesario disponer de
+información sobre $X$ para interpretar lo que ocurre con la respuesta. En concreto, interesa:
+\begin{itemize}
+  \item comprobar si hay \textbf{valores atípicos de $X$} que puedan influir en la recta de
+    regresión ajustada (\cref{sec:t4-outliers-x});
+  \item conocer el \textbf{rango y la dispersión} de los valores de $X$, para determinar el
+    rango de validez de las predicciones realizadas con el modelo ajustado (el \emph{scope} del
+    modelo, \cref{sec:t2-analisis}).
+\end{itemize}
+Para ello resulta útil un análisis descriptivo de $X$, con representaciones como diagramas de
+cajas o histogramas.

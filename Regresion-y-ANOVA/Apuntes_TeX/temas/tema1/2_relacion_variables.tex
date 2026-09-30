@@ -1,0 +1,163 @@
+% ==============================================================================
+%  1.2  Relación entre variables. Relaciones lineales y linealizables.
+%       Asociación y causalidad.
+% ==============================================================================
+\section{Relación entre variables}
+\label{sec:t1-relacion}
+
+\subsection{Relación funcional y relación estadística}
+
+\begin{definicion}[Relación funcional y relación estadística]
+  \begin{itemize}
+    \item Una \textbf{relación funcional}, expresada mediante una fórmula matemática, es una
+      relación perfecta entre variables: el valor de las variables explicativas determina
+      exactamente el valor de la respuesta.
+    \item Una \textbf{relación estadística} es algo intermedio entre una relación funcional y
+      la ausencia de relación: conocidas las variables explicativas, la respuesta no puede
+      predecirse exactamente, pero sí de forma aproximada.
+  \end{itemize}
+\end{definicion}
+
+El interés está en modelizar relaciones estadísticas, mediante modelos del tipo
+\begin{equation}\label{eq:t1-modelo-general}
+  Y = m(X_1,\ldots,X_k) + \varepsilon ,
+\end{equation}
+donde $m(X_1,\ldots,X_k)$ es el \emph{patrón sistemático} de la relación, en torno al cual se
+distribuyen los datos con cierta variabilidad que recoge el \emph{error aleatorio}
+$\varepsilon$. A este error se le atribuyen una serie de propiedades (distribución, media,
+varianza\ldots).
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[width=6cm, height=5cm, xlabel={Unidades vendidas ($X$)},
+          ylabel={Ventas en \$ ($Y$)}, xmin=0, xmax=160, ymin=0, ymax=320]
+        \addplot[recta, domain=0:150] {2*x};
+        \addplot[puntos, mark size=1.5pt] coordinates {(25,50) (75,150) (130,260)};
+        \node[font=\footnotesize, anchor=west] at (axis cs:95,120) {$Y=2X$};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Relación funcional: los puntos están exactamente sobre la recta.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[width=6cm, height=5cm, xlabel={Edad ($X$)},
+          ylabel={Nivel de esteroides ($Y$)}, xmin=7, xmax=26, ymin=0, ymax=30]
+        \addplot[recta, domain=8:25, samples=50] {-26.3+4.84*x-0.1165*x^2};
+        \addplot[puntos, mark size=1.3pt] coordinates {
+          (8,2) (8,6) (9,9.5) (9,12) (9,4) (10,11) (11,15) (12,11) (12,19) (13,13)
+          (13,21) (14,21) (14,24) (16,22) (17,19) (17,24) (17,25) (18,21) (18,20.5)
+          (19,22.5) (21,20) (21,24) (23,23) (23,27) (24.5,26) (25,22) (25,20)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Relación estadística: los puntos se distribuyen alrededor de un patrón
+      sistemático (en este caso, curvo).}
+  \end{subfigure}
+  \caption{Relación funcional frente a relación estadística.}
+\end{figure}
+
+\begin{definicion}[Variables relacionadas][def:variables-relacionadas]
+  Dos variables $X$ e $Y$ están \textbf{relacionadas} si la distribución condicional de
+  $Y \cond X=x$ cambia al cambiar $x$. En caso contrario, las variables son
+  \textbf{independientes}.
+\end{definicion}
+
+Uno de los objetivos de la modelización estadística es describir de forma sencilla cómo
+cambian las distribuciones condicionales de $Y$ al cambiar $X$. La misma idea se extiende a la
+relación entre $Y$ y un conjunto de variables explicativas $X_1,\ldots,X_k$.
+
+\subsection{Selección de las variables explicativas}
+
+Una parte esencial del ajuste de un modelo es la \textbf{selección de las variables
+explicativas} $X_1,\ldots,X_k$, especialmente cuando $k$ es muy grande en relación con el
+tamaño muestral $n$. Los criterios de selección son:
+\begin{itemize}
+  \item \textbf{Criterio principal}: en qué medida contribuyen a explicar la variabilidad de la
+    respuesta. Son preferibles las que explican más.
+  \item \textbf{Conocimiento del fenómeno}: por ejemplo, su importancia como agente causal.
+  \item \textbf{Cuestiones prácticas de la toma de datos}: la precisión con la que puede
+    observarse la variable y la facilidad, rapidez o coste de cada observación.
+\end{itemize}
+
+\subsection{Forma de la relación: relaciones lineales y linealizables}
+
+Otra decisión importante es la \textbf{forma de la relación}. Normalmente no se conoce a priori
+y debe decidirse empíricamente a partir de los datos. Las funciones lineales suelen ser una
+buena elección por varias razones:
+\begin{itemize}
+  \item su \emph{simplicidad}, que es la más evidente, aunque no la única;
+  \item muchas \emph{relaciones no lineales} pueden \textbf{linealizarse} mediante
+    transformaciones de $X$, de $Y$ o de ambas (inversa, logaritmo, cuadrado, etc.);
+  \item las relaciones de forma muy compleja pueden aproximarse mediante \textbf{funciones
+    lineales ``a trozos''}.
+\end{itemize}
+Todo ello amplía el campo de aplicación de los modelos lineales y los convierte en una
+herramienta fundamental para el ajuste de modelos estadísticos.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=6.5cm, height=4.2cm, xmin=0, xmax=1.05, ymin=0, ymax=1.1,
+        xtick={0,0.2,0.4,0.6,0.8,1},
+        xticklabels={$x_0{=}0$,$x_1$,$x_2$,$x_3$,$x_4$,$x_5{=}1$},
+        ytick=\empty, axis lines=left, tick label style={font=\scriptsize}]
+      \addplot[NavyBlue, thick, domain=0:1, samples=60] {4*x*(1-x)};
+      \addplot[red, thick, mark=none] coordinates
+        {(0,0) (0.2,0.64) (0.4,0.96) (0.6,0.96) (0.8,0.64) (1,0)};
+      \foreach \x in {0.2,0.4,0.6,0.8} {
+        \edef\tmp{\noexpand\draw[dashed, gray] (axis cs:\x,0) -- (axis cs:\x,{4*\x*(1-\x)});}
+        \tmp }
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Aproximación de una relación no lineal (azul) mediante una función lineal a
+    trozos (rojo).}
+\end{figure}
+
+\subsection{Asociación y causalidad}
+\label{sec:t1-causalidad}
+
+Una relación puede ser \emph{débil}, en cuyo caso puede carecer de importancia práctica. Pero,
+\textbf{aunque exista una relación estadística fuerte entre $X$ e $Y$, no puede asumirse que
+$X$ sea la causa de $Y$} (relación causa--efecto):
+\begin{itemize}
+  \item la relación observada puede deberse a la influencia de terceras variables
+    (\textbf{variables confusoras}), cuyos efectos solo pueden neutralizarse mediante el
+    \emph{diseño de experimentos} (\cref{sec:t1-datos});
+  \item puede existir una relación causal en sentido contrario, de $Y$ hacia $X$;
+  \item hay incluso situaciones en las que la relación no es interpretable.
+\end{itemize}
+
+\begin{ejemplo}[Chocolate y premios Nobel][ej:t1-chocolate]
+  En 2012 F.~H.~Messerli publicó en el \emph{New England Journal of Medicine} el estudio
+  ``El consumo de chocolate, la función cognitiva y los Premios Nobel''. Con datos por
+  países, encontró una relación muy fuerte ($r=0.791$, $p<0.0001$) entre el consumo anual de
+  chocolate per cápita y el número de premios Nobel por cada 10 millones de habitantes.
+
+  Poco después aparecieron otros trabajos (Maurage, Heeren y Pesenti, 2013, \emph{The Journal
+  of Nutrition}) que señalaban otros índices relacionados con el número de premiados:
+  \begin{center}
+    \small
+    \begin{tabular}{lc}
+      \toprule
+      Relación entre países & $r$ \\
+      \midrule
+      Nobel -- consumo de té            & $0.03$ \\
+      Nobel -- consumo de vino          & $0.16$ \\
+      Nobel -- tiendas IKEA por 10 M hab. & $0.82$ \\
+      Nobel -- PIB per cápita           & $0.73$ \\
+      Consumo de chocolate -- PIB per cápita & $0.66$ \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  El número de tiendas de IKEA está más relacionado con el número de premios Nobel que el
+  consumo de chocolate.
+
+  Esta relación no permite concluir que comer chocolate aumente la probabilidad de obtener un
+  premio Nobel. La tabla apunta a una \textbf{variable confusora}, la riqueza del país (PIB per
+  cápita), relacionada tanto con el consumo de chocolate ($r=0.66$) como con el número de
+  premios Nobel ($r=0.73$). Además, se trata de datos observacionales agregados por países,
+  con los que no pueden establecerse relaciones causa--efecto (\cref{sec:t1-datos}).
+\end{ejemplo}

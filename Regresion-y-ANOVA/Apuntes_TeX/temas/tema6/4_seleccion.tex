@@ -1,0 +1,106 @@
+% ==============================================================================
+%  6.4  Criterios de selección de un modelo
+% ==============================================================================
+\section{Criterios de selección de un modelo}
+\label{sec:t6-seleccion}
+
+Al construir un modelo de regresión múltiple hay que decidir:
+\begin{itemize}
+  \item \textbf{cuántas variables explicativas} utilizar. Generalmente son más convenientes los
+    conjuntos pequeños, aunque incluyendo muchas variables independientes se consigue explicar
+    una mayor parte de la variabilidad de la respuesta;
+  \item dado un número de variables a incluir, \textbf{cuáles} de entre todas las $X$ disponibles
+    deben formar parte del modelo.
+\end{itemize}
+Hay muchos criterios para comparar modelos entre sí, basados en distintas cuestiones. Uno de ellos
+es la \textbf{bondad del ajuste}, que se mide con $R^2$ cuando los modelos tienen el mismo número
+de predictores y con $R^2_a$ cuando no.
+
+\subsection{Criterios basados en la bondad del ajuste}
+
+\paragraph{Mismo número de predictores: criterio de $R^2$.} Se define
+\[
+  R^2_p = \frac{SSR_p}{SST} = 1-\frac{SSE_p}{SST},
+\]
+donde el subíndice $p$ indica el número de parámetros del modelo.
+\begin{itemize}
+  \item Son mejores los modelos con $R^2_p$ mayor.
+  \item Como $SST$ no depende del modelo, elegir el modelo con máximo $R^2_p$ equivale a elegir,
+    entre los modelos con $p-1$ predictores, el de menor $SSE$.
+\end{itemize}
+
+\paragraph{Distinto número de predictores: criterio de $R^2_a$.} $R^2_a$ (\cref{def:t6-R2a})
+penaliza el valor de $R^2$ teniendo en cuenta el número de predictores incluidos en el modelo:
+\[
+  R^2_a = 1-\left(\frac{n-1}{n-p}\right)\frac{SSE}{SST} = 1-\frac{MSE}{MST}.
+\]
+\begin{itemize}
+  \item Cuando $p$ aumenta, la cantidad que se resta tiene un denominador menor, por lo que, si la
+    inclusión de las nuevas variables no se compensa suficientemente con una disminución de $SSE$,
+    $R^2_a$ puede disminuir a medida que se incorporan variables.
+  \item Como $MST$ no depende del modelo, elegir el modelo con máximo $R^2_a$ equivale a elegir el
+    modelo con menor $MSE$.
+\end{itemize}
+
+\paragraph{Búsqueda exhaustiva.} Aplicar estos criterios a todos los modelos posibles supone una
+búsqueda exhaustiva. El número de modelos que pueden construirse crece exponencialmente con el
+número de predictores disponibles (con $k$ candidatos hay $2^k$ subconjuntos posibles). Si hay
+pocos predictores pueden compararse todos los modelos, pero con muchos esa comparación es
+inabordable, y se necesitan procedimientos semiautomáticos que permitan elegir el subconjunto de
+variables independientes con el que construir los mejores modelos.
+
+\subsection{Algoritmos automáticos de selección de variables}
+
+Se basan en los $p$-valores asociados a los contrastes $H_0\colon\beta_k=0$ frente a
+$H_1\colon\beta_k\neq0$ de cada coeficiente.
+
+\paragraph{Selección hacia adelante (\emph{forward}).}
+\begin{enumerate}
+  \item Se fija un $p$-valor de entrada, \emph{p-to-enter}.
+  \item Se ajustan los modelos individuales, cada uno con una sola de las variables
+    independientes.
+  \item Se identifica el predictor con menor $p$-valor en el contraste $H_0\colon\beta_k=0$ frente
+    a $H_1\colon\beta_k\neq0$.
+    \begin{enumerate}[label=3.\arabic*.]
+      \item Si $p$-valor $<$ \emph{p-to-enter}, se añade la variable correspondiente, se reajusta el
+        modelo con ella y se vuelve al paso 3, ahora con los modelos que resultan de añadir al
+        modelo actual cada una de las variables restantes.
+      \item Si $p$-valor $\ge$ \emph{p-to-enter}, no entran más variables y el proceso concluye.
+    \end{enumerate}
+\end{enumerate}
+
+\paragraph{Eliminación hacia atrás (\emph{backward}).}
+\begin{enumerate}
+  \item Se fija un $p$-valor de salida, \emph{p-to-remove}.
+  \item Se ajusta el modelo de regresión completo, con todas las variables independientes.
+  \item Se identifica el predictor con mayor $p$-valor en el contraste $H_0\colon\beta_k=0$ frente
+    a $H_1\colon\beta_k\neq0$.
+    \begin{enumerate}[label=3.\arabic*.]
+      \item Si $p$-valor $>$ \emph{p-to-remove}, se elimina la variable correspondiente, se
+        reajusta el modelo sin ella y se vuelve al paso 3.
+      \item Si $p$-valor $\le$ \emph{p-to-remove}, no salen más variables y el proceso concluye.
+    \end{enumerate}
+\end{enumerate}
+
+\paragraph{Regresión paso a paso (\emph{stepwise}).} Combina las ideas de los métodos
+\emph{forward} y \emph{backward}.
+\begin{enumerate}
+  \item Se fijan dos $p$-valores tales que \emph{p-to-remove} $\ge$ \emph{p-to-enter}.
+  \item Se ajustan los modelos individuales, cada uno con una sola de las variables
+    independientes.
+  \item Se identifica el predictor con menor $p$-valor en el contraste $H_0\colon\beta_k=0$ frente
+    a $H_1\colon\beta_k\neq0$.
+    \begin{enumerate}[label=3.\arabic*.]
+      \item Si $p$-valor $<$ \emph{p-to-enter}, se añade la variable correspondiente y se reajusta
+        el modelo con ella (paso \emph{forward}).
+      \item En el modelo ajustado en 3.1 se comprueba si alguna de las variables que ya estaban en
+        el modelo debe salir (paso \emph{backward}):
+        \begin{enumerate}[label=3.2.\arabic*.]
+          \item se elige la variable con mayor $p$-valor;
+          \item si $p$-valor $>$ \emph{p-to-remove}, se elimina la variable correspondiente, se
+            reajusta el modelo sin ella y se vuelve a 3.2;
+          \item si $p$-valor $\le$ \emph{p-to-remove}, no salen más variables y se vuelve a 3.1.
+        \end{enumerate}
+      \item El proceso concluye cuando no entran ni salen más variables.
+    \end{enumerate}
+\end{enumerate}

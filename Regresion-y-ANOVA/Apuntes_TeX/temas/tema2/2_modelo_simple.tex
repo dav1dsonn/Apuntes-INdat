@@ -1,0 +1,278 @@
+% ==============================================================================
+%  2.2  El modelo de regresión lineal simple: formulación, hipótesis e
+%       interpretación de los parámetros
+% ==============================================================================
+\section{El modelo de regresión lineal simple}
+\label{sec:t2-modelo}
+
+El modelo de regresión más sencillo es el \textbf{modelo de regresión lineal simple}, en el
+que intervienen:
+\begin{itemize}
+  \item una variable respuesta $Y$ cuantitativa;
+  \item una única variable explicativa $X$ cuantitativa.
+\end{itemize}
+Se estudia si los cambios en $X$ afectan \emph{de forma lineal} a $Y$ ($Y\leftarrow X$).
+
+\begin{ejemplo}[Conductores: formulación del modelo][ej:t2-conductores]
+  En el \cref{ej:conductores} (Tema 1) la edad es la variable explicativa $X$ y la distancia
+  máxima de lectura de la señal es la respuesta $Y$. El diagrama de dispersión sugiere una
+  relación lineal negativa, por lo que se modeliza la distancia media como una función lineal
+  de la edad más un error aleatorio, que es el modelo que se define a continuación.
+\end{ejemplo}
+
+\subsection{Formulación del modelo}
+
+\begin{definicion}[Modelo de regresión lineal simple][def:rls]
+  \[
+    Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i, \qquad i=1,\ldots,n,
+  \]
+  donde
+  \begin{itemize}
+    \item $Y_i$ es la respuesta del $i$-ésimo individuo;
+    \item $\beta_0$ y $\beta_1$ son \textbf{parámetros}, llamados \textbf{coeficientes de la
+      regresión};
+    \item $X_i$ es el valor de la variable explicativa (predictor) del $i$-ésimo individuo.
+      \textbf{Se asume conocido} (no aleatorio);
+    \item $\varepsilon_i$ representa la componente aleatoria: es una \textbf{variable
+      aleatoria} $\Normal(0,\sigma^2)$, y $\varepsilon_1,\ldots,\varepsilon_n$ son
+      \textbf{i.i.d.}
+  \end{itemize}
+\end{definicion}
+
+\paragraph{Parámetros del modelo.}
+\begin{itemize}
+  \item $\beta_0$: \textbf{\emph{intercept}}, u ordenada en el origen.
+  \item $\beta_1$: \textbf{pendiente}. $\beta_1=0$ si no hay relación (lineal) entre $X$ e $Y$.
+  \item $\sigma^2$: \textbf{varianza del error}.
+\end{itemize}
+
+\subsection{Hipótesis del modelo}
+\label{sec:t2-hipotesis}
+
+Al ajustar un modelo de regresión lineal simple se asume que los \textbf{errores} son variables
+aleatorias independientes e igualmente distribuidas, \textbf{normales con media 0 y varianza
+constante}:
+\[
+  \varepsilon_i \sim \Normal(0,\sigma^2) \ \text{independientes}, \qquad \forall i=1,\ldots,n.
+\]
+Esto supone cuatro hipótesis, que deben comprobarse para que el modelo sea válido:
+\begin{enumerate}
+  \item \textbf{Linealidad}: $\E(\varepsilon_i)=0$ (la media de $Y$ es realmente la recta).
+  \item \textbf{Homogeneidad de varianzas} (homocedasticidad): $\Var(\varepsilon_i)=\sigma^2$,
+    que no depende de $i$.
+  \item \textbf{Normalidad}: $\varepsilon_i \sim \Normal$.
+  \item \textbf{Independencia}: $\varepsilon_i$ y $\varepsilon_j$ independientes,
+    $\forall i\neq j$.
+\end{enumerate}
+
+\begin{proposicion}[Distribución de la respuesta][prop:t2-dist-Y]
+  Las hipótesis sobre $\varepsilon$ son equivalentes a
+  \[
+    Y_i \sim \Normal(\beta_0+\beta_1X_i,\ \sigma^2) \ \text{independientes},
+    \qquad \forall i=1,\ldots,n .
+  \]
+\end{proposicion}
+
+En efecto, la respuesta $Y_i=\beta_0+\beta_1X_i+\varepsilon_i$ es la suma de una constante,
+$\beta_0+\beta_1X_i$ (los $X_i$ son conocidos), y de la variable aleatoria $\varepsilon_i$:
+\begin{itemize}
+  \item $Y_i$ es una variable aleatoria normal, por ser combinación lineal de variables
+    aleatorias normales;
+  \item $\E(Y_i)=\beta_0+\beta_1X_i$, ya que $\E(\varepsilon_i)=0$;
+  \item $\Var(Y_i)=\Var(\varepsilon_i)=\sigma^2$, ya que sumar una constante no altera la
+    varianza;
+  \item las respuestas de individuos distintos son incorreladas: para $i\neq j$,
+    \[
+      \Cov(Y_i,Y_j)=\Cov(\beta_0+\beta_1X_i+\varepsilon_i,\ \beta_0+\beta_1X_j+\varepsilon_j)
+      =\Cov(\varepsilon_i,\varepsilon_j)=0,
+    \]
+    por la independencia de los errores. Al ser normales, $Y_i$ e $Y_j$ son además
+    independientes.
+\end{itemize}
+
+\begin{nota}
+  Como los errores $\varepsilon_i$ no se observan, las hipótesis se comprueban sobre los
+  \emph{residuos} $e_i$ (\cref{def:t2-ajuste}), mediante el \textbf{análisis residual}.
+\end{nota}
+
+\subsection{Interpretación de los parámetros}
+
+La parte determinista del modelo, $\beta_0+\beta_1x_i$, especifica que la \textbf{media
+poblacional} de la respuesta $Y$ cuando $X=x_i$ es una \textbf{línea recta}:
+\[
+  Y_i = \underbrace{\beta_0+\beta_1x_i}_{\E(Y_i\cond X=x_i)\,=\,\E(Y_i)} + \varepsilon_i .
+\]
+Por ser una recta:
+\begin{itemize}
+  \item $\beta_0$ (\textbf{\emph{intercept}}) es el valor esperado de la respuesta cuando $X=0$;
+  \item $\beta_1$ (\textbf{pendiente}) es el incremento (o decremento, si es negativa) de la
+    media de la respuesta cuando $X$ aumenta 1 unidad.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=0.11cm, y=0.13cm]
+    \draw[-{Stealth}] (0,0) -- (70,0) node[below] {$X$};
+    \draw[-{Stealth}] (0,0) -- (0,40) node[left] {$Y$};
+    \foreach \t in {10,20,30,40,50,60} \draw (\t,0) -- (\t,-0.6) node[below, font=\scriptsize] {\t};
+    \foreach \t in {10,20,30} \draw (0,\t) -- (-0.8,\t) node[left, font=\scriptsize] {\t};
+    \draw[NavyBlue, thick] (0,0) -- (68,34) node[right, font=\scriptsize] {$\E(Y)=0+0.5X$};
+    \foreach \xx/\lab/\dy in {20/1/2.2,30/3/7,55/2/2.2} {
+      \pgfmathsetmacro{\mm}{0.5*\xx}
+      \draw[gray] (\xx,{\mm-8}) -- (\xx,{\mm+8});
+      \draw[colRes, thick, domain=-8:8, samples=40] plot ({\xx+4.5*exp(-(\x)^2/10)}, {\mm+\x});
+      \fill[NavyBlue] (\xx,\mm) circle (1.3pt);
+      \node[font=\scriptsize, anchor=east] at (\xx-0.8,\mm+\dy) {$\E(Y_{\lab})=\pgfmathprintnumber{\mm}$};
+    }
+    \fill (20,7.3) circle (1pt) node[below right, font=\scriptsize] {$Y_1$};
+    \fill (55,29.5) circle (1pt) node[below right, font=\scriptsize] {$Y_2$};
+    \fill (30,16.4) circle (1pt) node[right, font=\scriptsize] {$Y_3$};
+  \end{tikzpicture}
+  \caption{Recta de regresión poblacional $\E(Y)=0+0.5X$ y distribución normal de $Y$ para tres
+    valores de $X$, todas con la misma varianza. Cada observación $Y_i$ es un valor de su
+    distribución.}
+\end{figure}
+
+\subsection{Ajustar el modelo: recta estimada, valores ajustados y residuos}
+
+Ajustar el modelo consiste en estimar sus parámetros a partir de los datos: la \textbf{recta de
+regresión} ($\beta_0$ y $\beta_1$, que describen el modelo) y $\sigma^2$, que permite cuantificar
+el error que se comete.
+
+\begin{definicion}[Recta estimada, valores ajustados y residuos][def:t2-ajuste]
+  Sean $\est{\beta}_0$, $\est{\beta}_1$ y $\est{\sigma}^2$ los estimadores de los parámetros.
+  \begin{itemize}
+    \item La \textbf{recta de regresión estimada} es $\est{Y}=\est{\beta}_0+\est{\beta}_1X$.
+    \item Los \textbf{valores ajustados} son $\est{y}_i=\est{\beta}_0+\est{\beta}_1x_i$,
+      $i=1,\ldots,n$: los valores estimados por el modelo.
+    \item Las desviaciones respecto de la verdadera recta son los \textbf{errores}
+      $\varepsilon_i=y_i-(\beta_0+\beta_1x_i)$, que son desconocidos porque también lo son los
+      coeficientes. Se estiman mediante los \textbf{residuos}:
+      \[
+        e_i = y_i-\est{y}_i = y_i-(\est{\beta}_0+\est{\beta}_1x_i).
+      \]
+  \end{itemize}
+\end{definicion}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=8cm, height=5.5cm, axis lines=left, xtick={4.5}, xticklabels={$x_i$},
+        ytick={3.2,4.55}, yticklabels={$y_i$,$\est{y}_i$}, xmin=0, xmax=10, ymin=0, ymax=9.5,
+        clip=false]
+      \addplot[recta, domain=0.3:9.8] {1.4+0.7*x};
+      \node[font=\scriptsize, NavyBlue, anchor=west] at (axis cs:9.9,8.3)
+        {$\est{y}=\est{\beta}_0+\est{\beta}_1x$};
+      \addplot[puntos, mark size=1.5pt] coordinates {(1.5,3.5) (2,2.7) (2.5,2.8) (3.3,3.4)
+        (3.7,3.3) (5.3,5.4) (6.2,6.9) (6.8,5.8) (7.8,6.7) (8.6,8.0) (9.3,7.7)};
+      \addplot[only marks, mark=*, mark size=1.8pt, red] coordinates {(4.5,3.2)};
+      \addplot[only marks, mark=square, mark size=1.8pt, NavyBlue] coordinates {(4.5,4.55)};
+      \draw[dashed, gray] (axis cs:0,3.2) -- (axis cs:4.5,3.2);
+      \draw[dashed, gray] (axis cs:0,4.55) -- (axis cs:4.5,4.55);
+      \draw[dashed, gray] (axis cs:4.5,0) -- (axis cs:4.5,3.2);
+      \draw[red, thick] (axis cs:4.5,3.2) -- (axis cs:4.5,4.55)
+        node[midway, right, font=\scriptsize] {$e_i$ (residuo)};
+      \node[font=\scriptsize, red, anchor=north west] at (axis cs:4.6,3.1)
+        {$(x_i,y_i)$ observación};
+      \node[font=\scriptsize, NavyBlue, anchor=south east] at (axis cs:4.4,4.6)
+        {$(x_i,\est{y}_i)$ valor ajustado};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Observación, valor ajustado y residuo.}
+\end{figure}
+
+Los estimadores tienen una distribución concreta, lo que permite utilizar \textbf{métodos de
+inferencia} para evaluar la significación y la precisión de las estimaciones (Tema 3).
+
+\begin{ejemplo}[Conductores: recta ajustada e interpretación][ej:t2-conductores-ajuste]
+  En el ejemplo de los conductores, ajustar el modelo es estimar la recta que representa el
+  patrón general de los datos. Se obtiene
+  \[
+    \widehat{\text{distancia}} = 576 - 3\cdot\text{edad},
+    \qquad \est{\beta}_0=576,\quad \est{\beta}_1=-3 .
+  \]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[width=7.5cm, height=5cm, xlabel={Edad (años)}, ylabel={Distancia (pies)},
+          xmin=15, xmax=85, ymin=260, ymax=610, label style={font=\small},
+          tick label style={font=\footnotesize}]
+        \addplot[puntos, mark size=1.3pt] table[x=edad, y=distancia] {datos/conductores.dat};
+        \addplot[red, thick, no marks, domain=17:83] {576-3*x};
+        \draw[NavyBlue, -{Stealth}] (axis cs:60,260) -- (axis cs:60,396) -- (axis cs:15,396);
+        \node[font=\scriptsize, red, anchor=south west] at (axis cs:40,540)
+          {$\widehat{\text{dist.}}=576-3\,\text{edad}$};
+      \end{axis}
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item \textbf{Predicción}: para un conductor de 60 años, $576-3\cdot60=396\approx400$ pies.
+    \item \textbf{\emph{Intercept}} $\est{\beta}_0=576$: la función de regresión vale 576 en $X=0$,
+      lo que equivaldría a decir que un conductor de 0 años vería la señal a 576 pies. En este
+      caso \textbf{no es interpretable}, ya que la edad no puede ser 0 (y además queda muy
+      fuera del rango observado, 18--82 años).
+    \item \textbf{Pendiente} $\est{\beta}_1=-3$: por cada año más de edad, la distancia máxima a
+      la que se lee la señal \emph{disminuye, en media}, 3 pies.
+  \end{itemize}
+\end{ejemplo}
+
+\subsection{Versión centrada del modelo}
+
+El modelo también puede formularse utilizando como predictor $X_i-\media{X}$ (desviación del
+valor de $X$ en la observación $i$ respecto de su media) en lugar de $X_i$:
+\[
+  Y_i = \beta_0^* + \beta_1(X_i-\media{X}) + \varepsilon_i,
+  \qquad \text{con } \beta_0^* = \beta_0+\beta_1\media{X}.
+\]
+
+\begin{demostracion}[Comprobación]
+  Sumando y restando $\beta_1\media{X}$ en el modelo original,
+  \[
+    Y_i = \beta_0 + \beta_1X_i + \varepsilon_i
+        = \underbrace{(\beta_0 + \beta_1\media{X})}_{\beta_0^*}
+          + \beta_1(X_i-\media{X}) + \varepsilon_i .
+  \]
+  Ambos modelos representan la misma recta, expresada respecto de un origen distinto en el
+  eje $X$.
+\end{demostracion}
+
+La interpretación de los parámetros es la siguiente:
+\begin{itemize}
+  \item $\beta_0^*$ (\emph{intercept}) es el valor esperado de la respuesta cuando $X=\media{X}$.
+  \item $\beta_1$ (pendiente) es el cambio en la media de la respuesta cuando $X$ se desvía de
+    su media 1 unidad. Es \textbf{el mismo parámetro} que en el modelo con predictor $X_i$.
+\end{itemize}
+
+\begin{nota}
+  En el ejemplo de los conductores el \emph{intercept} $\beta_0$ no era interpretable, mientras que
+  $\beta_0^*$ sí lo es: representa la distancia media para un conductor de edad media.
+\end{nota}
+
+\subsection{El proceso de modelización}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[node distance=0.55cm,
+      paso/.style={draw, fill=gray!15, minimum width=4cm, minimum height=0.8cm, align=center,
+                   font=\small},
+      ext/.style={draw, rounded corners=8pt, fill=gray!30, minimum width=2cm,
+                  minimum height=0.7cm, font=\small},
+      dec/.style={draw, diamond, aspect=2.2, fill=gray!15, align=center, font=\small,
+                  inner sep=1pt},
+      fl/.style={-{Stealth}}]
+    \node[ext] (ini) {Comienzo};
+    \node[paso, below=of ini] (eda) {Análisis exploratorio de datos};
+    \node[paso, below=of eda] (aju) {Ajuste de posibles\\ modelos de regresión};
+    \node[dec, below=of aju] (ok) {¿Se ajustan bien\\ a los datos?};
+    \node[paso, left=1.2cm of ok, minimum width=3.3cm] (rev) {Revisar los modelos\\ y plantear nuevos};
+    \node[paso, below=of ok] (mej) {Elegir el ``mejor''};
+    \node[paso, below=of mej] (inf) {Hacer inferencias\\ con esos modelos};
+    \node[ext, below=of inf] (fin) {Fin};
+    \draw[fl] (ini) -- (eda); \draw[fl] (eda) -- (aju); \draw[fl] (aju) -- (ok);
+    \draw[fl] (ok) -- node[above, font=\small] {No} (rev);
+    \draw[fl] (rev) |- ($(aju.south)!0.5!(ok.north)$);
+    \draw[fl] (ok) -- node[right, font=\small] {Sí} (mej);
+    \draw[fl] (mej) -- (inf); \draw[fl] (inf) -- (fin);
+  \end{tikzpicture}
+  \caption{Etapas de un análisis de regresión (compárese con las etapas del ajuste de un modelo
+    estadístico, \cref{sec:t1-modelos}).}
+\end{figure}

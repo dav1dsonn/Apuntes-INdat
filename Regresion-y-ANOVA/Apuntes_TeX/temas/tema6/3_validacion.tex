@@ -1,0 +1,237 @@
+% ==============================================================================
+%  6.3  Validación del modelo. Multicolinealidad
+% ==============================================================================
+\section{Validación del modelo}
+\label{sec:t6-validacion}
+
+La validación de las hipótesis sobre los errores, $\varepsilon_1,\ldots,\varepsilon_n$ i.i.d.\ con
+$\varepsilon_i\sim\Normal(0,\sigma^2)$, se hace con las mismas herramientas que en la regresión
+simple (\cref{sec:t4-analisis}).
+\begin{itemize}
+  \item \textbf{Herramientas gráficas}:
+    \begin{itemize}
+      \item linealidad y homogeneidad de la varianza: residuos frente a los valores predichos y
+        frente a cada variable explicativa;
+      \item normalidad: QQ-plot, residuos frente a los cuantiles normales;
+      \item homogeneidad de la varianza: residuos frente a los valores predichos;
+      \item independencia: residuos frente al orden de las observaciones.
+    \end{itemize}
+  \item \textbf{Contrastes de hipótesis}:
+    \begin{itemize}
+      \item normalidad: Kolmogorov--Smirnov, Shapiro--Wilk, etc.;
+      \item homogeneidad de la varianza: Breusch--Pagan o Brown--Forsythe.
+    \end{itemize}
+  \item \textbf{Si no se verifican} (\cref{sec:t4-soluciones}):
+    \begin{itemize}
+      \item se transforma $X$ si la relación es no lineal;
+      \item se transforma $Y$ si no se cumplen la homogeneidad de varianzas o la normalidad,
+        buscando la transformación entre la familia de Box--Cox (\cref{def:t4-boxcox}).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Multicolinealidad}
+\label{sec:t6-multicolinealidad}
+
+\begin{definicion}[Multicolinealidad][def:t6-multicolinealidad]
+  Hay \textbf{multicolinealidad} cuando existe correlación entre las variables independientes.
+\end{definicion}
+
+\begin{itemize}
+  \item Supone un problema cuando esa correlación es muy alta (por encima de 0.8--0.9).
+  \item La \textbf{situación ideal} es que no haya correlación entre los predictores: así no se
+    solapan en la variabilidad de la respuesta que pueden explicar. En ese caso, las sumas de
+    cuadrados y las pendientes estimadas no se modifican al añadir variables al modelo.
+\end{itemize}
+La multicolinealidad puede suponer un problema para:
+\begin{itemize}
+  \item evaluar la importancia relativa de cada uno de los predictores;
+  \item determinar la magnitud del efecto que tiene un predictor sobre la variable respuesta.
+\end{itemize}
+
+\begin{ejemplo}[Predictores no correlacionados][ej:t6-productividad]
+  Se evalúa la productividad ($Y$) de ocho empleados según el tamaño del turno en el que trabajan
+  ($X_1$) y los incentivos que reciben ($X_2$). Los dos predictores están incorrelados: cada
+  combinación de $X_1$ y $X_2$ aparece con dos empleados.
+  \begin{center}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{ccc}
+      \toprule
+      Productividad ($Y$) & Tamaño del turno ($X_1$) & Incentivos ($X_2$) \\
+      \midrule
+      42, 39 & 4 & 2 \\
+      48, 51 & 4 & 3 \\
+      49, 53 & 6 & 2 \\
+      61, 60 & 6 & 3 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+
+  \textbf{Modelo con las dos variables independientes.}
+  \begin{center}
+    \small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{lrrrrr}
+      \toprule
+      Fuente & g.l. & $SS$ & $MS$ & $F$ & $p$-valor \\
+      \midrule
+      Modelo & 2 & 402.250 & 201.125 & 57 & 0.0004 \\
+      Error & 5 & 17.625 & 3.525 & & \\
+      Total & 7 & 419.875 & & & \\
+      \bottomrule
+    \end{tabular}
+    \qquad
+    \begin{tabular}{lrrr}
+      \toprule
+      Fuente & g.l. & $SS$ tipo I & $SS$ tipo III \\
+      \midrule
+      Tamaño & 1 & 231.125 & 231.125 \\
+      Incentivos & 1 & 171.125 & 171.125 \\
+      \bottomrule
+    \end{tabular}
+
+    \medskip
+    \begin{tabular}{lrrrr}
+      \toprule
+      Parámetro & Estimación & Error estándar & $t$ & $p$-valor \\
+      \midrule
+      \emph{Intercept} & 0.375 & 4.74 & 0.08 & 0.9400 \\
+      Tamaño & 5.375 & 0.66 & 8.10 & 0.0005 \\
+      Incentivos & 9.250 & 1.33 & 6.97 & 0.0009 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  (Las medias cuadráticas de las sumas de cuadrados de tipo I y III coinciden con ellas, al tener
+  cada una un grado de libertad.)
+
+  \textbf{Modelo solo con el tamaño del turno.}
+  \begin{center}
+    \small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{lrrrrr}
+      \toprule
+      Fuente & g.l. & $SS$ & $MS$ & $F$ & $p$-valor \\
+      \midrule
+      Modelo & 1 & 231.125 & 231.125 & 7.4 & 0.035 \\
+      Error & 6 & 188.750 & 31.458 & & \\
+      Total & 7 & 419.875 & & & \\
+      \bottomrule
+    \end{tabular}
+    \qquad
+    \begin{tabular}{lrrrr}
+      \toprule
+      Parámetro & Estimación & Error estándar & $t$ & $p$-valor \\
+      \midrule
+      \emph{Intercept} & 23.5 & 10.1 & 2.32 & 0.0591 \\
+      Tamaño & 5.375 & 1.98 & 2.71 & 0.0351 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  Como los predictores no están correlacionados, la suma de cuadrados asociada al tamaño del turno
+  es la misma, 231.125, en el modelo simple y en el múltiple (y en este coinciden las de tipo I y
+  tipo III), y la pendiente estimada del tamaño es también la misma en ambos modelos, 5.375.
+\end{ejemplo}
+
+\begin{ejemplo}[Predictores perfectamente correlacionados][ej:t6-colineales]
+  Se tienen cuatro observaciones cuyos predictores están exactamente sobre la recta
+  $X_2=5+0.5X_1$:
+  \begin{center}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{ccc}
+      \toprule
+      $X_1$ & $X_2$ & $Y$ \\
+      \midrule
+      2 & 6 & 25 \\
+      8 & 9 & 81 \\
+      6 & 8 & 60 \\
+      10 & 10 & 113 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  Al ajustar el modelo con $X_1$ y $X_2$, SAS avisa de que el modelo no es de rango completo: las
+  soluciones de mínimos cuadrados para los parámetros no son únicas, algunos estadísticos pueden
+  ser engañosos, y las estimaciones marcadas con g.l.\ 0 o B están sesgadas. Además, indica que el
+  parámetro de $X_2$ se ha fijado en 0 porque la variable es combinación lineal de otras,
+  $X_2=5\cdot\textit{Intercept}+0.5\,X_1$. La salida es:
+  \begin{center}
+    \small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{lrrrrr}
+      \toprule
+      Fuente & g.l. & $SS$ & $MS$ & $F$ & $p$-valor \\
+      \midrule
+      Modelo & 1 & 4007.150 & 4007.150 & 91.49 & 0.0108 \\
+      Error & 2 & 87.600 & 43.800 & & \\
+      Total corregido & 3 & 4094.750 & & & \\
+      \bottomrule
+    \end{tabular}
+    \qquad
+    \begin{tabular}{lr}
+      \toprule
+      Raíz MSE & 6.61816 \\
+      Media dependiente & 69.75000 \\
+      Coef Var & 9.48840 \\
+      R-cuadrado & 0.9786 \\
+      R-Sq Ajust & 0.9679 \\
+      \bottomrule
+    \end{tabular}
+
+    \medskip
+    \begin{tabular}{lcrrrr}
+      \toprule
+      Variable & g.l. & Estimación & Error estándar & $t$ & $p$-valor \\
+      \midrule
+      \emph{Intercept} & B & 0.20000 & 7.98892 & 0.03 & 0.9823 \\
+      $X_1$ & B & 10.70000 & 1.11867 & 9.56 & 0.0108 \\
+      $X_2$ & 0 & 0 & -- & -- & -- \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item Como las observaciones de $(X_1,X_2)$ están exactamente sobre una recta, hay infinitos
+      planos de regresión que serían igual de buenos: la solución no es única.
+    \item La columna de $X_2$ en la matriz de diseño es combinación lineal de las otras dos, por
+      lo que $\XtX$ no es invertible (\cref{teo:t5-mc}) y no pueden estimarse las pendientes de
+      todas las variables implicadas.
+    \item SAS elige ajustar el modelo solo con $X_1$: la salida coincide con la de la regresión
+      simple de $Y$ sobre $X_1$, con $\est{Y}=0.2+10.7X_1$ y $R^2_a=1-43.8/(4094.75/3)=0.9679$.
+  \end{itemize}
+\end{ejemplo}
+
+\paragraph{Situación intermedia.} Normalmente, la correlación entre las $X$ no es ni 0 ni 1.
+\begin{itemize}
+  \item Cuando esa correlación no es muy grande, puede estimarse un buen modelo, útil para hacer
+    predicciones dentro de su \emph{scope}.
+  \item Cuando la correlación supone un problema grave de multicolinealidad, se observa lo
+    siguiente:
+    \begin{itemize}
+      \item correlaciones muy altas entre pares de predictores;
+      \item estimadores de los coeficientes de regresión con error estándar muy alto;
+      \item el contraste global $F$ de la tabla ANOVA es significativo y $R^2$ es alto, pero los
+        contrastes $t$ asociados a las variables independientes individuales no lo son (no se
+        rechaza $H_0\colon\beta_k=0$);
+      \item las sumas de cuadrados de tipo I son muy diferentes de las de tipo III;
+      \item hay grandes cambios en los coeficientes de regresión estimados cuando se añaden o se
+        eliminan variables del modelo.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Factor de inflación de la varianza.} Para detectar la multicolinealidad se utiliza el
+\textbf{VIF} (\emph{Variance Inflation Factor}), relacionado con la varianza estimada de los
+coeficientes de regresión, que se ve inflada cuando hay multicolinealidad.
+
+\begin{definicion}[VIF y tolerancia][def:t6-vif]
+  El \textbf{factor de inflación de la varianza} del predictor $X_k$ es
+  \[
+    VIF_k = \frac{1}{1-R_k^2},
+  \]
+  donde $R_k^2$ es el coeficiente de determinación del modelo de regresión de $X_k$ sobre el
+  resto de predictores. La \textbf{tolerancia} es
+  \[
+    T_k = 1-R_k^2 = \frac{1}{VIF_k}.
+  \]
+\end{definicion}
+
+Si, por ejemplo, $R_k^2\ge0.9$, $X_k$ se predice muy bien a partir del resto de variables
+independientes. Esto corresponde a $VIF_k\ge10$, que indica un problema muy serio de
+multicolinealidad. Equivalentemente, tolerancias menores que 0.1 son indicadoras de
+multicolinealidad.

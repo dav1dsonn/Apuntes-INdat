@@ -1,0 +1,364 @@
+% ==============================================================================
+%  1.4  Análisis descriptivo previo a la formulación del modelo.
+%       Gráficos. Correlación.
+% ==============================================================================
+\section{Análisis descriptivo previo al modelo}
+\label{sec:t1-descriptivo}
+
+El análisis descriptivo de los datos ayuda a formular el modelo (etapa de
+\emph{especificación}). Conviene tener en cuenta las escalas elegidas y el rango de variación de
+$X$ e $Y$, y completarlo con otros métodos descriptivos, gráficos o numéricos.
+
+\subsection{El diagrama de dispersión}
+
+Para estudiar gráficamente la dependencia entre \textbf{dos variables} resulta muy útil el
+\textbf{diagrama (o gráfico) de dispersión}. Los datos son pares $(x_i,y_i)$, $i=1,\ldots,n$, y
+el objetivo es ver cómo cambian los valores de $Y$ al cambiar los de $X$. Cada par se
+representa como un punto, con $x_i$ en el eje horizontal (\textbf{variable explicativa}) e
+$y_i$ en el vertical (\textbf{variable respuesta}). La forma de la nube de puntos da una idea
+de si existe relación entre $X$ e $Y$ y de qué forma tiene.
+
+\begin{ejemplo}[Edad y distancia de lectura de una señal][ej:conductores]
+  En una muestra de 30 conductores de entre 18 y 82 años se mide la distancia máxima (en pies)
+  a la que pueden leer una señal de tráfico. Se quiere estudiar la relación entre la edad y esa
+  distancia, con el objetivo de mejorar la seguridad de los conductores mayores. Como interesa
+  el efecto de la edad sobre la distancia:
+  \begin{itemize}
+    \item la \textbf{edad} es la variable explicativa $X$;
+    \item la \textbf{distancia} es la variable respuesta $Y$.
+  \end{itemize}
+  Cada conductor corresponde a un punto: el conductor 1 (18 años, 510 pies) es el punto
+  $(18,510)$, el conductor 2 (32 años, 410 pies) es el punto $(32,410)$, etc.
+
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[width=8cm, height=5.5cm, xlabel={Edad del conductor (años)},
+          ylabel={Distancia (pies)}, xmin=15, xmax=85, ymin=260, ymax=610,
+          label style={font=\small}, tick label style={font=\footnotesize}]
+        \addplot[puntos, mark size=1.3pt] table[x=edad, y=distancia]
+          {datos/conductores.dat};
+        \addplot[only marks, mark=*, mark size=2pt, red] coordinates {(18,510)};
+        \addplot[only marks, mark=*, mark size=2pt, blue] coordinates {(32,410)};
+        \draw[red, dashed] (axis cs:18,260) -- (axis cs:18,510) -- (axis cs:15,510);
+        \draw[blue, dashed] (axis cs:32,260) -- (axis cs:32,410) -- (axis cs:15,410);
+      \end{axis}
+    \end{tikzpicture}\\
+    {\footnotesize Datos reconstruidos a partir del gráfico de las diapositivas.}
+  \end{center}
+\end{ejemplo}
+
+\subsection{Interpretación de un diagrama de dispersión}
+
+Al interpretar un diagrama de dispersión se analizan:
+\begin{itemize}
+  \item el \textbf{patrón general} de la relación: \emph{dirección}, \emph{forma} y
+    \emph{fuerza};
+  \item las \textbf{desviaciones} respecto de ese patrón: los \emph{outliers} (datos atípicos).
+\end{itemize}
+
+\paragraph{Dirección.} Puede ser positiva, negativa o no estar definida.
+\begin{itemize}
+  \item \textbf{Relación positiva}: los incrementos de una variable van asociados a
+    incrementos de la otra.
+  \item \textbf{Relación negativa}: los incrementos de una variable van asociados a
+    disminuciones de la otra.
+  \item No todas las relaciones pueden clasificarse como positivas o negativas.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos] table {datos/tema1/dir_pos.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Relación positiva.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos] table {datos/tema1/dir_neg.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Relación negativa.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos] table {datos/tema1/dir_nula.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Sin dirección clara.}
+  \end{subfigure}
+  \caption{Dirección de una relación.}
+\end{figure}
+
+\paragraph{Forma.} Lineal, curva (cuadrática, exponencial\ldots), por grupos, etc.
+
+\paragraph{Fuerza.} Depende de lo cerca que se sitúen los puntos del patrón que describe la
+relación. En una relación lineal \textbf{fuerte} los puntos están muy próximos a la recta; en
+una relación lineal más \textbf{débil} siguen el mismo patrón lineal, pero mucho más dispersos a
+su alrededor.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos] table {datos/tema1/fuerte.dat};
+        \addplot[recta] table[y={create col/linear regression={y=y}}] {datos/tema1/fuerte.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Relación lineal fuerte: puntos muy próximos a la recta.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos] table {datos/tema1/debil.dat};
+        \addplot[recta] table[y={create col/linear regression={y=y}}] {datos/tema1/debil.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Relación lineal débil: puntos más dispersos alrededor de la recta.}
+  \end{subfigure}
+  \caption{Fuerza de una relación lineal.}
+\end{figure}
+
+\paragraph{Outliers.} Son observaciones atípicas, es decir, datos que se apartan del patrón de
+la relación. Pueden darse distintos casos:
+\begin{itemize}
+  \item \textbf{Atípico en $X$}: su valor de $X$ es mucho mayor (o menor) que el del resto,
+    pero sigue el patrón de la relación, por lo que \emph{no} es atípico en la relación.
+  \item \textbf{Atípico en la relación}: los valores de $X$ e $Y$ no son extremos por separado,
+    pero el par no sigue el patrón del resto.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini, width=5.5cm]
+        \addplot[puntos] table {datos/tema1/atipico_x.dat};
+        \addplot[only marks, mark=*, mark size=1.8pt, red] coordinates {(40,640)};
+        \addplot[recta] table[y={create col/linear regression={y=y}}]
+          {datos/tema1/atipico_x.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Atípico en $X$ (en rojo): valor de $X$ extremo, pero sigue la relación.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini, width=5.5cm]
+        \addplot[puntos] table {datos/tema1/atipico_rel.dat};
+        \addplot[only marks, mark=*, mark size=1.8pt, red] coordinates {(0.5,9.2)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Atípico en la relación (en rojo): el par no sigue el patrón del resto.}
+  \end{subfigure}
+  \caption{Tipos de datos atípicos.}
+\end{figure}
+
+\begin{ejemplo}[Conductores: interpretación][ej:conductores-interp]
+  En el \cref{ej:conductores}:
+  \begin{itemize}
+    \item \textbf{Dirección}: negativa; a medida que un conductor envejece, disminuye la
+      distancia a la que es capaz de identificar la señal.
+    \item \textbf{Forma}: aparentemente lineal.
+    \item \textbf{Fuerza}: es difícil de valorar sin una referencia; parece
+      \emph{moderadamente fuerte}, ya que los datos están bastante dispersos en torno a la
+      recta que resume la relación.
+    \item \textbf{Outliers}: todas las observaciones siguen razonablemente bien el patrón
+      lineal, por lo que no parece haber valores atípicos.
+  \end{itemize}
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[width=7.5cm, height=5cm, xlabel={Edad (años)}, ylabel={Distancia (pies)},
+          xmin=15, xmax=85, ymin=260, ymax=610, label style={font=\small},
+          tick label style={font=\footnotesize}]
+        \addplot[puntos, mark size=1.3pt] table[x=edad, y=distancia] {datos/conductores.dat};
+        \addplot[recta, domain=17:83] {576-3*x};
+      \end{axis}
+    \end{tikzpicture}
+  \end{center}
+\end{ejemplo}
+
+\paragraph{Varias variables explicativas.} Cuando hay varias variables se utiliza una
+\textbf{matriz de gráficos de dispersión}, formada por los diagramas de dispersión de cada par
+de variables.
+
+\begin{ejemplo}[Consumo de combustible (Weisberg)]
+  Datos de 2001 de los estados de EE.\,UU.:
+  \begin{center}
+    \small
+    \begin{tabular}{ll}
+      \toprule
+      \textit{Drivers} & Número de conductores con licencia en el estado \\
+      \textit{FuelC}   & Gasolina vendida para uso en carretera (miles de galones) \\
+      \textit{Income}  & Renta personal per cápita en 2000 (miles de dólares) \\
+      \textit{Miles}   & Millas de autopistas con ayuda federal en el estado \\
+      \textit{Pop}     & Población de 16 años o más en 2001 \\
+      \textit{Tax}     & Impuesto estatal sobre la gasolina (céntimos por galón) \\
+      \textit{State}   & Nombre del estado \\
+      \midrule
+      \textit{Fuel}    & $1000\times \textit{FuelC}/\textit{Pop}$ \\
+      \textit{Dlic}    & $1000\times \textit{Drivers}/\textit{Pop}$ \\
+      $\log(\textit{Miles})$ & Logaritmo en base 2 de \textit{Miles} \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  La matriz de dispersión de \textit{Tax}, \textit{Dlic}, \textit{Income},
+  $\log(\textit{Miles})$ y \textit{Fuel} es una cuadrícula $5\times5$ en la que la casilla
+  $(i,j)$ contiene el diagrama de dispersión de la variable de la fila $i$ frente a la de la
+  columna $j$, y la diagonal, los nombres de las variables. Permite ver de un vistazo cómo se
+  relaciona la respuesta (\textit{Fuel}) con cada variable explicativa, y estas entre sí.
+\end{ejemplo}
+
+\subsection{El coeficiente de correlación lineal de Pearson}
+\label{sec:t1-correlacion}
+
+La \textbf{correlación} mide el grado de \textbf{relación lineal} entre $X$ e $Y$. Para dos
+variables cuantitativas se utiliza el \textbf{coeficiente de correlación lineal de Pearson}.
+
+\begin{definicion}[Coeficiente de correlación de Pearson][def:pearson]
+  \begin{itemize}
+    \item \textbf{Poblacional}:
+      \[
+        \rho_{XY} = \frac{\E\big[(X-\E X)(Y-\E Y)\big]}{\sqrt{\Var(X)}\,\sqrt{\Var(Y)}} .
+      \]
+    \item \textbf{Muestral}:
+      \[
+        r_{xy} = \frac{1}{n}\sumi \frac{(x_i-\media{x})(y_i-\media{y})}{s_x\,s_y},
+        \qquad
+        s_x=\sqrt{\frac1n\sumi(x_i-\media{x})^2},\quad
+        s_y=\sqrt{\frac1n\sumi(y_i-\media{y})^2}.
+      \]
+  \end{itemize}
+\end{definicion}
+
+\begin{nota}
+  En la fórmula muestral, $s_x$ y $s_y$ son las desviaciones típicas \emph{con divisor $n$},
+  coherentes con el factor $\tfrac1n$. Al simplificar, estos factores se cancelan:
+  \[
+    r_{xy} = \frac{\sumi (x_i-\media{x})(y_i-\media{y})}
+                  {\sqrt{\sumi (x_i-\media{x})^2}\,\sqrt{\sumi (y_i-\media{y})^2}},
+  \]
+  por lo que se obtiene el mismo valor usando $\tfrac{1}{n-1}$ \emph{a la vez} en la
+  covarianza y en las dos varianzas. Lo que no es correcto es mezclar ambos divisores.
+\end{nota}
+
+\paragraph{Propiedades.}
+\begin{itemize}
+  \item Es \textbf{adimensional}.
+  \item Toma valores entre $-1$ y $1$, y solo vale $-1$ o $1$ si existe una relación lineal
+    \emph{exacta} entre las variables.
+  \item Es \textbf{invariante ante cambios de escala}: no varía al cambiar las unidades de
+    medida de cualquiera de las dos variables (salvo, quizá, el signo).
+  \item Es \textbf{invariante ante cambios de origen} y, por tanto, ante transformaciones
+    lineales (salvo el signo).
+\end{itemize}
+
+\paragraph{Interpretación.}
+\begin{itemize}
+  \item El \textbf{signo} indica la dirección de la relación lineal: positiva ($r_{xy}>0$) o
+    negativa ($r_{xy}<0$).
+  \item La \textbf{distancia a 0} indica la fuerza de la relación lineal: los valores próximos
+    a $1$ o $-1$ indican una relación lineal fuerte, y los próximos a $0$, ausencia de relación
+    lineal.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos, mark size=0.6pt] table {datos/tema1/r_097.dat};
+        \addplot[recta] table[y={create col/linear regression={y=y}}] {datos/tema1/r_097.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{$r=0.97$: relación lineal positiva fuerte.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos, mark size=0.6pt] table {datos/tema1/r_m079.dat};
+        \addplot[recta] table[y={create col/linear regression={y=y}}] {datos/tema1/r_m079.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{$r=-0.79$: relación lineal negativa.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos, mark size=0.6pt] table {datos/tema1/r_nulo.dat};
+        \addplot[recta] table[y={create col/linear regression={y=y}}] {datos/tema1/r_nulo.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{$r=-0.02$: ausencia de relación lineal (plot nulo).}
+  \end{subfigure}
+  \caption{Nubes de puntos y su coeficiente de correlación.}
+\end{figure}
+
+\paragraph{Precaución.} $r_{xy}$ \textbf{por sí solo no basta} para determinar si una relación
+es lineal o no: \textbf{es necesario el diagrama de dispersión}. La siguiente figura muestra
+tres situaciones en las que el valor de $r$ resulta engañoso.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos, mark size=0.6pt] table {datos/tema1/no_lineal.dat};
+        \addplot[recta] table[y={create col/linear regression={y=y}}]
+          {datos/tema1/no_lineal.dat};
+        \node[font=\scriptsize, anchor=north] at (rel axis cs:0.5,0.97) {$r=-0.06$};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Relación no lineal: existe una relación clara (parabólica), pero $r\approx0$
+      porque no es lineal.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[only marks, mark=*, mark size=0.7pt, NavyBlue] table {datos/tema1/grupo1.dat};
+        \addplot[only marks, mark=*, mark size=0.7pt, ForestGreen] table {datos/tema1/grupo2.dat};
+        \addplot[black, thin, no marks] table[y={create col/linear regression={y=y}}]
+          {datos/tema1/grupos.dat};
+        \node[font=\scriptsize, anchor=north west] at (rel axis cs:0.02,0.97) {$r=0.98$};
+        \node[font=\scriptsize, NavyBlue] at (rel axis cs:0.25,0.35) {$r=0.21$};
+        \node[font=\scriptsize, ForestGreen] at (rel axis cs:0.75,0.55) {$r=0.05$};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Grupos de individuos: apenas hay relación dentro de cada grupo, pero al
+      juntarlos $r=0.98$.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini]
+        \addplot[puntos, mark size=0.7pt] table {datos/tema1/sin_atipico.dat};
+        \addplot[only marks, mark=o, mark size=2.5pt, red] coordinates {(10,10)};
+        \addplot[only marks, mark=*, mark size=0.8pt, black] coordinates {(10,10)};
+        \addplot[black, thin, no marks] table[y={create col/linear regression={y=y}}]
+          {datos/tema1/con_atipico.dat};
+        \addplot[red, thin, no marks] table[y={create col/linear regression={y=y}}]
+          {datos/tema1/sin_atipico.dat};
+        \node[font=\scriptsize, anchor=north west] at (rel axis cs:0.02,0.97) {$r=0.70$};
+        \node[font=\scriptsize, red, anchor=north west] at (rel axis cs:0.02,0.82) {$r=-0.13$};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Dato atípico (en rojo): sin él $r=-0.13$; al incluirlo, $r=0.70$.}
+  \end{subfigure}
+  \caption{Situaciones en las que el coeficiente de correlación es engañoso.}
+\end{figure}

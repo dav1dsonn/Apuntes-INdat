@@ -1,0 +1,60 @@
+% ==============================================================================
+%  Comandos / notación común a todos los temas
+%  (usar SIEMPRE estos comandos para que la notación sea homogénea)
+% ==============================================================================
+
+% --- Conjuntos y probabilidad ---------------------------------------------------
+\newcommand{\R}{\mathbb{R}}
+\DeclareMathOperator{\E}{E}                  % esperanza      \E[Y]
+\DeclareMathOperator{\Var}{Var}              % varianza       \Var(Y)
+\DeclareMathOperator{\Cov}{Cov}              % covarianza     \Cov(X,Y)
+\DeclareMathOperator{\Cor}{Cor}              % correlación
+\newcommand{\Normal}{\mathcal{N}}            % \Normal(0,\sigma^2)
+\newcommand{\iid}{\overset{\text{i.i.d.}}{\sim}}
+\newcommand{\bajoHo}{\overset{H_0}{\sim}}    % distribución bajo H0
+
+% --- Vectores y matrices (negrita) ----------------------------------------------
+\newcommand{\vect}[1]{\bm{#1}}               % \vect{Y}, \vect{\beta}
+\newcommand{\T}{^{\mathsf{T}}}               % traspuesta: X\T
+
+% --- Sumas de cuadrados y medias cuadráticas ------------------------------------
+\newcommand{\SC}[1]{SS_{\text{#1}}}          % \SC{hip}   -> SS_hip
+\newcommand{\MC}[1]{MS_{\text{#1}}}          % \MC{res}   -> MS_res
+
+% --- Estadística descriptiva --------------------------------------------------
+\newcommand{\media}[1]{\overline{#1}}        % \media{y}
+\newcommand{\est}[1]{\widehat{#1}}           % estimador: \est{\mu}
+
+% --- Distribuciones -----------------------------------------------------------
+\newcommand{\Fdist}[2]{F_{#1,\,#2}}          % \Fdist{1}{n-1}
+\newcommand{\tdist}[1]{t_{#1}}
+\newcommand{\chisq}[1]{\chi^2_{#1}}
+
+% --- Texto --------------------------------------------------------------------
+\newcommand{\Rsoft}{\textsf{R}}              % el software R
+\newcommand{\codigo}[1]{\texttt{#1}}
+
+% --- Otros ----------------------------------------------------------------------
+\newcommand{\cond}{\mid}                     % condicionado: \E(Y \cond X=x)
+\newcommand{\gl}{\text{g.l.}}                % grados de libertad
+\newcommand{\sumi}{\sum_{i=1}^{n}}           % suma habitual de 1 a n
+
+% --- Regresión (Tema 3 en adelante) ----------------------------------------------
+\newcommand{\Ynew}{Y_{h(\mathrm{new})}}      % nueva observación en x_h
+\newcommand{\Xnew}{X_{h(\mathrm{new})}}      % predicción inversa
+\newcommand{\Ymnew}{\media{Y}_{h(\mathrm{new})}} % media de m nuevas observaciones
+\newcommand{\tq}[2]{t_{#1;\,#2}}             % cuantil: \tq{n-2}{1-\alpha/2}
+\newcommand{\Fq}[3]{F_{#1,\,#2;\,#3}}        % cuantil: \Fq{1}{n-2}{1-\alpha}
+\newcommand{\ee}{\operatorname{ee}}          % error estándar
+\newcommand{\SSX}{SS_X}
+\newcommand{\raizMSE}[1]{\sqrt{MSE\left(#1\right)}}
+
+% --- Validación (Tema 4 en adelante) -------------------------------------------
+\newcommand{\DFFits}{\mathrm{DFFits}}        % \DFFits_i
+\newcommand{\DFBeta}{\mathrm{DFBeta}}        % \DFBeta_{ji}
+\newcommand{\sumk}{\sum_{k=1}^{n}}           % suma en k de 1 a n
+
+% --- Notación matricial (Tema 5 en adelante) ------------------------------------
+\newcommand{\XtX}{\vect{X}\T\vect{X}}                 % X'X
+\newcommand{\XtXi}{(\vect{X}\T\vect{X})^{-1}}         % (X'X)^{-1}
+\newcommand{\bhat}{\est{\vect{\beta}}}                % beta estimado (vector)

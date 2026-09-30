@@ -1,0 +1,33 @@
+% ==============================================================================
+%  6.2  El coeficiente de determinación
+% ==============================================================================
+\section{El coeficiente de determinación}
+\label{sec:t6-determinacion}
+
+El coeficiente de determinación $R^2=SSR/SST=1-SSE/SST$ (\cref{def:R2}) mide la proporción de
+la variabilidad de $Y$ explicada por el modelo también en regresión múltiple. Sin embargo,
+\textbf{$R^2$ no es útil para comparar modelos de regresión con distinto número de variables
+explicativas}: al añadir variables explicativas al modelo, $R^2$ puede aumentar de forma
+artificial, independientemente de que las $X$ añadidas sean importantes o no. La inclusión de una
+nueva variable independiente nunca puede hacer que $R^2$ disminuya, aunque la nueva variable no
+contribuya en nada a explicar la respuesta.
+
+En su lugar se utiliza el \textbf{coeficiente de determinación múltiple ajustado}, que corrige
+$R^2$ penalizando por el número de variables explicativas incluidas en el modelo.
+
+\begin{definicion}[Coeficiente de determinación ajustado][def:t6-R2a]
+  \[
+    R^2_a = 1-\frac{MSE}{MST} = 1-\left(\frac{n-1}{n-p}\right)\frac{SSE}{SST},
+  \]
+  donde $MSE=SSE/(n-p)$ y $MST=SST/(n-1)$ (\cref{sec:t3-anova}).
+\end{definicion}
+
+\begin{itemize}
+  \item Si al añadir una nueva variable independiente al modelo $R^2_a$ aumenta mucho, esa
+    variable es importante para predecir $Y$. Si, por el contrario, no aumenta o incluso
+    disminuye, es señal de que no contribuye a explicar $Y$ y no debe incluirse en el modelo.
+  \item A diferencia de $R^2$, $R^2_a$ \textbf{puede disminuir al incluir una nueva variable en el
+    modelo}.
+\end{itemize}
+En la regresión simple ($p=2$) se obtiene el $R^2$ ajustado que aparece en las salidas del
+Tema 3 (\cref{ej:t3-anova-arboles}).

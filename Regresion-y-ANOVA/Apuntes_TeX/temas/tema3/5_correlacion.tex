@@ -1,0 +1,101 @@
+% ==============================================================================
+%  3.7  Medidas de la relación lineal entre dos variables.
+%       Coeficiente de determinación y correlación lineal
+% ==============================================================================
+\section{Medidas de la relación lineal: determinación y correlación}
+\label{sec:t3-correlacion}
+
+\subsection{El coeficiente de determinación}
+
+En la descomposición de la variabilidad (\cref{teo:t3-sst}), $SST$ mide la incertidumbre en la
+predicción de $Y$ sin usar la información de $X$, y $SSE$ la incertidumbre al usarla. La
+reducción de la variabilidad, $SST-SSE=SSR$, en proporción a la variabilidad total, mide cuánto
+se reduce la incertidumbre al usar $X$ para predecir $Y$.
+
+\begin{definicion}[Coeficiente de determinación][def:R2]
+  \[
+    R^2 = \frac{SSR}{SST} = 1-\frac{SSE}{SST}.
+  \]
+\end{definicion}
+
+Como $0\le SSE\le SST$, se tiene $0\le R^2\le1$:
+\begin{itemize}
+  \item $R^2=0$ cuando $SSR=0$: la recta ajustada es horizontal ($\est{\beta}_1=0$,
+    $\est{Y}=\media{Y}$) y no hay relación lineal entre $X$ e $Y$;
+  \item $R^2=1$ cuando $SSE=0$: todas las observaciones coinciden con sus valores ajustados, y
+    $X$ predice perfectamente a $Y$.
+\end{itemize}
+En la práctica se obtienen valores intermedios. Cuanto mayor es $R^2$, mayor es la reducción de
+la variabilidad total de $Y$ al usar $X$ para predecirla.
+
+\paragraph{Propiedades de $R^2$.}
+\begin{itemize}
+  \item $0\le R^2\le1$ y es adimensional.
+  \item Es el cuadrado del coeficiente de correlación de Pearson de la muestra
+    $\{(X_i,Y_i)\}_{i=1}^n$, y también del de los pares $\{(\est{Y}_i,Y_i)\}_{i=1}^n$.
+  \item Cuanto mayor es $R^2$, mayor es la capacidad del regresor $X$ para predecir la respuesta
+    $Y$, menor es $SSE$ y más cerca están los puntos de la recta ajustada.
+  \item Toma el mismo valor si se usa $X$ para predecir $Y$ o $Y$ para predecir $X$.
+\end{itemize}
+En el \cref{ej:t3-anova-arboles}, $R^2=3085.789/3744.358=0.8241$: el diámetro del tronco explica el
+82.4\,\% de la variabilidad del volumen de madera.
+
+\subsection{El coeficiente de correlación lineal}
+
+Cuando las dos variables son aleatorias, la medida habitual de la relación lineal entre ellas es
+el coeficiente de correlación de Pearson muestral (\cref{def:pearson}), que en función de las
+sumas de cuadrados y de la pendiente estimada se escribe
+\[
+  r_{XY} = \frac{\sumi (x_i-\media{X})(y_i-\media{Y})}
+                {\sqrt{\sumi (x_i-\media{X})^2\sumi (y_i-\media{Y})^2}}
+  = \frac{SS_{XY}}{\sqrt{\SSX\,SS_Y}} = \est{\beta}_1\sqrt{\frac{\SSX}{SS_Y}} .
+\]
+
+\begin{proposicion}[Relación entre $R^2$ y $r_{XY}$][prop:R2-r2]
+  En la regresión lineal simple, $R^2=r_{XY}^2$.
+\end{proposicion}
+
+\begin{demostracion}
+  Usando $SSR=\est{\beta}_1^2\SSX$ (\cref{sec:t3-anova}) y $SS_Y=SST$,
+  \[
+    r_{XY}^2 = \est{\beta}_1^2\,\frac{\SSX}{SS_Y} = \frac{SSR}{SST} = 1-\frac{SSE}{SST} = R^2 .
+  \]
+\end{demostracion}
+
+\paragraph{Propiedades de $r_{XY}$.}
+\begin{itemize}
+  \item $-1\le r_{XY}\le1$.
+  \item $|r_{XY}|$ mide la fuerza de la asociación lineal: cuanto mayor es, más fuerte es la
+    asociación lineal entre $X$ e $Y$.
+  \item $r_{XY}=0$ indica que no hay asociación lineal; $r_{XY}=1$ ($-1$), asociación lineal
+    perfecta positiva (negativa): los puntos están sobre una recta de pendiente positiva
+    (negativa).
+  \item El signo indica asociación positiva ($r_{XY}>0$) o negativa ($r_{XY}<0$).
+  \item No depende de las unidades de medida de las variables.
+  \item Los papeles de $X$ e $Y$ son simétricos en su cálculo.
+  \item Es muy sensible a observaciones atípicas.
+\end{itemize}
+
+\begin{nota}[Regresión y correlación]
+  Son conceptos relacionados que no deben confundirse. El modelo de regresión describe la
+  relación lineal entre una variable independiente $X$, fija, y una respuesta $Y$, aleatoria,
+  cuyo comportamiento se quiere explicar o estimar. La correlación describe la fuerza de la
+  relación lineal entre dos variables, ambas aleatorias.
+\end{nota}
+
+\subsection{Inferencias sobre el coeficiente de correlación poblacional}
+
+Las inferencias sobre el coeficiente de correlación poblacional $\rho_{XY}$ se basan en la
+distribución en el muestreo de $r_{XY}$.
+\begin{itemize}
+  \item Para $H_0\colon\rho_{XY}=0$ frente a $H_1\colon\rho_{XY}\neq0$ se utiliza que
+    \[
+      r_{XY}\,\frac{\sqrt{n-2}}{\sqrt{1-r_{XY}^2}} \bajoHo \tdist{n-2} .
+    \]
+  \item Para $\rho_{XY}\neq0$ la distribución de $r_{XY}$ es compleja y se usan aproximaciones.
+    La más habitual es la \textbf{transformación $Z$ de Fisher}: para $n$ grande,
+    \[
+      z' = \frac12\ln\left(\frac{1+r_{XY}}{1-r_{XY}}\right)
+      \ \approx\ \Normal\!\left(\frac12\ln\left(\frac{1+\rho_{XY}}{1-\rho_{XY}}\right),\ \frac{1}{n-3}\right).
+    \]
+\end{itemize}

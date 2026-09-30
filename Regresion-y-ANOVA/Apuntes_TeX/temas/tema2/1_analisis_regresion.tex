@@ -1,0 +1,163 @@
+% ==============================================================================
+%  2.1  El análisis de regresión
+% ==============================================================================
+\section{El análisis de regresión}
+\label{sec:t2-analisis}
+
+El término \textbf{regresión} se utiliza para describir relaciones estadísticas entre
+variables. El \textbf{análisis de regresión} es la técnica estadística que permite modelizar e
+investigar la relación de una variable $Y$ con otra u otras variables $X_1,\ldots,X_k$
+($Y \leftarrow X_1,\ldots,X_k$), es decir, estudiar cómo afectan a $Y$ los cambios en las $X_i$.
+\begin{itemize}
+  \item $Y$: \textbf{variable respuesta} o \textbf{dependiente}. Es una variable aleatoria y la
+    de mayor interés en el problema.
+  \item $X_1,\ldots,X_k$: \textbf{regresores}, \textbf{predictores}, variables
+    \textbf{independientes} o \textbf{explicativas}. Aportan información sobre la variabilidad
+    de $Y$, y el interés está en evaluar el efecto que sus cambios producen en $Y$.
+\end{itemize}
+
+\subsection{Componentes del modelo de regresión}
+
+El modelo de regresión debe expresar formalmente las dos componentes de una relación
+estadística (\cref{sec:t1-relacion}):
+\begin{enumerate}
+  \item la tendencia \textbf{sistemática} con la que cambia $Y$ al cambiar los predictores,
+    $\vect{X}=(X_1,\ldots,X_k)$;
+  \item la componente \textbf{aleatoria}, que recoge la variabilidad con la que los datos se
+    distribuyen alrededor de esa tendencia.
+\end{enumerate}
+Para ello se supone que:
+\begin{enumerate}
+  \item existe una \textbf{distribución de $Y$ para cada nivel de $\vect{X}$};
+  \item la \textbf{media} de estas distribuciones condicionadas \textbf{varía de forma
+    sistemática con $\vect{X}$}.
+\end{enumerate}
+Los modelos son, por tanto, de la forma
+\[
+  Y = m(X_1,\ldots,X_k) + \varepsilon,
+  \qquad
+  m(x_1,\ldots,x_k) = \E\left(Y \cond X_1=x_1,\ldots,X_k=x_k\right),
+\]
+donde $m$ es la función de regresión (\cref{def:funcion-regresion}).
+
+\begin{ejemplo}[Evaluación de empleados][ej:t2-empleados]
+  Se quiere evaluar la relación entre la eficiencia de 10 empleados en dos momentos del año.
+  La variable respuesta $Y$ es la evaluación de cada trabajador a final de año, y la variable
+  explicativa $X$, la evaluación a mitad de año. Para cada valor de $X$ existe una
+  distribución de probabilidad de $Y$, y la \emph{curva de regresión} une las medias de esas
+  distribuciones.
+
+  \begin{center}
+    \begin{tikzpicture}[x=0.09cm, y=0.06cm]
+      % ejes
+      \draw[-{Stealth}] (40,40) -- (105,40) node[below] {$X$};
+      \draw[-{Stealth}] (40,40) -- (40,100) node[left] {$Y$};
+      \foreach \t in {50,70,90} {
+        \draw (\t,40) -- (\t,39) node[below, font=\scriptsize] {\t};
+        \draw (40,\t) -- (39,\t) node[left, font=\scriptsize] {\t};
+      }
+      \node[below, font=\small] at (72,32) {Evaluación a mitad de año};
+      \node[rotate=90, font=\small] at (29,70) {Evaluación final};
+      % curva de regresión m(x)
+      \draw[NavyBlue, thick, domain=45:100, samples=40]
+        plot (\x, {50+0.9*(\x-45)-0.006*(\x-45)^2});
+      \node[NavyBlue, font=\scriptsize, anchor=west] at (100,80.8) {curva de regresión};
+      % densidades condicionadas (tumbadas)
+      \foreach \xx in {55,72,90} {
+        \pgfmathsetmacro{\mm}{50+0.9*(\xx-45)-0.006*(\xx-45)^2}
+        \draw[gray] (\xx,{\mm-15}) -- (\xx,{\mm+15});
+        \draw[colRes, thick, domain=-15:15, samples=40]
+          plot ({\xx+9*exp(-(\x)^2/40)}, {\mm+\x});
+        \fill[NavyBlue] (\xx,\mm) circle (0.5pt);
+      }
+      \node[colRes, font=\scriptsize, align=center] at (82,100) {distribución de $Y$\\ para cada $X$};
+    \end{tikzpicture}
+  \end{center}
+\end{ejemplo}
+
+\paragraph{Filosofía.}
+\begin{itemize}
+  \item La variabilidad de la respuesta $Y$ depende de muchas causas, quizá infinitas.
+  \item De ellas, unas pocas, $X_1,\ldots,X_k$, son \emph{causas importantes} que pueden
+    observarse y controlarse.
+  \item El resto, $X_{k+1},X_{k+2},\ldots$, son muchas otras causas no observables,
+    desconocidas o incontrolables.
+\end{itemize}
+Por tanto, $Y$ puede modelizarse como
+\[
+  Y = f(X_1,\ldots,X_k) + g(X_{k+1},X_{k+2},\ldots),
+\]
+donde $g(X_{k+1},X_{k+2},\ldots)=\varepsilon$ es una \textbf{perturbación aleatoria}. Así:
+\[
+  Y = f(X_1,\ldots,X_k) + \varepsilon .
+\]
+
+\subsection{Objetivos y decisiones del análisis de regresión}
+
+\paragraph{Objetivos.} El análisis de regresión tiene varios objetivos:
+\begin{enumerate}
+  \item \textbf{Conocer el modelo}, para averiguar el tipo o forma de la relación (lineal,
+    polinómica\ldots), medir su fuerza y comprender el papel y la importancia de cada variable
+    explicativa.
+  \item \textbf{Predecir} el valor de $Y$ en un individuo a partir de sus valores de
+    $X_1,\ldots,X_k$.
+  \item \textbf{Optimizar procesos}: averiguar los valores de $X_1,\ldots,X_k$ que proporcionan
+    el valor óptimo de $Y$.
+\end{enumerate}
+
+\begin{ejemplo}[Usos de los modelos de regresión]
+  \begin{itemize}
+    \item Estimar la ganancia de peso de niños debida a varios suplementos dietéticos.
+    \item Predecir el resultado académico a partir de las calificaciones de bachillerato y la
+      EBAU.
+    \item Estimar la cantidad de ventas en relación con los gastos de publicidad.
+    \item Predecir el consumo de calefacción según las temperaturas diarias y otros factores
+      climáticos.
+  \end{itemize}
+\end{ejemplo}
+
+\paragraph{Decisiones importantes.}
+\begin{itemize}
+  \item Selección de las ``mejores'' variables explicativas.
+  \item Forma de la componente sistemática de la relación: lineal, cuadrática\ldots
+  \item \textbf{Alcance (\emph{scope}) del modelo}. Uno de los usos principales de la
+    regresión es la predicción, por lo que hay que tener en cuenta el \emph{rango y la
+    dispersión de los valores de $X$ observados} para determinar el rango de validez de las
+    predicciones del modelo ajustado. Conviene tenerlo presente ya en la fase de recogida de
+    datos.
+\end{itemize}
+
+\subsection{El modelo de regresión lineal}
+
+Si $Y=f(X_1,\ldots,X_k)+\varepsilon$, la regresión busca la función $f$ que mejor se ajusta a
+los datos. Cuando $f$ es lineal, el modelo es
+\[
+  Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \cdots + \beta_kX_k + \varepsilon,
+\]
+y el objetivo se reduce a \textbf{estimar los coeficientes} $\beta_i$. La asignatura se centra
+en los modelos de regresión lineal por varios motivos:
+\begin{itemize}
+  \item son simples y fáciles de manejar;
+  \item la mayoría de los modelos pueden linealizarse mediante transformaciones;
+  \item casi cualquier función se puede aproximar localmente por funciones lineales.
+\end{itemize}
+
+\begin{ejemplo}[Tipos de regresión lineal][ej:t2-tipos]
+  \begin{itemize}
+    \item \textbf{Regresión simple} (un solo predictor):
+      \begin{itemize}
+        \item Número de accidentes de tráfico mortales frente al número de habitantes de cada
+          estado: la nube de puntos es claramente creciente y aproximadamente lineal.
+        \item La longitud de un caimán es fácil de medir con fotografías aéreas, pero su peso
+          es mucho más difícil de estimar, por lo que se quiere predecir el peso a partir de
+          la longitud. El peso crece de forma \emph{no lineal} con la longitud, pero de forma
+          aproximadamente lineal con el cubo de la longitud; el modelo
+          $Y=\beta_0+\beta_1X^3+\varepsilon$ es lineal en los parámetros
+          (\cref{def:modelo-lineal}). Es un ejemplo de relación \emph{linealizable}.
+      \end{itemize}
+    \item \textbf{Regresión lineal múltiple}: consumo de un vehículo (millas por galón) frente
+      a su potencia y su peso. La superficie ajustada es un plano.
+    \item \textbf{Regresión lineal a trozos}: descripción de la morfología de las glándulas de
+      Meibomio mediante una poligonal.
+  \end{itemize}
+\end{ejemplo}

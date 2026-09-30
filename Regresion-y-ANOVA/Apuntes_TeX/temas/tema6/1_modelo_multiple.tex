@@ -1,0 +1,189 @@
+% ==============================================================================
+%  6.1  El modelo de regresión lineal múltiple
+% ==============================================================================
+\section{El modelo de regresión lineal múltiple}
+\label{sec:t6-modelo}
+
+Se quiere modelizar la esperanza de una variable continua $Y$ cuando se conocen $p-1$
+variables explicativas (predictores o regresores) $X_1,X_2,\ldots,X_{p-1}$. El modelo es
+``lineal'' porque la esperanza de $Y$ condicionada a las $X$ depende linealmente de
+$X_1,X_2,\ldots,X_{p-1}$.
+
+Por ejemplo, con dos predictores ($p=3$) se propone el modelo
+\[
+  \E(Y\cond X_1,X_2) = \beta_0+\beta_1X_1+\beta_2X_2 ,
+\]
+donde:
+\begin{itemize}
+  \item $\beta_0$, $\beta_1$ y $\beta_2$ son constantes desconocidas, llamadas
+    \textbf{parámetros del modelo} o \textbf{coeficientes de la regresión};
+  \item se estiman a partir de una muestra aleatoria de $n$ observaciones $(X_{i1},X_{i2},Y_i)$,
+    $i=1,\ldots,n$, donde $Y_i$ es la respuesta medida en el $i$-ésimo individuo y $X_{i1}$,
+    $X_{i2}$ son los valores de las variables explicativas en ese individuo.
+\end{itemize}
+Por simplicidad, se escribe $\E(Y)$ en lugar de $\E(Y\cond X_1,X_2)$.
+
+\begin{definicion}[Modelo de regresión lineal múltiple][def:t6-rlm]
+  \[
+    Y_i = \beta_0+\beta_1X_{i1}+\beta_2X_{i2}+\cdots+\beta_{p-1}X_{i,p-1}+\varepsilon_i,
+    \qquad \varepsilon_i\iid\Normal(0,\sigma^2), \quad i=1,\ldots,n .
+  \]
+  La función $\E(Y\cond X_1,X_2,\ldots,X_{p-1})$ se llama \textbf{función de respuesta}.
+\end{definicion}
+
+En el modelo de regresión lineal simple, $\E(Y\cond X_1)$ es una recta; con dos variables
+explicativas, la función de respuesta $\E(Y\cond X_1,X_2)$ es un plano. A partir de $p>3$ ya no es
+posible representarla gráficamente. En regresión múltiple, la función de respuesta también se
+denomina \textbf{superficie de regresión} o \textbf{superficie de respuesta}.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[view={50}{22}, width=10cm, height=8cm, xmin=0, xmax=10, ymin=0, ymax=10,
+        zmin=0, zmax=90, xlabel={$X_1$}, ylabel={$X_2$}, zlabel={$Y$}, ticks=none,
+        axis lines=left, clip=false, label style={font=\small}]
+      \addplot3[surf, shader=flat, fill=NavyBlue!12, faceted color=NavyBlue!60, opacity=0.85,
+        domain=0:10, y domain=0:10, samples=5, samples y=5] {10+2*x+5*y};
+      % observación (X_i1, X_i2) = (6, 4)
+      \draw[dashed, gray] (axis cs:6,4,0) -- (axis cs:6,4,42);
+      \draw[dashed, gray] (axis cs:6,0,0) -- (axis cs:6,4,0) -- (axis cs:0,4,0);
+      \fill (axis cs:6,4,0) circle (1.6pt);
+      \node[font=\scriptsize, anchor=north west] at (axis cs:6,4,0) {$(X_{i1},X_{i2})$};
+      \fill[NavyBlue] (axis cs:6,4,42) circle (1.8pt);
+      \node[font=\scriptsize, NavyBlue, anchor=west] at (axis cs:6.3,4,40) {$\E(Y_i)$};
+      \draw[colRes, thick] (axis cs:6,4,42) -- (axis cs:6,4,56);
+      \fill[colRes] (axis cs:6,4,56) circle (1.8pt);
+      \node[font=\scriptsize, colRes, anchor=west] at (axis cs:6.3,4,57) {$Y_i$};
+      \node[font=\scriptsize, colRes, anchor=east] at (axis cs:5.8,4,49) {$\varepsilon_i$};
+      \node[font=\scriptsize, anchor=east] at (axis cs:0,0,10) {$\beta_0=10$};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Plano de respuesta $\E(Y)=10+2X_1+5X_2$. Para la observación $i$, la respuesta
+    $Y_i$ se desvía de su valor esperado $\E(Y_i)$, situado sobre el plano, en el error
+    $\varepsilon_i$.}
+\end{figure}
+
+\subsection{Hipótesis del modelo}
+
+Los supuestos sobre la componente aleatoria son los mismos que en la regresión simple
+(\cref{sec:t2-hipotesis}): $\varepsilon_1,\ldots,\varepsilon_n$ son variables aleatorias
+i.i.d.\ con $\varepsilon_i\sim\Normal(0,\sigma^2)$. Es decir:
+\begin{itemize}
+  \item los $\varepsilon_i$ tienen media cero, $\E(\varepsilon_i)=0$ (\textbf{linealidad});
+  \item los $\varepsilon_i$ tienen todos la misma varianza $\sigma^2$, normalmente desconocida,
+    que es otro parámetro del modelo a estimar (\textbf{homogeneidad de la varianza});
+  \item los $\varepsilon_i$ tienen distribución normal (\textbf{normalidad});
+  \item los $\varepsilon_i$ son independientes entre sí e independientes de los predictores
+    $x_{i1},x_{i2},\ldots,x_{i,p-1}$ (\textbf{independencia}).
+\end{itemize}
+Estas hipótesis equivalen a que, conocidos $X_{i1},X_{i2},\ldots,X_{i,p-1}$,
+\[
+  Y_i\sim\Normal\left(\beta_0+\sum_{j=1}^{p-1}\beta_jX_{ij},\ \sigma^2\right)\ \text{independientes}.
+\]
+
+\subsection{Interpretación de los coeficientes}
+
+En el caso con dos predictores, $\E(Y)=\beta_0+\beta_1X_1+\beta_2X_2$:
+\begin{itemize}
+  \item $\beta_0$ es el \textbf{\emph{intercept}} u ordenada en el origen del plano: la respuesta media
+    en el punto $(X_1,X_2)=(0,0)$;
+  \item $\beta_1$ indica el cambio en la respuesta media cuando $X_1$ aumenta una unidad,
+    manteniendo $X_2$ constante;
+  \item análogamente, $\beta_2$ indica el cambio en la respuesta media cuando $X_2$ aumenta una
+    unidad, manteniendo $X_1$ constante.
+\end{itemize}
+
+\begin{ejemplo}[Interpretación de los coeficientes][ej:t6-interpretacion]
+  Sea $\E(Y)=10+2X_1+5X_2$. Si se fija $X_2=3$, se obtiene la recta $\E(Y)=25+2X_1$. Lo mismo
+  ocurre para cualquier otro valor de $X_2$: solo cambia la constante de la recta, $10+5X_2$.
+  Por tanto, $\beta_1=2$ indica que la respuesta media aumenta 2 unidades por cada incremento
+  unitario de $X_1$ cuando $X_2$ se mantiene constante, sea cual sea el valor de $X_2$.
+\end{ejemplo}
+
+Por ello, $\beta_1$ y $\beta_2$ se llaman a veces \textbf{coeficientes de regresión parcial}:
+reflejan el efecto parcial de una variable explicativa cuando el otro predictor está incluido en el
+modelo y se mantiene constante.
+
+\subsection{Consideraciones sobre el modelo}
+
+\begin{itemize}
+  \item El término \textbf{``lineal''} se refiere a los \textbf{parámetros}, no a las variables
+    explicativas (\cref{def:modelo-lineal}):
+    \begin{itemize}
+      \item pueden utilizarse modelos de regresión lineales para manejar cualquier función de
+        una variable explicativa, por ejemplo $X^2$ o $\log(X)$: $\beta_0+\beta_1X+\beta_2X^2$;
+      \item no se utilizan modelos de regresión lineales para funciones no lineales de los
+        parámetros, como $\beta_0+\beta_1X_1+\beta_1^2X_2$.
+    \end{itemize}
+  \item Los \textbf{regresores} pueden ser:
+    \begin{itemize}
+      \item variables continuas o cualitativas;
+      \item variables transformadas;
+      \item potencias de una misma variable (\textbf{regresión polinomial}):
+        $Y_i=\beta_0+\beta_1X_i+\beta_2X_i^2+\cdots+\beta_{p-1}X_i^{p-1}+\varepsilon_i$;
+      \item \textbf{efectos de interacción}: el producto de predictores se incluye como una
+        variable adicional, $Y_i=\beta_0+\beta_1X_{i1}+\beta_2X_{i2}+\beta_3X_{i1}X_{i2}+\varepsilon_i$.
+    \end{itemize}
+  \item \textbf{Multicolinealidad}: si las variables explicativas están muy correlacionadas entre
+    sí, es posible que no se obtengan buenos estimadores de los parámetros, ya que tratan de
+    explicar la misma parte de la variabilidad de la respuesta (\cref{sec:t6-multicolinealidad}).
+\end{itemize}
+
+\subsection{El modelo en notación matricial}
+\label{sec:t6-matricial}
+
+El modelo múltiple se escribe como en el Tema 5 (\cref{def:t5-modelo}),
+$\vect{Y}=\vect{X}\vect{\beta}+\vect{\varepsilon}$ con
+$\vect{\varepsilon}\sim\Normal(\vect{0},\sigma^2\vect{I}_n)$, añadiendo una columna a la matriz de
+diseño por cada predictor:
+\[
+  \vect{X}_{n\times p} =
+  \begin{pmatrix}
+    1 & X_{11} & X_{12} & \cdots & X_{1,p-1}\\
+    1 & X_{21} & X_{22} & \cdots & X_{2,p-1}\\
+    \vdots & \vdots & \vdots & & \vdots\\
+    1 & X_{n1} & X_{n2} & \cdots & X_{n,p-1}
+  \end{pmatrix},
+  \qquad
+  \vect{\beta}_{p\times1} = \begin{pmatrix} \beta_0\\ \beta_1\\ \vdots\\ \beta_{p-1} \end{pmatrix}.
+\]
+Todos los resultados del Tema 5 se mantienen con esta $\vect{X}$: el estimador
+$\bhat=\XtXi\vect{X}\T\vect{Y}$ (si $\XtX$ es invertible), la matriz hat, las sumas de cuadrados y
+$\bhat\sim\Normal\big(\vect{\beta},\sigma^2\XtXi\big)$. Lo único que cambia son los grados de
+libertad: como se estiman $p$ coeficientes, $SSE$ tiene $n-p$ grados de libertad, el estimador
+insesgado de $\sigma^2$ es
+\[
+  MSE = \frac{SSE}{n-p},
+\]
+y los estadísticos $t$ para los coeficientes, la respuesta media y la predicción
+(\cref{sec:t5-respuesta-media}) siguen una $\tdist{n-p}$. $SSR$ tiene $p-1$ grados de libertad,
+uno por predictor.
+
+\begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{lccccc}
+    \toprule
+    Fuente & $SS$ & g.l. & $MS$ & $F$ & $p$-valor \\
+    \midrule
+    Modelo (regresión) & $SSR$ & $p-1$ & $MSR=SSR/(p-1)$ & $F^*=MSR/MSE$ & $p$ \\
+    Error & $SSE$ & $n-p$ & $MSE=SSE/(n-p)$ & & \\
+    Total & $SST$ & $n-1$ & & & \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+El estadístico $F=MSR/MSE$ contrasta globalmente $H_0\colon\beta_1=\cdots=\beta_{p-1}=0$ frente a
+que algún $\beta_k$ sea distinto de 0, con distribución $\Fdist{p-1}{n-p}$ bajo $H_0$; es el
+contraste de la regresión (\cref{sec:t3-anova}) con $p-1$ predictores. Cada coeficiente se
+contrasta individualmente con el estadístico $t$ de $H_0\colon\beta_k=0$.
+
+\begin{nota}[Sumas de cuadrados de tipo I y de tipo III]
+  Las salidas de software descomponen $SSR$ en la aportación de cada predictor, como reducción de
+  $SSE$ al incluirlo en el modelo (\cref{sec:t3-ftest-general}):
+  \begin{itemize}
+    \item las \textbf{sumas de cuadrados de tipo I} (secuenciales) miden la reducción de $SSE$ al
+      añadir cada variable al modelo que contiene las anteriores, en el orden en que se
+      introducen; suman $SSR$;
+    \item las \textbf{sumas de cuadrados de tipo III} (parciales) miden la reducción de $SSE$ al
+      añadir cada variable al modelo que contiene todas las demás.
+  \end{itemize}
+\end{nota}

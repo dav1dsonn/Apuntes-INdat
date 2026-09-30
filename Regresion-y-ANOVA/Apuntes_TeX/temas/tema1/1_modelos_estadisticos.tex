@@ -1,0 +1,167 @@
+% ==============================================================================
+%  1.1  Modelos estadísticos: utilidad y fundamentos
+% ==============================================================================
+\section{Modelos estadísticos: utilidad y fundamentos}
+\label{sec:t1-modelos}
+
+\subsection{La tarea del estadístico}
+
+La tarea de un estadístico es \textbf{extraer información de un conjunto de datos} para:
+\begin{itemize}
+  \item describir un fenómeno,
+  \item controlar o predecir el fenómeno,
+  \item confirmar alguna hipótesis sobre el fenómeno,
+  \item informar para la toma de decisiones.
+\end{itemize}
+
+\paragraph{El proceso estadístico.} De una \emph{población} se extrae una \emph{muestra}
+(muestreo), que se resume mediante la \emph{estadística descriptiva}. Para extraer
+conclusiones sobre la población a partir de la muestra (\emph{inferencia}) se necesita la
+\emph{probabilidad}, es decir, describir cómo se han generado los datos de la muestra. Esta es
+la tarea de la \textbf{modelización estadística}.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+      caja/.style={draw, rounded corners, fill=fondoDef, minimum width=2.6cm,
+                   minimum height=0.9cm, align=center, font=\small},
+      flecha/.style={-{Stealth[length=2.5mm]}, thick}]
+    \node[caja] (pob) at (0,0) {Población};
+    \node[caja] (mue) at (7,0) {Muestra};
+    \draw[flecha] (pob.north east) to[bend left=25]
+      node[above, font=\small] {Muestreo} (mue.north west);
+    \node[font=\small, right=0.3cm of mue] {$\to$ Estadística descriptiva};
+    \draw[flecha, colRes!80!black] (mue.south west) to[bend left=25]
+      node[below, font=\small, align=center]
+      {\textbf{Probabilidad} + \textbf{Inferencia}\\[-1pt]
+       \footnotesize (modelización estadística)} (pob.south east);
+  \end{tikzpicture}
+  \caption{El proceso estadístico. La modelización estadística permite pasar de la muestra
+    a la población.}
+\end{figure}
+
+\subsection{Componente sistemática y componente aleatoria}
+
+Los datos suelen combinar dos aspectos:
+\begin{itemize}
+  \item cierta regularidad en algún sentido: \textbf{componente sistemática};
+  \item una variación irregular: \textbf{componente aleatoria}.
+\end{itemize}
+
+\begin{ejemplo}[Descomposición sistemática + aleatoria][ej:t1-componentes]
+  \begin{enumerate}[label=(\alph*)]
+    \item \emph{Consumo de cigarrillos de un fumador.} Varía irregularmente de semana en
+      semana en torno a un nivel ``medio'': $C_i = m + e_i$.
+    \item \emph{Ventas de patatas en un establecimiento.} Oscilan a lo largo del año con un
+      patrón estacional, pero no todas las semanas son iguales: $V_t = m(t) + e_t$.
+    \item \emph{Elección entre dos rutas, A y B, para cruzar la ciudad.} Los datos son los
+      tiempos de viaje durante varios días usando las dos rutas. El tiempo de cada viaje se
+      descompone en una componente fija, la ``norma'', y otra aleatoria (tráfico,
+      semáforos\ldots): $t_r = T + u_r$, $r=1,\ldots,n$.
+  \end{enumerate}
+  En los tres casos, $m$, $m(t)$ y $T$ son la componente sistemática y $e_i$, $e_t$, $u_r$ la
+  aleatoria.
+
+  En (c), para saber qué ruta es más rápida no basta con comparar tiempos individuales, ya que
+  cada uno incluye la componente aleatoria $u_r$. Hay que comparar las componentes fijas $T_A$
+  y $T_B$ de cada ruta, lo que supone hacer inferencia sobre la diferencia de dos medias a
+  partir de las dos muestras de tiempos (\cref{sec:t1-dos-medias}).
+\end{ejemplo}
+
+\subsection{Modelo estadístico}
+
+\begin{definicion}[Modelo estadístico]
+  La característica principal de un modelo estadístico es que \textbf{la variabilidad se
+  representa por medio de distribuciones de probabilidad}. Por ello, la formulación del
+  modelo incluye alguna especificación sobre la componente aleatoria (o \emph{perturbación}),
+  como que sigue cierta distribución de probabilidad, por ejemplo $\Normal(0,\sigma^2)$.
+\end{definicion}
+
+\paragraph{Etapas del ajuste de un modelo estadístico.}
+\begin{enumerate}
+  \item \textbf{Especificación}: seleccionar una función apropiada para el modelo y las
+    variables a incluir. Puede ser muy útil el análisis exploratorio de los datos
+    (\cref{sec:t1-descriptivo}). Para un mismo conjunto de datos pueden ser apropiados
+    diferentes modelos y tipos de análisis.
+  \item \textbf{Estimación--ajuste}: seleccionar un método apropiado de estimación del
+    modelo y estimar los parámetros.
+  \item \textbf{Diagnóstico}: comprobar si el modelo propuesto es correcto. A veces esta etapa sirve
+    para seleccionar ``el mejor modelo''.
+\end{enumerate}
+
+\paragraph{Tipos de modelos estadísticos.}
+\begin{itemize}
+  \item \textbf{Paramétricos}: el modelo queda perfectamente especificado una vez conocido
+    el conjunto de parámetros que, a su vez, especifican la distribución de probabilidad
+    subyacente. \emph{Ejemplo}: si la componente aleatoria tiene distribución
+    $\Normal(0,\sigma^2)$, para estimar el modelo hay que estimar $\sigma$.
+  \item \textbf{No paramétricos}: la distribución de los datos no puede definirse en
+    términos de un conjunto de parámetros. \emph{Ejemplo}: se suponen las perturbaciones
+    independientes y con media 0, sin asumir ninguna distribución concreta.
+\end{itemize}
+
+\begin{nota}[Notación]
+  En estos apuntes $\Normal(\mu,\sigma^2)$ indica siempre una normal de media $\mu$ y
+  \emph{varianza} $\sigma^2$ (desviación típica $\sigma$).
+\end{nota}
+
+\subsection{El modelo de regresión}
+
+En muchos problemas existe una relación entre dos o más variables cuya naturaleza interesa
+estudiar. El \textbf{análisis de regresión} es la técnica estadística que se utiliza para
+modelizar e investigar este tipo de relaciones.
+
+\begin{definicion}[Modelo y función de regresión][def:funcion-regresion]
+  Los \textbf{modelos de regresión} describen cómo una \emph{variable respuesta} $Y$, tratada
+  como \emph{aleatoria}, depende de un conjunto de \emph{variables explicativas}
+  $X_1,\ldots,X_k$, tratadas como \emph{fijas}. Se supone que $Y$ tiene una distribución de
+  probabilidad para cada nivel de las $X$, cuya media varía con ellas de forma sistemática.
+  Esta relación sistemática es la \textbf{función de regresión de $Y$ sobre $X$}:
+  \[
+    m(x_1,\ldots,x_k) = \E\left(Y \cond X_1=x_1,\ldots,X_k=x_k\right).
+  \]
+\end{definicion}
+
+Cada forma de la función de regresión y de la distribución de $Y$ da lugar a un modelo de
+regresión distinto, que se estima a partir de los datos. Cuando no se hace ninguna suposición
+sobre la forma de $m$ se obtienen los \textbf{modelos de regresión no paramétricos}, que se
+ajustan estimando $m(x_1,\ldots,x_k)$ punto a punto.
+
+\subsection{El modelo lineal}
+
+\begin{definicion}[Modelo lineal][def:modelo-lineal]
+  Un modelo es \textbf{lineal} si su componente sistemática es una \textbf{función lineal de
+  sus parámetros}. Los ejemplos más sencillos son la constante $\alpha$ y la recta
+  $\alpha+\beta x$. En ningún caso aparecen expresiones del tipo $\alpha^2$, $\alpha\beta$,
+  $\log(\beta)$\ldots
+\end{definicion}
+
+\begin{nota}
+  ``Lineal'' se refiere a los \emph{parámetros}, no a las variables: $Y=\beta_0+\beta_1X^2+U$
+  o $Y=\beta_0+\beta_1\log X+U$ son modelos lineales; $Y=\beta_0 e^{\beta_1X}+U$ no lo es.
+\end{nota}
+
+Formalmente, el \textbf{modelo lineal general} se expresa como
+\[
+  \vect{Y} = Z\vect{\theta} + \vect{U},
+\]
+donde $\vect{Y}$ es el vector de la variable respuesta (univariante o multivariante), $Z$ una
+matriz conocida que contiene los valores de las variables explicativas, $\vect{\theta}$ un
+vector de parámetros y $\vect{U}$ un vector aleatorio. Puede acompañarse de un conjunto de
+restricciones lineales sobre los parámetros, $R\vect{\theta}=\vect{c}$.
+
+\paragraph{Modelos de regresión lineal.} Son aquellos en los que una respuesta continua depende
+linealmente de un conjunto de variables explicativas,
+\[
+  Y = \beta_0 + \beta_1X_1 + \cdots + \beta_kX_k + U .
+\]
+Constituyen la base de la mayoría de los análisis estadísticos, aunque no son adecuados en
+todos los casos: en muchas aplicaciones la respuesta $Y$ es \emph{discreta}, o los datos
+sugieren la presencia de \emph{componentes no lineales}. En esas situaciones se recurre a:
+\begin{itemize}
+  \item \textbf{modelos no lineales} $Y=g(X_1,\ldots,X_k)+U$ con $g$ no lineal, que requieren
+    nuevas herramientas de ajuste (por ejemplo, mínimos cuadrados ponderados);
+  \item \textbf{modelos lineales generalizados}, con distribuciones de la familia
+    exponencial para la respuesta, de la que la binomial y la Poisson son casos particulares
+    importantes.
+\end{itemize}

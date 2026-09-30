@@ -1,0 +1,13 @@
+# Archivos auxiliares de LaTeX
+build/
+*.aux
+*.log
+*.toc
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.err
+
+# Los PDF no se suben: se obtienen compilando el código
+*.pdf

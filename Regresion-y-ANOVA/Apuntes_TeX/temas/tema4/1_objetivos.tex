@@ -1,0 +1,41 @@
+% ==============================================================================
+%  4.1  Objetivos de la validación
+% ==============================================================================
+\section{Objetivos de la validación}
+\label{sec:t4-objetivos}
+
+Validar el modelo consiste en comprobar que se cumplen los supuestos necesarios para que sea
+apropiado. En el modelo de regresión lineal simple (\cref{def:rls}) hay que comprobar que
+\[
+  \varepsilon_i \iid \Normal(0,\sigma^2), \qquad i=1,\ldots,n,
+\]
+o, de forma equivalente (\cref{prop:t2-dist-Y}), que
+\[
+  Y_i \sim \Normal(\beta_0+\beta_1X_i,\ \sigma^2) \ \text{independientes}, \qquad i=1,\ldots,n .
+\]
+Esto supone verificar las cuatro hipótesis del modelo (\cref{sec:t2-hipotesis}):
+\begin{itemize}
+  \item \textbf{Linealidad}: si la relación es lineal, es decir, si $\E(Y)=\beta_0+\beta_1X$
+    para todo $X$ o, equivalentemente, $\E(\varepsilon)=0$.
+  \item \textbf{Homogeneidad de varianzas}: si la varianza depende de $X$; el modelo supone
+    $\Var(Y)=\sigma^2$ o, equivalentemente, $\Var(\varepsilon)=\sigma^2$, para todo $X$.
+  \item \textbf{Normalidad}: si $Y$ es normal o, equivalentemente, si lo son los errores
+    $\varepsilon$.
+  \item \textbf{Independencia}: si las $Y_i$ o, equivalentemente, los $\varepsilon_i$,
+    $i=1,\ldots,n$, son independientes.
+\end{itemize}
+
+Además, la validación debe responder a otras cuestiones:
+\begin{itemize}
+  \item si el \textbf{predictor} $X$ incluido en el modelo es \textbf{adecuado}
+    (\cref{sec:t4-predictor});
+  \item si hay algún \textbf{predictor importante} que \textbf{no se haya incluido} en el
+    modelo (\cref{sec:t4-omitidas});
+  \item si hay \textbf{outliers y puntos de influencia}. En ese caso, la estimación del modelo
+    puede depender en gran medida de un solo dato o de un pequeño subconjunto de
+    observaciones, por lo que parte de la validación consiste en identificarlos
+    (\cref{sec:t4-outliers}).
+\end{itemize}
+
+La validación se basa principalmente en los residuos, $e_i=y_i-\est{y}_i$, y por tanto se lleva a
+cabo después del ajuste.

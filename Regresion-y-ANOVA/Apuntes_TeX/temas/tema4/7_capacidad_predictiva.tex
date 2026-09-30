@@ -1,0 +1,79 @@
+% ==============================================================================
+%  4.7  Validación de la capacidad predictiva
+% ==============================================================================
+\section{Validación de la capacidad predictiva}
+\label{sec:t4-capacidad-predictiva}
+
+La \textbf{capacidad predictiva} de un modelo es su capacidad para realizar predicciones válidas
+en individuos distintos de aquellos con los que se ha construido.
+
+\paragraph{Validación externa.} La mejor validación de un modelo es la que utiliza una
+\textbf{muestra externa}, es decir, la que comprueba cómo funciona el modelo con datos nuevos que
+no se han utilizado para ajustarlo. Con frecuencia esto no es posible.
+
+\paragraph{Validación interna.} Si no se dispone de una muestra externa, se utilizan las
+observaciones disponibles. Cuando el conjunto de datos es grande, una solución intermedia es
+repartirlo aleatoriamente en dos grupos: una \textbf{muestra de ajuste} o de entrenamiento
+(\emph{training data set}), con la que se ajusta el modelo, y una \textbf{muestra de validación}
+(\emph{test data set}), con la que se evalúa. Cuando no es posible dividir la muestra de esta
+forma, se recurre a métodos iterativos, que se describen a continuación.
+
+\subsection{Validación cruzada dejando uno fuera (LOOCV)}
+
+La validación cruzada dejando uno fuera (\emph{Leave One Out Cross-Validation}, LOOCV) es un
+método iterativo:
+\begin{itemize}
+  \item el conjunto de entrenamiento lo forman todas las observaciones disponibles excepto una;
+  \item la observación excluida es la muestra de validación;
+  \item el proceso se repite tantas veces como observaciones haya, excluyendo en cada iteración
+    una observación distinta, ajustando el modelo con el resto y calculando el error de
+    predicción en la observación excluida.
+\end{itemize}
+En la iteración $i$-ésima, el error de predicción es el residuo eliminado
+$e_{(i)}=y_i-\est{Y}_{i(i)}$ (\cref{sec:t4-eliminados}).
+
+\subsection{Validación cruzada en \texorpdfstring{$k$}{k} grupos (\emph{k-fold})}
+
+La validación cruzada en $k$ grupos (\emph{K-Fold Cross-Validation}) también es un método
+iterativo:
+\begin{itemize}
+  \item los datos se dividen aleatoriamente en $k$ grupos de aproximadamente el mismo tamaño;
+  \item $k-1$ grupos se emplean para entrenar el modelo, y el grupo restante como muestra de
+    validación;
+  \item el proceso se repite $k$ veces, utilizando en cada iteración un grupo distinto como
+    muestra de validación.
+\end{itemize}
+El método LOOCV es el caso particular $k=n$.
+
+\subsection{Bootstrap}
+
+\begin{itemize}
+  \item Es un método iterativo.
+  \item Una \textbf{muestra bootstrap} es una muestra obtenida a partir de la muestra original
+    mediante muestreo aleatorio con reposición, y del mismo tamaño que la muestra original.
+  \item Las observaciones de la muestra original no seleccionadas en una muestra bootstrap se
+    denominan \emph{out-of-bag} (OOB).
+  \item En cada iteración se genera una nueva muestra bootstrap, se ajusta el modelo con ella y se
+    evalúa con las observaciones \emph{out-of-bag}. La estimación del error de predicción en esa
+    iteración es la media de los errores de predicción en las observaciones \emph{out-of-bag}.
+  \item El proceso se repite $B$ veces y se calcula la media de las $B$ estimaciones del error de
+    predicción.
+\end{itemize}
+
+\begin{ejemplo}[Muestras bootstrap]
+  A partir de una muestra original $\{x_1,\ldots,x_{10}\}$ se generan tres muestras bootstrap
+  (conjuntos de entrenamiento), cada una con sus observaciones \emph{out-of-bag} (conjuntos de
+  validación):
+  \begin{center}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lll}
+      \toprule
+      & Muestra bootstrap (entrenamiento) & \emph{Out-of-bag} (validación) \\
+      \midrule
+      1 & $x_8,x_6,x_2,x_9,x_5,x_8,x_1,x_4,x_8,x_2$ & $x_3,x_7,x_{10}$ \\
+      2 & $x_{10},x_1,x_3,x_5,x_1,x_7,x_4,x_2,x_1,x_8$ & $x_6,x_9$ \\
+      3 & $x_6,x_5,x_4,x_1,x_2,x_4,x_2,x_6,x_9,x_2$ & $x_3,x_7,x_8,x_{10}$ \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{ejemplo}

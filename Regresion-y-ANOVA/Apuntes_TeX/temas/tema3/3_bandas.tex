@@ -1,0 +1,98 @@
+% ==============================================================================
+%  3.4  Bandas de confianza para la recta de regresión
+% ==============================================================================
+\section{Bandas de confianza para la recta de regresión}
+\label{sec:t3-bandas}
+
+Se puede construir un IC para $\E(Y_h)$ en cada valor $x_h$. Repitiéndolo a lo largo de todo el
+rango de $X$ observado se obtiene una \textbf{banda de confianza} para la recta de regresión. La
+forma más sencilla es construir un IC de nivel $1-\alpha$ para cada valor de $X$: es la
+\textbf{banda de confianza puntual} de nivel $1-\alpha$ para $\E(Y)$.
+
+Como ocurre con cada IC para la respuesta media, la banda es más estrecha para valores de $X$
+cercanos a $\media{X}$. Sin embargo, la banda puntual no garantiza el nivel $1-\alpha$ para
+\emph{toda} la recta a la vez: por el problema de las comparaciones múltiples
+(\cref{sec:t3-bonferroni}), su \textbf{nivel de confianza simultáneo es menor que $1-\alpha$}.
+
+Interesa, por tanto, una \textbf{banda de confianza simultánea}: una región que, con confianza
+$1-\alpha$, contenga a la recta de regresión completa. Esta región tiene además nivel al menos
+$1-\alpha$ para cada valor de $X$ en particular.
+
+El ajuste de Bonferroni solo es aplicable a un número finito $m$ de valores $x_h$ (tomando
+$\alpha^*=\alpha/m$ en cada uno); para la recta completa, que involucra infinitos valores de $X$,
+no sirve, y se utiliza la banda de Working--Hotelling.
+
+\begin{definicion}[Banda de confianza de Working--Hotelling][def:working-hotelling]
+  La banda de confianza de Working--Hotelling de nivel $1-\alpha$ para la recta de regresión
+  está formada, para cada valor $x_h$ de $X$ (observado o no, entre el mínimo y el máximo
+  observados), por los intervalos
+  \[
+    \est{Y}_h \pm W\raizMSE{\frac1n+\frac{(x_h-\media{X})^2}{\SSX}},
+    \qquad
+    W=\sqrt{2\,\Fq{2}{n-2}{1-\alpha}},
+  \]
+  donde $\Fq{2}{n-2}{1-\alpha}$ es el cuantil $1-\alpha$ de la distribución $F$ de
+  Fisher--Snedecor con 2 y $n-2$ grados de libertad.
+\end{definicion}
+
+\begin{itemize}
+  \item La expresión es la del IC para la respuesta media, sustituyendo el cuantil de la $t$ de
+    Student por $W$, que es mayor y cubre el nivel simultáneo. Por ello la banda de
+    Working--Hotelling es más ancha para todos los valores de $X$, y su nivel para cada $X$
+    particular es $\ge1-\alpha$.
+  \item Para obtener IC de nivel conjunto (simultáneos) para varios valores de $X$ debe usarse
+    la banda de Working--Hotelling y no los IC individuales basados en la $t$.
+  \item La banda es válida en el rango de $X$ en que el modelo lineal es adecuado, es decir,
+    entre el mínimo y el máximo observados: el \emph{scope} del modelo.
+  \item Los límites de la banda son una \textbf{hipérbola}: la región es más estrecha cerca de
+    $\media{X}$ y más ancha al alejarse de él.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=9cm, height=6.5cm, xlabel={DBH}, ylabel={VOL}, xmin=9.8, xmax=19.4,
+        ymin=0, ymax=110, label style={font=\small}, tick label style={font=\footnotesize},
+        legend style={font=\scriptsize, at={(0.98,0.02)}, anchor=south east, draw=none,
+          fill=white, fill opacity=0.8, text opacity=1}]
+      \addplot[puntos, mark size=1.2pt] table[x=dbh, y=vol] {datos/tema3/arboles.dat};
+      \addlegendentry{datos}
+      \addplot[black, thick, no marks] table[x=x, y=fit] {datos/tema3/bandas.dat};
+      \addlegendentry{recta ajustada}
+      \addplot[NavyBlue, dashed, no marks] table[x=x, y=cilo] {datos/tema3/bandas.dat};
+      \addlegendentry{IC puntual ($t$)}
+      \addplot[NavyBlue, dashed, no marks, forget plot] table[x=x, y=cihi] {datos/tema3/bandas.dat};
+      \addplot[Maroon, densely dotted, thick, no marks] table[x=x, y=whlo] {datos/tema3/bandas.dat};
+      \addlegendentry{Working--Hotelling}
+      \addplot[Maroon, densely dotted, thick, no marks, forget plot] table[x=x, y=whhi] {datos/tema3/bandas.dat};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Banda de confianza puntual del 95\,\% basada en la $t$ y banda simultánea de
+    Working--Hotelling, más ancha, en el ejemplo de los árboles (datos reconstruidos).}
+\end{figure}
+
+\paragraph{Bandas de predicción.} De forma análoga se construyen bandas para los valores
+predichos a partir de los intervalos de predicción (\cref{teo:t3-prediccion}). Son mucho más
+anchas que las de la respuesta media. En ambos casos, las estimaciones son más precisas para
+valores de $X$ cercanos a $\media{X}$.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=9cm, height=6.5cm, xlabel={DBH}, ylabel={VOL}, xmin=9.8, xmax=19.4,
+        ymin=0, ymax=110, label style={font=\small}, tick label style={font=\footnotesize},
+        legend style={font=\scriptsize, at={(0.98,0.02)}, anchor=south east, draw=none,
+          fill=white, fill opacity=0.8, text opacity=1}]
+      \addplot[puntos, mark size=1.2pt, forget plot] table[x=dbh, y=vol] {datos/tema3/arboles.dat};
+      \addplot[black, thick, no marks, forget plot] table[x=x, y=fit] {datos/tema3/bandas.dat};
+      \addplot[NavyBlue, dashed, no marks] table[x=x, y=cilo] {datos/tema3/bandas.dat};
+      \addlegendentry{IC para $\E(Y_h)$}
+      \addplot[NavyBlue, dashed, no marks, forget plot] table[x=x, y=cihi] {datos/tema3/bandas.dat};
+      \addplot[gray, no marks] table[x=x, y=pilo] {datos/tema3/bandas.dat};
+      \addlegendentry{intervalo de predicción}
+      \addplot[gray, no marks, forget plot] table[x=x, y=pihi] {datos/tema3/bandas.dat};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Banda del 95\,\% para la respuesta media y banda de predicción del 95\,\% en el
+    ejemplo de los árboles (datos reconstruidos).}
+\end{figure}

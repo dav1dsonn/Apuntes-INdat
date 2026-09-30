@@ -1,0 +1,288 @@
+% ==============================================================================
+%  4.5  Outliers y puntos de influencia
+% ==============================================================================
+\section{Outliers y puntos de influencia}
+\label{sec:t4-outliers}
+
+En algunos problemas, la respuesta observada en unos pocos casos no parece seguir el modelo que
+sí se ajusta bien a la gran mayoría de los datos.
+
+\begin{definicion}[Outlier en regresión][def:t4-outlier]
+  Un \textbf{outlier en regresión} es un punto que no sigue el patrón lineal general del resto
+  de los datos, es decir, que no se ajusta bien al modelo propuesto: su valor ajustado,
+  $\est{Y}_i$, está lejos del verdadero valor observado, $Y_i$. Por tanto, estos puntos se
+  caracterizan por tener residuos $e_i=Y_i-\est{Y}_i$ altos.
+\end{definicion}
+
+\begin{itemize}
+  \item El método de mínimos cuadrados es muy sensible a la presencia de outliers, que pueden
+    modificar sustancialmente la estimación.
+  \item Puede haber outliers tanto en la variable $X$ como en la $Y$.
+  \item También puede ocurrir que una observación no sea un outlier en ninguna de las dos
+    variables, pero sí en la relación entre $X$ e $Y$ (\cref{sec:t1-descriptivo}).
+\end{itemize}
+En los modelos de regresión simple es relativamente fácil identificar este tipo de
+observaciones mediante diagramas de dispersión.
+
+\begin{figure}[H]
+  \centering
+  \pgfplotsset{outl/.style={mini, width=3.5cm, height=3.4cm, xmin=0, xmax=15, ymin=0, ymax=15}}
+  \def\nube{(1,1) (1,2) (2,2) (2,3) (2,4) (3,3) (3,4) (4,3) (4,4) (4,5) (5,5) (5,6) (6,5)
+    (6,6) (6,7) (7,7) (7,8) (8,8) (8,9) (8,10)}
+  \begin{subfigure}[t]{0.24\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[outl]
+        \addplot[puntos, mark size=1.2pt] coordinates {\nube};
+        \addplot[only marks, mark=*, mark size=1.8pt, colRes] coordinates {(13,5)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Valor extremo de $X$.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.24\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[outl]
+        \addplot[puntos, mark size=1.2pt] coordinates {\nube};
+        \addplot[only marks, mark=*, mark size=1.8pt, colRes] coordinates {(5,14)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Valor extremo de $Y$.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.24\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[outl]
+        \addplot[puntos, mark size=1.2pt] coordinates {\nube};
+        \addplot[only marks, mark=*, mark size=1.8pt, colRes] coordinates {(13,14)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Extremo en $X$ y en $Y$.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.24\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[outl]
+        \addplot[puntos, mark size=1.2pt] coordinates {\nube};
+        \addplot[only marks, mark=*, mark size=1.8pt, colRes] coordinates {(1,10)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Alejado de la relación.}
+  \end{subfigure}
+  \caption{Tipos de outliers (en rojo) en un diagrama de dispersión.}
+\end{figure}
+
+Hay, por tanto, dos tipos de atipicidad:
+\begin{itemize}
+  \item \textbf{outliers univariantes}, atípicos en $X$ o en $Y$;
+  \item \textbf{outliers en la relación}, que no tienen por qué ser atípicos en ninguna de las
+    dos variables.
+\end{itemize}
+
+\begin{definicion}[Punto de influencia][def:t4-influencia]
+  Un \textbf{punto de influencia} es un outlier que tiene un efecto muy importante en la recta de
+  regresión ajustada.
+\end{definicion}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini, xmin=-0.1, xmax=2.1, ymin=-0.8, ymax=3.6]
+        \addplot[puntos, mark size=1.2pt] table {datos/tema4/infl_sin.dat};
+        \addplot[only marks, mark=triangle*, mark size=2.5pt, colRes] coordinates {(2,0)};
+        \addplot[recta] table[y={create col/linear regression={y=y}}] {datos/tema4/infl_con.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Con el punto de influencia (triángulo rojo).}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini, xmin=-0.1, xmax=2.1, ymin=-0.8, ymax=3.6]
+        \addplot[puntos, mark size=1.2pt] table {datos/tema4/infl_sin.dat};
+        \addplot[recta] table[y={create col/linear regression={y=y}}] {datos/tema4/infl_sin.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Sin el punto de influencia.}
+  \end{subfigure}
+  \caption{Recta ajustada con y sin un punto de influencia (datos simulados).}
+\end{figure}
+
+Si se encuentran puntos de influencia en un conjunto de datos, hay que tener en cuenta que pueden
+ser observaciones que no representan el comportamiento de interés, y comparar las decisiones que
+se toman cuando se incluyen y cuando no.
+
+\subsection{Outliers en \texorpdfstring{$X$}{X}: el leverage}
+\label{sec:t4-outliers-x}
+
+Los outliers en $X$ pueden identificarse por valores grandes del leverage $h_{ii}$
+(\cref{def:t4-leverage}).
+\begin{itemize}
+  \item En general, $0\le h_{ii}\le1$ y $\sumi h_{ii}=2$ (\cref{prop:t4-prop-leverage}).
+  \item Valores grandes del leverage indican que el valor $x_i$ está alejado del centro de todas
+    las observaciones: $(x_i-\media{X})^2$ grande.
+  \item Se considera que un leverage es grande si es mayor que dos veces la media de los
+    leverages:
+    \[
+      h_{ii} > 2\media{h} = \frac2n\sumi h_{ii} = \frac4n .
+    \]
+\end{itemize}
+
+Los puntos con leverage grande son \textbf{potenciales} puntos de influencia, es decir, pueden
+condicionar de manera importante el ajuste del modelo:
+\begin{itemize}
+  \item como $\Var(e_i)=\sigma^2(1-h_{ii})$, cuanto mayor es $h_{ii}$ menor es la varianza de
+    $e_i$;
+  \item puesto que $0\le h_{ii}\le1$, cuanto más próximo a 1 es $h_{ii}$, más próxima a cero es la
+    varianza del residuo de la observación $i$-ésima;
+  \item por tanto, en las observaciones con $h_{ii}$ grande, $\est{Y}_i$ tiende a estar cerca del
+    valor observado $Y_i$;
+  \item en el caso extremo e hipotético $h_{ii}=1$, la recta ajustada estaría forzada a pasar por
+    el valor observado $(x_i,Y_i)$.
+\end{itemize}
+
+\subsection{Outliers en \texorpdfstring{$Y$}{Y}: los residuos}
+\label{sec:t4-outliers-y}
+
+Los residuos permiten identificar los outliers en la variable respuesta: valores altos o bajos
+indican observaciones que se ajustan mal al modelo. Los residuos regulares, $e_i=Y_i-\est{Y}_i$,
+no tienen una escala conocida, por lo que es difícil definir qué es un ``valor extremo''; por
+eso siempre resulta más útil utilizar los residuos estudentizados, $r_i$
+(\cref{def:t4-estudentizados}), o los estudentizados eliminados, $t_{(i)}$
+(\cref{def:t4-eliminado-estudentizado}).
+\begin{itemize}
+  \item Tanto $r_i$ como $t_{(i)}$ se distribuyen según una $t$ de Student (aproximadamente en el
+    caso de $r_i$). Para un tamaño $n$ razonable, un valor de $|r_i|$ o de $|t_{(i)}|$
+    \textbf{mayor que 3} indica que la observación es un outlier.
+  \item Los valores de $|r_i|$ o $|t_{(i)}|$ \textbf{entre 2 y 3} deben considerarse
+    sospechosos.
+  \item Muchas observaciones con residuos extremos podrían indicar que el modelo no es adecuado.
+  \item Puede ser más útil utilizar $t_{(i)}$ que $r_i$, ya que la observación no interviene en
+    el cálculo de su propio residuo.
+\end{itemize}
+
+\paragraph{Contraste de outliers.} De manera más formal, para cada observación puede plantearse
+el contraste
+\[
+  H_0\colon \text{la observación } i \text{ no es un outlier}
+  \qquad\text{frente a}\qquad
+  H_1\colon \text{la observación } i \text{ es un outlier},
+\]
+donde $H_0$ significa que la observación $i$ sigue el modelo ajustado. Bajo $H_0$ (y con errores
+normales), $t_{(i)}\sim\tdist{n-3}$, de modo que se rechaza $H_0$ a nivel $\alpha$ si
+$|t_{(i)}|>\tq{n-3}{1-\alpha/2}$. Como se contrastan los $n$ residuos, aparece el problema de las
+comparaciones múltiples (\cref{sec:t3-bonferroni}), y se aplica el ajuste de Bonferroni con
+$\alpha^*=\alpha/n$.
+
+\begin{resumen}[Identificación de outliers en $Y$]
+  Se contrasta cada uno de los $n$ residuos para determinar si corresponde a un outlier: la
+  observación $i$ se considera un outlier si
+  \[
+    |t_{(i)}| > \tq{n-3}{1-\alpha/(2n)} .
+  \]
+\end{resumen}
+
+\subsection{Medidas de influencia}
+
+Un outlier no siempre es un punto de influencia, ni los outliers son los únicos puntos
+sospechosos de influir demasiado en el ajuste.
+\begin{itemize}
+  \item Un outlier en la variable $Y$ puede ser influyente. Serán potencialmente más influyentes
+    los puntos con residuos mucho mayores (o menores) que el resto de residuos de la muestra.
+  \item Los puntos con un valor particularmente alto o bajo de la variable $X$ pueden tener una
+    gran influencia en la estimación de los dos coeficientes. Estos puntos son potencialmente
+    influyentes.
+\end{itemize}
+Así, con los residuos estudentizados (eliminados) y los leverages se detectan los puntos
+potencialmente influyentes, pero es necesario evaluar su \textbf{influencia efectiva}. Para ello
+se utilizan las siguientes medidas:
+\begin{itemize}
+  \item la \textbf{distancia de Cook}, que mide la influencia de una observación en todos los
+    valores ajustados;
+  \item los \textbf{DFFits}, que miden la influencia de una observación en su propio valor
+    ajustado;
+  \item los \textbf{DFBeta}, que miden la influencia de una observación en un coeficiente de
+    regresión particular.
+\end{itemize}
+Las tres se basan en comparar el ajuste con todas las observaciones y el ajuste sin la
+observación $i$-ésima (\cref{sec:t4-eliminados}).
+
+\paragraph{Distancia de Cook.} Determina la influencia de una observación en todos los valores
+predichos; valores grandes indican que la observación tiene mucha influencia. Mide cómo cambian
+los estimadores de los coeficientes de regresión cuando se elimina una observación, utilizando la
+distancia de Mahalanobis para cuantificar el cambio:
+\[
+  D_i = \frac{\sum_{j=1}^n\big(\est{Y}_j-\est{Y}_{j(i)}\big)^2}{2\cdot MSE}
+  = \frac{e_i^2}{2\cdot MSE}\left(\frac{h_{ii}}{(1-h_{ii})^2}\right).
+\]
+Su valor se compara con los de la distribución $\Fdist{2}{n-2}$: si $D_i$ se sitúa en torno a la
+mediana de la $\Fdist{2}{n-2}$ o por encima de ella, la observación tiene una influencia
+importante en el ajuste; si queda por debajo de su percentil 10 o 20, apenas influye.
+
+\paragraph{DFFits.} Determina la influencia de una observación en su propia predicción. Es una
+medida estandarizada del cambio que sufre $\est{Y}_i$ al eliminar la observación $i$:
+\[
+  \DFFits_i = \frac{\est{Y}_i-\est{Y}_{i(i)}}{\sqrt{MSE_{(i)}\cdot h_{ii}}} .
+\]
+En general, una observación se considera influyente si
+\(
+  |\DFFits_i| > 2\sqrt{2/n} .
+\)
+
+\paragraph{DFBeta.} Hay un DFBeta por cada parámetro y cada observación, y determina la influencia
+de cada observación en la estimación de cada parámetro. Es una medida estandarizada del cambio que
+sufre $\est{\beta}_j$, $j=0,1$, al eliminar la observación $i$:
+\[
+  \DFBeta_{ji} = \frac{\est{\beta}_j-\est{\beta}_{j(i)}}{\sqrt{\widehat{\Var}\big(\est{\beta}_{j(i)}\big)}},
+\]
+donde el error estándar del denominador se calcula con $MSE_{(i)}$ en lugar de $MSE$
+(\cref{teo:t3-dist-b0,teo:t3-dist-b1}); por ejemplo, para la pendiente es
+$\sqrt{MSE_{(i)}/\SSX}$. Se consideran altos los valores absolutos mayores que 1 (en muestras
+pequeñas o medianas) o que $2/\sqrt{n}$ (en muestras grandes).
+
+\subsection{Tipos de outliers y puntos de influencia}
+
+\begin{center}
+  \small
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{l>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{4.6cm}}
+    \toprule
+    & \textbf{No outlier en $Y$} & \textbf{Outlier en $Y$} \\
+    \midrule
+    \textbf{No outlier en $X$} &
+      Puntos normales (A): residuos pequeños y leverages pequeños. &
+      Outlier, problema leve (B): residuos grandes y leverages pequeños. \\
+    \addlinespace
+    \textbf{Outlier en $X$} &
+      Punto de influencia ``bueno'' (C): leverage grande y medidas de influencia efectiva
+      pequeñas. &
+      Punto de influencia ``malo'' (D): leverage grande y medidas de influencia efectiva
+      grandes. \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=7.5cm, height=5.5cm, ticks=none, axis lines=box, xmin=-0.5, xmax=11,
+        ymin=-0.5, ymax=11]
+      \addplot[black, no marks, domain=0:10.6] {0.15+0.93*x};
+      \addplot[puntos, mark size=1.4pt] coordinates {(1,1.2) (1.5,0.7) (1.5,1.7) (2,2.1)
+        (2.3,1.4) (2.7,2.6) (3.2,2.1) (3.6,2.8) (3.7,3.6) (4.1,4.3) (4.4,3.2) (4.6,4.1)
+        (5,4.9) (5.3,4.3)};
+      \addplot[only marks, mark=*, mark size=1.8pt, colRes] coordinates {(2.2,6.6) (10,9.6) (10,3.8)};
+      \node[font=\footnotesize, anchor=north] at (axis cs:2.9,0.9) {A};
+      \node[font=\footnotesize, anchor=south east] at (axis cs:2.1,6.7) {B};
+      \node[font=\footnotesize, anchor=south east] at (axis cs:9.9,9.7) {C};
+      \node[font=\footnotesize, anchor=south east] at (axis cs:9.9,3.9) {D};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{A: puntos normales; B: outlier; C: punto de influencia bueno; D: punto de influencia
+    malo.}
+\end{figure}
+
+\paragraph{Tratamiento.} Se eliminan los casos que condicionan de manera importante el análisis y
+se estudian las causas de la aparición de dichas observaciones.

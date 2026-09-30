@@ -1,0 +1,384 @@
+% ==============================================================================
+%  4.4  El análisis de los residuos: gráficos y contrastes
+% ==============================================================================
+\section{El análisis de los residuos}
+\label{sec:t4-analisis}
+
+Las \textbf{representaciones gráficas} de los residuos son la principal herramienta de
+validación. Las más utilizadas son:
+\begin{itemize}
+  \item residuos frente a la variable $X$;
+  \item valor absoluto o cuadrado de los residuos frente a la variable $X$;
+  \item residuos frente a los valores predichos;
+  \item residuos frente al orden de las observaciones;
+  \item residuos frente a otras posibles variables $X$;
+  \item diagrama de cajas de los residuos;
+  \item gráfico de normalidad de los residuos.
+\end{itemize}
+A continuación se indica qué gráficos permiten estudiar cada hipótesis del modelo.
+
+\subsection{Linealidad}
+
+La hipótesis de linealidad se estudia en el \textbf{gráfico de residuos}: residuos frente a $X$
+o, equivalentemente, frente a los valores predichos. En el modelo de regresión lineal simple
+ambos gráficos son totalmente equivalentes, ya que $\est{Y}_i=\est{\beta}_0+\est{\beta}_1X_i$ es una
+transformación lineal de $X_i$ (con el eje horizontal invertido si $\est{\beta}_1<0$), por lo
+que lo habitual es utilizar el de los valores predichos.
+
+Cuando el modelo lineal es adecuado, los residuos se sitúan centrados en 0 de forma aleatoria,
+sin que se observen patrones sistemáticos (\emph{gráfico nulo}). Si la función de regresión no es
+lineal, los residuos presentan un patrón curvo.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[residuos, xlabel={$\est{y}_i$ o $x_i$}]
+        \addplot[cero] {0};
+        \addplot[puntos] table[x=x, y=r] {datos/tema4/nulo.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Gráfico nulo: modelo adecuado.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[residuos]
+        \addplot[cero] {0};
+        \addplot[puntos] table[x=x, y=r] {datos/tema4/curva1.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Patrón curvo: relación no lineal.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[residuos]
+        \addplot[cero] {0};
+        \addplot[puntos] table[x=x, y=r] {datos/tema4/curva2.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Patrón curvo: relación no lineal.}
+  \end{subfigure}
+  \caption{Gráficos de residuos y linealidad (datos simulados).}
+\end{figure}
+
+\subsection{Homogeneidad de varianzas}
+
+La hipótesis de homogeneidad de varianzas también se estudia en el gráfico de residuos. Si la
+varianza es homogénea, la dispersión de los residuos es aproximadamente constante a lo largo de
+todo el eje horizontal; en caso contrario, la nube de puntos se abre o se cierra.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[residuos, xlabel={$\est{y}_i$ o $x_i$}, ymin=-3, ymax=3]
+        \addplot[cero] {0};
+        \addplot[puntos] table[x=x, y=r] {datos/tema4/nulo.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Varianza constante.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[residuos, xlabel={$\est{y}_i$ o $x_i$}]
+        \addplot[cero] {0};
+        \addplot[puntos] table[x=x, y=r] {datos/tema4/embudo_crec.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{La varianza aumenta con $\est{y}_i$.}
+  \end{subfigure}
+
+  \medskip
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[residuos, xlabel={$\est{y}_i$ o $x_i$}]
+        \addplot[cero] {0};
+        \addplot[puntos] table[x=x, y=r] {datos/tema4/embudo_decr.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{La varianza disminuye con $\est{y}_i$.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[residuos, xlabel={$\est{y}_i$ o $x_i$}]
+        \addplot[cero] {0};
+        \addplot[puntos] table[x=x, y=r] {datos/tema4/diamante.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Mayor varianza en los valores centrales.}
+  \end{subfigure}
+  \caption{Gráficos de residuos y homogeneidad de varianzas (datos simulados).}
+\end{figure}
+
+También son útiles los gráficos del valor absoluto o del cuadrado de los residuos frente a
+$\est{Y}_i$ (o $X_i$), especialmente cuando no hay muchas observaciones: si la varianza no es
+homogénea, la magnitud de los residuos, independientemente de su signo, cambia con el valor de
+$\est{Y}_i$ (o $X_i$).
+
+\begin{nota}[Residuos regulares frente a estudentizados]
+  Como $\Var(e_i)=\sigma^2(1-h_{ii})$ (\cref{prop:t4-prop-residuos}) y $h_{ii}$ es mínimo cuando
+  $X_i=\media{X}$, la varianza de los residuos regulares es \emph{mayor} cuanto más cerca está
+  $X_i$ de su media muestral.%
+   Este patrón podría verse en el gráfico de residuos aunque los errores
+  tengan varianza constante. Por ese motivo es mucho más frecuente utilizar los residuos
+  estudentizados, que tienen varianza 1 para todas las observaciones.
+\end{nota}
+
+\subsection{Normalidad}
+
+Para estudiar la normalidad de los errores se utilizan:
+\begin{itemize}
+  \item el \textbf{gráfico cuantil-cuantil} (\emph{QQ-plot}), en el que los residuos ordenados se
+    comparan con sus valores esperados bajo normalidad, es decir, con los cuantiles de la normal.
+    Si los residuos son normales, los puntos se sitúan aproximadamente sobre una recta;
+  \item el \textbf{histograma} o el \textbf{diagrama de cajas} de los residuos.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini, xlabel={$z$}, ylabel={$r_i$}, xmin=-3, xmax=3, ymin=-4, ymax=6]
+        \addplot[cero, domain=-3:3] {x};
+        \addplot[puntos] table[x=q, y=der] {datos/tema4/qq.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Distribución asimétrica a la derecha.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini, xlabel={$z$}, ylabel={$r_i$}, xmin=-3, xmax=3, ymin=-6, ymax=4]
+        \addplot[cero, domain=-3:3] {x};
+        \addplot[puntos] table[x=q, y=izq] {datos/tema4/qq.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Distribución asimétrica a la izquierda.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.32\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[mini, xlabel={$z$}, ylabel={$r_i$}, xmin=-3, xmax=3, ymin=-5, ymax=5]
+        \addplot[cero, domain=-3:3] {x};
+        \addplot[puntos] table[x=q, y=colas] {datos/tema4/qq.dat};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Distribución simétrica con colas pesadas.}
+  \end{subfigure}
+  \caption{QQ-plots de residuos no normales: residuos ordenados ($r_i$) frente a los cuantiles
+    esperados de la normal ($z$). La línea discontinua es la recta que seguirían los puntos bajo
+    normalidad (datos simulados).}
+\end{figure}
+
+Con un tamaño muestral adecuado también es útil comparar las frecuencias observadas con las
+esperadas bajo normalidad: aproximadamente el 68\,\% de los residuos deben quedar en la banda
+$\pm\sqrt{MSE}$, el 95\,\% en $\pm2\sqrt{MSE}$ y el 99.7\,\% en $\pm3\sqrt{MSE}$.
+
+Para muestras grandes, el supuesto de normalidad no es crucial: \textbf{las inferencias sobre los
+parámetros de la regresión $\beta_0$ y $\beta_1$ son robustas ante la falta de normalidad de los
+errores}, ya que con tamaños muestrales suficientes la aproximación a la normal es razonable por
+el teorema central del límite (\cref{sec:t3-coeficientes}).
+
+\subsection{Independencia}
+
+Si las observaciones proceden de una muestra aleatoria de sujetos de alguna población, en
+principio serán independientes. Para detectar correlación entre los errores se representan los
+residuos frente al tiempo o frente a algún otro tipo de secuencia (\textbf{gráficos
+secuenciales}). La presencia de \textbf{rachas} en los residuos sugiere falta de independencia.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[width=6.2cm, height=4.4cm, xlabel={Orden temporal}, ylabel={$e_i$},
+          xmin=0, xmax=14, ymin=-2.6, ymax=2.4, ytick={0}, xtick={1,3,...,13},
+          label style={font=\small}, tick label style={font=\footnotesize},
+          ylabel style={rotate=-90}]
+        \addplot[black, no marks, domain=0:14] {0};
+        \addplot[puntos, mark size=1.3pt] coordinates {(1,-2.2) (2,-1.4) (3,-1.6) (4,-1.2)
+          (5,-1.0) (6,-0.7) (7,0.3) (8,-0.1) (9,0.9) (10,1.3) (11,1.6) (12,1.3) (13,1.8)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Efecto de tendencia.}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \begin{axis}[width=6.2cm, height=4.4cm, xlabel={Orden temporal}, ylabel={$e_i$},
+          xmin=0, xmax=15, ymin=-2.2, ymax=2.4, ytick={0}, xtick={1,3,...,13},
+          label style={font=\small}, tick label style={font=\footnotesize},
+          ylabel style={rotate=-90}]
+        \addplot[black, no marks, domain=0:15] {0};
+        \addplot[puntos, mark size=1.3pt] coordinates {(1,-1.5) (2,-1.3) (3,-0.6) (4,0.2)
+          (5,0.15) (6,1.0) (7,1.8) (8,1.2) (9,0.2) (10,0.15) (11,-1.1) (12,-1.4) (13,-1.2)
+          (14,-0.3)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Falta de independencia cíclica.}
+  \end{subfigure}
+  \caption{Gráficos secuenciales de residuos con rachas (datos reconstruidos a partir de las
+    diapositivas).}
+\end{figure}
+
+En el gráfico de residuos frente a $X$ la nube de puntos puede parecer no aleatoria sin que
+exista falta de independencia. Normalmente, en ese caso, el problema es que $X$ no es un buen
+predictor de $Y$.
+
+\subsection{Identificación de variables \texorpdfstring{$X$}{X} importantes}
+\label{sec:t4-omitidas}
+
+Representar los residuos de un modelo frente a variables $X$ que no se han incluido en él puede
+indicar que dicha variable tiene sobre la respuesta un efecto importante que el modelo no
+recoge.
+
+\begin{ejemplo}[Masa muscular y edad][ej:t4-masa]
+  Se espera que la masa muscular de una persona decrezca con la edad. Con $Y$ = masa muscular y
+  $X$ = edad se ajusta el modelo de regresión lineal simple
+  \[
+    Y_i = \beta_0+\beta_1X_i+\varepsilon_i, \qquad \varepsilon_i\iid\Normal(0,\sigma^2), \quad i=1,\ldots,n,
+  \]
+  a una muestra de hombres y mujeres, y se representan los residuos estudentizados eliminados
+  frente a la edad, distinguiendo el sexo de cada individuo.
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[width=9cm, height=5.5cm, xlabel={Edad (años)}, ylabel={$t_{(i)}$},
+          xmin=40, xmax=80, ymin=-3.5, ymax=3.5, ytick={-3,-2,...,3},
+          label style={font=\small}, tick label style={font=\footnotesize},
+          ylabel style={rotate=-90},
+          legend style={font=\scriptsize, at={(0.5,1.03)}, anchor=south, draw=none,
+            legend columns=2}]
+        \addplot[only marks, mark=*, mark size=1.1pt, NavyBlue]
+          table[x=edad, y=t, restrict expr to domain={\thisrow{sexo}}{0:0}] {datos/tema4/masa.dat};
+        \addlegendentry{Mujeres}
+        \addplot[only marks, mark=triangle*, mark size=1.4pt, Maroon]
+          table[x=edad, y=t, restrict expr to domain={\thisrow{sexo}}{1:1}] {datos/tema4/masa.dat};
+        \addlegendentry{Hombres}
+        \addplot[gray, no marks, domain=40:80, forget plot] {0};
+        \addplot[gray, dashed, no marks, domain=40:80, forget plot] {3};
+        \addplot[gray, dashed, no marks, domain=40:80, forget plot] {-3};
+      \end{axis}
+    \end{tikzpicture}\\
+    {\footnotesize (Datos simulados con el patrón del gráfico de las diapositivas.)}
+  \end{center}
+  Los residuos de los hombres son mayoritariamente positivos y los de las mujeres
+  mayoritariamente negativos: el modelo subestima la masa muscular de los hombres y la
+  sobrestima en las mujeres. El sexo tiene, por tanto, un efecto importante sobre la masa
+  muscular que el modelo no recoge, y convendría incluirlo como variable explicativa.
+\end{ejemplo}
+
+\subsection{Contrastes de hipótesis sobre los residuos}
+
+Si a la vista de los gráficos no está claro qué concluir, pueden utilizarse ciertos
+\textbf{contrastes de hipótesis}. Estos contrastes \textbf{no reemplazan a las herramientas
+gráficas}, ya que dependen mucho del tamaño muestral, sino que se utilizan como complemento. Los
+más habituales son:
+\begin{itemize}
+  \item \emph{Homogeneidad de varianzas}: test de Brown--Forsythe y test de Breusch--Pagan.
+  \item \emph{Normalidad}: test de Shapiro--Wilk y test de Kolmogorov--Smirnov, entre otros.
+  \item \emph{Independencia}: test de Durbin--Watson.
+\end{itemize}
+
+\subsubsection{Contraste de homogeneidad de varianzas: test de Brown--Forsythe}
+
+El más habitual es el test de Brown--Forsythe, una modificación del test de Levene que es robusta
+frente a la falta de normalidad.
+\begin{itemize}
+  \item La muestra se divide en dos grupos: valores bajos y valores altos de $X$.
+  \item Si la varianza no es constante, los residuos de un grupo serán más variables que los del
+    otro, y las desviaciones absolutas de los residuos alrededor del centro de su grupo serán
+    distintas en ambos grupos.
+  \item El test se basa en el contraste $t$ de Student para dos muestras aplicado a esas
+    desviaciones.
+\end{itemize}
+Sean $e_{i1}$, $i=1,\ldots,n_1$, y $e_{i2}$, $i=1,\ldots,n_2$, los residuos de los grupos 1 y 2
+($n_1+n_2=n$), y $\tilde e_1$, $\tilde e_2$ sus medianas. Se definen
+\[
+  d_{i1} = |e_{i1}-\tilde e_1|, \qquad d_{i2} = |e_{i2}-\tilde e_2| ,
+\]
+con medias $\media{d}_1$ y $\media{d}_2$. El estadístico es
+\[
+  T_{BF} = \frac{\media{d}_1-\media{d}_2}{S\sqrt{\dfrac{1}{n_1}+\dfrac{1}{n_2}}},
+  \qquad
+  S^2 = \frac{\sum_{i=1}^{n_1}\big(d_{i1}-\media{d}_1\big)^2+\sum_{i=1}^{n_2}\big(d_{i2}-\media{d}_2\big)^2}{n_1+n_2-2},
+\]
+que, bajo la hipótesis de varianza constante, sigue aproximadamente una $\tdist{n_1+n_2-2}$. Se
+rechaza la homogeneidad de varianzas si $|T_{BF}|$ es grande comparado con los cuantiles de esa
+distribución.
+
+\subsubsection{Contrastes de normalidad}
+
+En general, estos contrastes sirven para contrastar hipótesis sobre la distribución de una
+variable, no solo la normalidad. Se aplican a los residuos; a continuación se describen para
+una muestra genérica $x_1,\ldots,x_n$.
+
+\paragraph{Test $\chi^2$ de Pearson.} Es un contraste de bondad de ajuste a una distribución $F$:
+\[
+  H_0\colon \text{la distribución poblacional es } F
+  \quad\text{frente a}\quad
+  H_1\colon \text{la distribución poblacional no es } F .
+\]
+Se basa en el estadístico
+\[
+  Q = \sum_{j=1}^k \frac{(O_j-E_j)^2}{E_j} \bajoHo \chisq{k-1} \ \text{(aproximadamente)},
+\]
+donde $k$ es el número de niveles de una variable discreta o de clases de una continua, y $O_j$ y
+$E_j$ son las frecuencias observadas y esperadas bajo $F$ en el nivel o clase $j$.
+
+\paragraph{Test de Kolmogorov--Smirnov.} Es un contraste de bondad de ajuste a distribuciones
+continuas. Se basa en la máxima distancia entre la función de distribución empírica de la
+muestra, $F_n$, y la función de distribución teórica $F$:
+\[
+  D_n = \sup_x\big|F_n(x)-F(x)\big| .
+\]
+Valores grandes de $D_n$ llevan a rechazar $H_0$.
+
+\begin{definicion}[Función de distribución empírica][def:t4-empirica]
+  Sean $x_{(1)}\le\cdots\le x_{(n)}$ los datos ordenados de menor a mayor. La \textbf{función de
+  distribución empírica} de la muestra es
+  \[
+    F_n(x) =
+    \begin{cases}
+      0 & \text{si } x < x_{(1)}, \\[2pt]
+      \dfrac{\operatorname{card}\{j : x_j\le x\}}{n} & \text{si } x_{(i)}\le x<x_{(i+1)},\quad i=1,\ldots,n-1, \\[8pt]
+      1 & \text{si } x\ge x_{(n)},
+    \end{cases}
+  \]
+  donde $\operatorname{card}\{j : x_j\le x\}$ es el número de observaciones menores o iguales
+  que $x$. Es una función escalonada y no decreciente, que en cada observación da un salto igual
+  a la proporción de observaciones de la muestra que toman ese valor.
+\end{definicion}
+
+\paragraph{Test de Shapiro--Wilk.} Es útil con muestras pequeñas, ya que es más potente que el de
+Kolmogorov--Smirnov. Se basa en un estadístico que cuantifica las diferencias entre las
+observaciones y los valores esperados bajo la distribución normal. Toma valores entre 0 y 1, con
+valores pequeños para muestras alejadas de la normalidad.
+
+\paragraph{Test de asimetría.}
+En las distribuciones simétricas, como la normal, el coeficiente de
+asimetría poblacional es 0. Con los momentos centrales muestrales
+$m_k=\frac1n\sumi (x_i-\media{x})^k$ y $S_X^2=m_2$, el coeficiente de asimetría se estima por
+\[
+  CA = \frac{m_3}{S_X^3} = \frac{\sumi (x_i-\media{x})^3}{nS_X^3}
+  \ \bajoHo\ \Normal\!\left(0,\ \frac6n\right) \ \text{(aproximadamente)},
+\]
+o, equivalentemente, estandarizando, $CAS=\sqrt{\frac n6}\,CA\bajoHo\Normal(0,1)$.
+
+\paragraph{Test de apuntamiento.} La distribución normal se caracteriza porque su coeficiente de
+apuntamiento es 0. Este se estima por
+\[
+  CAp = \frac{m_4}{S_X^4}-3 = \frac{\sumi (x_i-\media{x})^4}{nS_X^4}-3
+  \ \bajoHo\ \Normal\!\left(0,\ \frac{24}{n}\right) \ \text{(aproximadamente)},
+\]
+o, equivalentemente, estandarizando, $CApS=\sqrt{\frac{n}{24}}\,CAp\bajoHo\Normal(0,1)$.
+
+En ambos casos se rechaza la normalidad si el estadístico estandarizado es grande en valor
+absoluto comparado con los cuantiles de la $\Normal(0,1)$.

@@ -1,0 +1,219 @@
+% ==============================================================================
+%  4.3  Los residuos: leverage, propiedades y tipos de residuos
+% ==============================================================================
+\section{Los residuos}
+\label{sec:t4-residuos}
+
+No es habitual verificar las hipótesis del modelo directamente sobre la respuesta $Y$; en su
+lugar se utilizan los residuos (\cref{def:t2-ajuste}),
+\[
+  e_i = Y_i-\est{Y}_i ,
+\]
+diferencia entre el valor observado y el valor predicho por el modelo. Los residuos pueden
+entenderse como el \textbf{error observado} y se utilizan para estimar el verdadero error
+$\varepsilon_i=Y_i-\E(Y_i)$, que es desconocido. Cuando es necesario distinguirlos de sus
+versiones tipificadas, que se definen más adelante, se denominan \textbf{residuos regulares}.
+
+Como el modelo supone $\varepsilon_i\iid\Normal(0,\sigma^2)$, la idea básica del análisis de los
+residuos es que, \textbf{si el modelo es apropiado para los datos, los residuos observados
+deben reflejar las propiedades supuestas para los $\varepsilon_i$}.
+
+\subsection{Los valores ajustados como combinación lineal de las observaciones: el leverage}
+
+\begin{proposicion}[Valores ajustados como combinación lineal][prop:t4-hik]
+  Cada valor ajustado es una combinación lineal de las observaciones:
+  \[
+    \est{Y}_i = \sumk h_{ik}Y_k,
+    \qquad
+    h_{ik} = \frac1n + \frac{(x_i-\media{X})(x_k-\media{X})}{\SSX}.
+  \]
+\end{proposicion}
+
+\begin{demostracion}
+  Usando $\est{\beta}_0=\media{Y}-\est{\beta}_1\media{X}$ y la expresión de $\est{\beta}_1$
+  (\cref{teo:t2-estimadores-mc}),
+  \begin{align*}
+    \est{Y}_i &= \est{\beta}_0 + \est{\beta}_1x_i
+      = \media{Y} - \est{\beta}_1\media{X} + \est{\beta}_1x_i
+      = \media{Y} + \est{\beta}_1(x_i-\media{X}) \\
+    &= \media{Y} + \frac{\sumk (x_k-\media{X})(Y_k-\media{Y})}{\SSX}\,(x_i-\media{X}) \\
+    &= \media{Y} + \frac{\sumk Y_k(x_k-\media{X})(x_i-\media{X})}{\SSX}
+      - \media{Y}\,\frac{\sumk (x_k-\media{X})(x_i-\media{X})}{\SSX}.
+  \end{align*}
+  El último término es nulo, ya que
+  \[
+    \sumk (x_k-\media{X})(x_i-\media{X}) = (x_i-\media{X})\sumk (x_k-\media{X})
+    = (x_i-\media{X})\left(\sumk x_k - n\media{X}\right) = 0 .
+  \]
+  Por tanto, escribiendo $\media{Y}=\sumk\frac1nY_k$,
+  \[
+    \est{Y}_i = \media{Y} + \frac{\sumk (x_k-\media{X})(x_i-\media{X})Y_k}{\SSX}
+    = \sumk \left(\frac1n + \frac{(x_i-\media{X})(x_k-\media{X})}{\SSX}\right)Y_k
+    = \sumk h_{ik}Y_k .
+  \]
+\end{demostracion}
+
+\begin{definicion}[Leverage][def:t4-leverage]
+  El \textbf{leverage} de la observación $i$-ésima es el coeficiente de $Y_i$ en su propio valor
+  ajustado:
+  \[
+    h_{ii} = \frac1n + \frac{(x_i-\media{X})^2}{\SSX}.
+  \]
+  En castellano suele traducirse por \textbf{palanca} o \textbf{influencia}.
+\end{definicion}
+
+El leverage mide lo lejos que está el valor $x_i$ de la media muestral de las $X$ y, en cierto
+modo, cuánto aporta la observación $i$-ésima a la varianza muestral de las $X$,
+$\SSX/(n-1)$.
+
+\begin{proposicion}[Propiedades del leverage][prop:t4-prop-leverage]
+  \begin{enumerate}
+    \item $h_{ii}$ no depende del valor $Y_i$ observado, sino solo de los valores de $X$.
+    \item $\sum_{i=1}^n h_{ik} = \sumk h_{ik} = 1$.
+    \item $\sum_{i=1}^n h_{ii} = 2$, el número de coeficientes del modelo.
+    \item $\frac1n \le h_{ii} \le \frac1s \le 1$, donde $s$ es el número de observaciones de la
+      muestra cuyo valor de $X$ es igual a $x_i$.
+  \end{enumerate}
+\end{proposicion}
+
+\subsection{Propiedades de los residuos}
+
+\begin{proposicion}[Propiedades de los residuos][prop:t4-prop-residuos]
+  \begin{itemize}
+    \item \emph{Esperanza}: $\E(e_i)=\E(Y_i-\est{Y}_i)=0$.
+    \item \emph{Varianza}:
+      \[
+        \Var(e_i) = \sigma^2\left(1-\frac1n-\frac{(X_i-\media{X})^2}{\SSX}\right)
+        = \sigma^2(1-h_{ii}).
+      \]
+    \item \emph{Covarianza}: para $i\neq j$,
+      \[
+        \Cov(e_i,e_j) = -\sigma^2\left(\frac1n+\frac{(X_i-\media{X})(X_j-\media{X})}{\SSX}\right)
+        = -\sigma^2h_{ij}.
+      \]
+  \end{itemize}
+\end{proposicion}
+
+La varianza del residuo de la observación $i$-ésima depende de $h_{ii}$, y por tanto del valor
+$x_i$, de modo que \textbf{no es homogénea}. Además, los residuos \textbf{no son variables
+aleatorias independientes}, puesto que todos se calculan a partir de la misma recta de
+regresión. En resumen, los residuos no cumplen ni la homogeneidad de varianzas ni la
+independencia. Aun así, los $e_i$ se utilizan para validar el modelo, ya que el efecto de la
+dependencia entre residuos y de la falta de homogeneidad de sus varianzas es de poca
+importancia cuando:
+\begin{itemize}
+  \item el \textbf{tamaño muestral es grande} en relación con el número de parámetros del modelo
+    de regresión, y
+  \item \textbf{no hay puntos} que ejerzan una gran \textbf{influencia}
+    (\cref{sec:t4-outliers}).
+\end{itemize}
+
+\subsection{Residuos semiestudentizados}
+
+Los residuos $e_i$ se miden en las unidades de $Y$ y no tienen una escala conocida, por lo que
+es difícil establecer qué es un valor ``extremo''. Por ello interesa tipificarlos: los residuos
+tipificados no dependen de las unidades de medida, pueden compararse entre sí y con los valores
+de referencia de una distribución conocida, y permiten identificar los residuos demasiado
+grandes (o pequeños), que corresponden a observaciones mal ajustadas por el modelo
+(\cref{sec:t4-outliers-y}).
+
+Como $\varepsilon_i\iid\Normal(0,\sigma^2)$, los \textbf{errores estandarizados}
+$(\varepsilon_i-0)/\sigma$ siguen una $\Normal(0,1)$. Puesto que $\sigma$ es desconocida, se estima
+mediante $\sqrt{MSE}$.
+
+\begin{definicion}[Residuos semiestudentizados][def:t4-semiestudentizados]
+  Los \textbf{residuos estandarizados} o \textbf{semiestudentizados} son
+  \[
+    e_i^* = \frac{e_i-\media{e}}{\sqrt{MSE}} = \frac{e_i}{\sqrt{MSE}}, \qquad i=1,\ldots,n,
+  \]
+  donde se ha usado que $\media{e}=0$, porque $\sumi e_i=0$ (\cref{prop:t2-propiedades-recta}).
+  Tienen media 0 y varianza aproximadamente 1.
+\end{definicion}
+
+Si $\sqrt{MSE}$ fuera una estimación de la desviación típica de los residuos, los $e_i^*$ estarían
+estudentizados (seguirían una distribución $t$ de Student). Sin embargo, la varianza estimada de
+cada residuo es (\cref{prop:t4-prop-residuos})
+\[
+  \widehat{\Var}(e_i) = MSE\left(1-\frac1n-\frac{(X_i-\media{X})^2}{\SSX}\right) = MSE(1-h_{ii}),
+\]
+por lo que la tipificación con $\sqrt{MSE}$ es solo una aproximación.
+
+\subsection{Residuos estudentizados}
+
+\begin{definicion}[Residuos estudentizados][def:t4-estudentizados]
+  Los \textbf{residuos estudentizados} son
+  \[
+    r_i = \frac{e_i}{\sqrt{\est{\sigma}^2\left(1-\frac1n-\frac{(X_i-\media{X})^2}{\SSX}\right)}}
+    = \frac{e_i}{\sqrt{MSE(1-h_{ii})}}, \qquad i=1,\ldots,n,
+  \]
+  donde $\est{\sigma}^2=MSE=SSE/(n-2)$ y $h_{ii}$ es el leverage de la observación $i$-ésima.
+  Verifican $\E(r_i)=0$ y $\Var(r_i)=1$.
+\end{definicion}
+
+Bajo la hipótesis de que la observación $i$-ésima sigue el modelo ajustado, y suponiendo errores
+normales, $r_i$ sigue aproximadamente una distribución $t$ de Student con $n-2$ grados de
+libertad:
+\[
+  r_i \approx \tdist{n-2}.
+\]
+
+\begin{nota}
+  La distribución $\tdist{n-2}$ de $r_i$ no es exacta, porque el numerador $e_i$ y el
+  denominador $\sqrt{MSE}$ no son independientes: $e_i^2$ forma parte de $SSE$. De hecho, como
+  $e_i^2/(1-h_{ii})\le SSE$, se tiene $|r_i|\le\sqrt{n-2}$. La distribución $t$ exacta la tiene el
+  residuo estudentizado eliminado, $t_{(i)}\sim\tdist{n-3}$ (\cref{def:t4-eliminado-estudentizado}).
+\end{nota}
+
+Conocer esta distribución es muy útil, porque proporciona una referencia para decidir qué
+residuos son demasiado grandes (o pequeños) y corresponden, por tanto, a observaciones que no
+están bien ajustadas por el modelo: aproximadamente el 95\,\% de los $r_i$ deben estar entre
+$-2$ y $2$, y casi todos (más del 99\,\%) entre $-3$ y $3$.
+
+En muestras grandes los leverages son pequeños (su media es $2/n$) y $e_i^*\approx r_i$.
+
+\subsection{Residuos eliminados}
+\label{sec:t4-eliminados}
+
+Para cada observación puede obtenerse su residuo en el modelo ajustado \emph{sin} considerar
+dicha observación:
+\begin{enumerate}
+  \item Se elimina la observación $(x_i,y_i)$ de la muestra, obteniendo una muestra reducida con
+    $n-1$ observaciones.
+  \item Con la muestra reducida se estima la recta de regresión, $\est{\beta}_{0(i)}$ y
+    $\est{\beta}_{1(i)}$, y la varianza, $\est{\sigma}^2_{(i)}=MSE_{(i)}$. El subíndice $(i)$ indica
+    que los parámetros se han estimado sin usar la $i$-ésima observación.
+  \item Para la observación omitida se calcula el valor ajustado
+    $\est{Y}_{i(i)}=\est{\beta}_{0(i)}+\est{\beta}_{1(i)}x_i$. Como la observación $i$-ésima no se
+    ha usado en la estimación de los parámetros, $y_i$ e $\est{Y}_{i(i)}$ son independientes.
+  \item El \textbf{residuo eliminado} es
+    \[
+      e_{(i)} = y_i - \est{Y}_{i(i)} .
+    \]
+\end{enumerate}
+
+\begin{definicion}[Residuos estudentizados eliminados][def:t4-eliminado-estudentizado]
+  La varianza estimada del residuo eliminado $e_{(i)}$ es
+  \[
+    \widehat{\Var}\big(e_{(i)}\big) = \frac{MSE_{(i)}}{1-h_{ii}},
+  \]
+  y el \textbf{residuo estudentizado eliminado} (\emph{studentized deleted residual}) es
+  \[
+    t_{(i)} = \frac{e_{(i)}}{\sqrt{\dfrac{MSE_{(i)}}{1-h_{ii}}}}, \qquad i=1,\ldots,n .
+  \]
+  Bajo la hipótesis de que la $i$-ésima observación sigue el modelo ajustado, y suponiendo
+  errores normales,
+  \[
+    t_{(i)} \sim \tdist{n-3} .
+  \]
+\end{definicion}
+
+Los grados de libertad son $n-3$ porque el modelo sin la observación $i$-ésima se ajusta con una
+observación menos: $(n-1)-2=n-3$.
+
+Para calcular cada $t_{(i)}$, $i=1,\ldots,n$, habría que ajustar de nuevo el modelo sin la
+observación $i$-ésima, de modo que para evaluar todas las observaciones serían necesarios $n$
+ajustes. Existe una fórmula computacionalmente más sencilla, que no requiere reajustar el
+modelo:
+\[
+  t_{(i)} = e_i\sqrt{\frac{n-3}{SSE(1-h_{ii})-e_i^2}} .
+\]

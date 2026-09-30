@@ -1,0 +1,92 @@
+% ==============================================================================
+%  Paquetes y configuración general
+% ==============================================================================
+
+% --- Idioma y fuentes ----------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[spanish,es-nodecimaldot,es-tabla,es-noshorthands]{babel}
+\usepackage{microtype}
+
+% --- Matemáticas ---------------------------------------------------------------
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{bm}
+
+% --- Página --------------------------------------------------------------------
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.7cm, right=2.7cm,
+            headheight=14pt]{geometry}
+\usepackage{setspace}
+\setstretch{1.15}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+% --- Tablas, listas, figuras ---------------------------------------------------
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{enumitem}
+\setlist{itemsep=0.2em, topsep=0.3em}
+\usepackage{graphicx}
+\graphicspath{{figuras/}}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% --- Gráficos ------------------------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes, calc, decorations.pathreplacing, babel}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{pgfplotstable}
+
+% --- Colores y cajas -----------------------------------------------------------
+\usepackage[dvipsnames]{xcolor}
+\usepackage[most]{tcolorbox}
+
+% --- Encabezados y títulos ----------------------------------------------------
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+% --- Enlaces (cargar casi al final) ---------------------------------------------
+\definecolor{enlace}{RGB}{50,75,120}
+\usepackage[colorlinks=true, linkcolor=enlace, urlcolor=enlace,
+            citecolor=enlace, bookmarksnumbered=true]{hyperref}
+\usepackage{bookmark}
+\usepackage[spanish, nameinlink, noabbrev]{cleveref}
+
+% --- Estilo de capítulos (un capítulo = un tema) -------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries}
+  {\LARGE Tema \thechapter}
+  {0.4em}
+  {\Huge}
+  [{\vspace{0.3em}\titlerule[1pt]}]
+\titlespacing*{\chapter}{0pt}{-20pt}{25pt}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{0.8em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}{\thesubsection}{0.8em}{}
+
+% --- Encabezado / pie ----------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\chaptermark}[1]{\markboth{Tema \thechapter. #1}{}\gdef\tituloTemaActual{#1}}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small Regresión y ANOVA}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% --- Estilos de gráficos comunes -----------------------------------------------
+\pgfplotsset{
+  mini/.style={width=4.4cm, height=4.2cm, ticks=none, axis lines=box,
+               xlabel={$X$}, ylabel={$Y$}, xlabel style={yshift=2pt},
+               ylabel style={rotate=-90, yshift=-2pt}, every axis plot/.append style={thin}},
+  puntos/.style={only marks, mark=*, mark size=0.9pt, black},
+  recta/.style={NavyBlue, thick, no marks},
+  % gráficos de residuos (Tema 4): como mini, con r_i frente a los valores ajustados
+  residuos/.style={mini, xlabel={$\est{y}_i$}, ylabel={$r_i$}, xmin=0, xmax=10},
+  cero/.style={gray, dashed, no marks, domain=0:10},
+}

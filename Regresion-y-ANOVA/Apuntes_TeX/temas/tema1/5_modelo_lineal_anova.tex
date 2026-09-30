@@ -1,0 +1,294 @@
+% ==============================================================================
+%  1.5  El modelo lineal. Inferencias sobre una, dos y varias medias.
+%       Introducción al ANOVA.
+% ==============================================================================
+\section{El modelo lineal para inferencias sobre medias. Introducción al ANOVA}
+\label{sec:t1-medias}
+
+Esta sección trata los métodos de \textbf{inferencia sobre las medias} de una, dos y varias
+poblaciones. Estas inferencias pueden basarse en los principios de las distribuciones
+muestrales o en \textbf{modelos lineales}. En esta asignatura interesan los modelos lineales,
+que también se apoyan en las \textbf{distribuciones muestrales}, aunque con un enfoque algo
+distinto.
+
+\paragraph{Proceso de ``hacer inferencia''.}
+\begin{enumerate}
+  \item Se identifican uno o más \textbf{parámetros} que caracterizan la población de interés.
+  \item Se toma una \textbf{muestra representativa} de la población.
+  \item Para estimar el parámetro se elige un \textbf{estadístico} que pueda calcularse con la
+    muestra. Al calcularse a partir de una muestra aleatoria, es una variable aleatoria.
+  \item Se determina su \textbf{distribución en el muestreo}, es decir, la distribución
+    teórica del estadístico en las distintas muestras posibles, que describe el
+    comportamiento de todos sus valores.
+  \item Con esa distribución y el valor observado en la muestra, se \textbf{hace inferencia}
+    sobre el parámetro.
+\end{enumerate}
+
+\begin{definicion}[Suma de cuadrados y media cuadrática][def:SS-MS]
+  \begin{itemize}
+    \item \textbf{Suma de cuadrados} ($SS$): suma de las desviaciones cuadráticas de los valores
+      observados respecto de la media muestral,
+      \[ SS_{xx} = \sumi (x_i-\media{x})^2 . \]
+    \item \textbf{Media cuadrática} ($MS$): suma de cuadrados dividida por sus grados de
+      libertad,
+      \[ MS_x = \frac{SS_{xx}}{n-1} = \frac{\sumi (x_i-\media{x})^2}{n-1} = S^2 , \]
+      es decir, la varianza muestral corregida $S^2$ es una media cuadrática.
+  \end{itemize}
+\end{definicion}
+
+\begin{nota}
+  Análogamente, $SS_{xy}=\sumi(x_i-\media{x})(y_i-\media{y})$. Con esta notación, el
+  coeficiente de correlación de la \cref{def:pearson} es
+  $r_{xy} = SS_{xy}/\sqrt{SS_{xx}\,SS_{yy}}$.
+\end{nota}
+
+Los tres contrastes que se estudian a continuación siguen el mismo esquema:
+\begin{resumen}[Esquema común: modelo restringido frente a no restringido]
+  \begin{enumerate}
+    \item Se plantea un modelo lineal \textbf{no restringido} (compatible con $H_1$) y el modelo
+      \textbf{restringido} que impone $H_0$.
+    \item Se estima cada uno por \textbf{mínimos cuadrados} y se calcula su suma de cuadrados
+      de los errores. Como el modelo restringido es un caso particular del no restringido,
+      $\SC{restringido} \ge \SC{no restringido}$.
+    \item El aumento $\SC{hipótesis}=\SC{restringido}-\SC{no restringido}$ mide cuánto empeora
+      el ajuste al imponer $H_0$. Si $H_0$ es cierta, este aumento debería ser pequeño.
+    \item Se comparan $\MC{hipótesis}$ y $\MC{no restringido}$ con un estadístico $F$ y se
+      rechaza $H_0$ si $F$ es grande.
+  \end{enumerate}
+\end{resumen}
+
+% ------------------------------------------------------------------------------
+\subsection{Inferencias para una media}
+\label{sec:t1-una-media}
+
+Se parte de una muestra aleatoria de tamaño $n$ de una población normal con media $\mu$ y
+desviación típica $\sigma$, y el objetivo es hacer inferencias sobre $\mu$. Para ello se
+plantea el \textbf{modelo lineal}
+\[
+  y_i = \mu + \varepsilon_i, \qquad i=1,\ldots,n,
+\]
+donde $y_i$ es el $i$-ésimo valor observado de la respuesta $Y$, $\mu$ es la media poblacional
+y $\varepsilon_1,\ldots,\varepsilon_n$ son variables aleatorias independientes
+$\Normal(0,\sigma^2)$.
+\begin{itemize}
+  \item \textbf{Componente sistemática}: $\mu$. En ausencia de variabilidad ($\sigma=0$),
+    $y_i=\mu$ para todo $i$. Como la media de los $\varepsilon_i$ es 0, $\E[Y]=\mu$.
+  \item \textbf{Componente aleatoria} (``error''): los $\varepsilon_i=y_i-\mu$, que describen la
+    variabilidad de los valores individuales alrededor de $\mu$.
+  \item \textbf{Parámetro $\sigma^2$}: es la varianza de $\varepsilon$ y mide la dispersión del
+    error, es decir, la variabilidad del modelo. Sirve como \emph{medida del ajuste}: una
+    varianza pequeña indica que los valores observados están cerca de la media, y por tanto
+    un buen ajuste.
+\end{itemize}
+
+\paragraph{Estimación por mínimos cuadrados.} El criterio más utilizado para estimar $\mu$ es
+el \textbf{criterio de mínimos cuadrados}, que consiste en buscar el valor $\est{\mu}$ que
+minimiza la suma de los cuadrados de las diferencias entre los valores observados y la media
+estimada,
+\[
+  SS_{yy} = \sumi \est{\varepsilon}_i^{\,2} = \sumi (y_i-\est{\mu})^2 .
+\]
+Derivando respecto de $\mu$ e igualando a cero,
+\[
+  \frac{\partial}{\partial \mu}\sumi (y_i-\mu)^2 = -2\sumi y_i + 2n\mu = 0
+  \quad\Longrightarrow\quad
+  \est{\mu} = \frac{\sumi y_i}{n} = \media{y} .
+\]
+Por tanto, $SS_{yy}=\sumi (y_i-\media{y})^2$, que es el numerador de $s_y^2$, la estimación de
+$\sigma^2$. Es decir, $\est{\mu}=\media{y}$ minimiza la variabilidad del modelo y proporciona
+el modelo que mejor se ajusta a los datos.
+
+\paragraph{Contraste $H_0\colon \mu=\mu_0$ frente a $H_1\colon \mu\neq\mu_0$.} Hay que elegir
+entre dos modelos:
+\begin{enumerate}
+  \item \textbf{Modelo restringido} (verifica $H_0$): $y_i = \mu_0 + \varepsilon_i$.
+  \item \textbf{Modelo no restringido} ($\mu$ libre; apoyaría la alternativa):
+    $y_i = \mu + \varepsilon_i$.
+\end{enumerate}
+Se elige el que minimiza la varianza. Las sumas de cuadrados de ambos modelos son
+\[
+  \SC{restringido} = \sumi (y_i-\mu_0)^2, \qquad
+  \SC{no restringido} = \sumi (y_i-\media{y})^2 .
+\]
+Como $\media{y}$ es el estimador mínimo cuadrático, minimiza la suma de cuadrados y
+$\SC{restringido} \ge \SC{no restringido}$. La distancia entre ambas es la base del contraste:
+\begin{align*}
+  \SC{restringido} &= \sumi (y_i-\mu_0)^2 = \sumi (y_i-\media{y}+\media{y}-\mu_0)^2 \\
+  &= \sumi (y_i-\media{y})^2 + \sumi (\media{y}-\mu_0)^2
+     + 2(\media{y}-\mu_0)\underbrace{\sumi (y_i-\media{y})}_{=\,0} \\
+  &= \SC{no restringido} + n(\media{y}-\mu_0)^2 .
+\end{align*}
+
+\begin{proposicion}[Descomposición de la variabilidad (una media)][prop:desc-una-media]
+  \[
+    \underbrace{\sumi (y_i-\mu_0)^2}_{\SC{restringido}}
+    = \underbrace{\sumi (y_i-\media{y})^2}_{\SC{no restringido}}
+    + \underbrace{n(\media{y}-\mu_0)^2}_{\SC{hipótesis}}
+  \]
+  \begin{itemize}
+    \item $\SC{restringido}$ tiene $n$ grados de libertad: es la suma de $n$ desviaciones
+      respecto de una cantidad, $\mu_0$, que no se calcula a partir de los datos.
+    \item $\SC{no restringido}$ tiene $n-1$ grados de libertad: suma de $n$ desviaciones
+      respecto de $\media{y}$, estimada por mínimos cuadrados.
+    \item $\SC{hipótesis}$ es lo que aumenta el error al imponer que $H_0$ es cierta; tiene
+      1 grado de libertad.
+  \end{itemize}
+  La igualdad también se cumple para los grados de libertad: $n=(n-1)+1$.
+\end{proposicion}
+
+\paragraph{Medias cuadráticas y estadístico $F$.}
+\[
+  \MC{no restringido} = \frac{\sumi (y_i-\media{y})^2}{n-1}, \qquad
+  \MC{hipótesis} = \frac{n(\media{y}-\mu_0)^2}{1}.
+\]
+Ambas estiman la misma varianza $\sigma^2$ si $H_0$ es cierta, y entonces
+\[
+  F = \frac{\MC{hipótesis}}{\MC{no restringido}} \bajoHo \Fdist{1}{n-1} .
+\]
+Si $H_0$ no es cierta, el numerador (y por tanto $F$) tiende a ser mayor. \textbf{Se rechaza
+$H_0$ si $F_{\text{obs}} > F_{1,\,n-1;\,1-\alpha}$}.
+
+\begin{nota}
+  Como $\MC{no restringido}=s^2$, se tiene $F=\left(\dfrac{\media{y}-\mu_0}{s/\sqrt{n}}\right)^2=t^2$:
+  es el cuadrado del estadístico $t$ habitual para una media, y $F_{1,n-1}$ es la distribución
+  de $t_{n-1}^2$. Ambos contrastes son equivalentes.
+\end{nota}
+
+% ------------------------------------------------------------------------------
+\subsection{Inferencias para dos medias}
+\label{sec:t1-dos-medias}
+
+Se consideran dos poblaciones de una variable $Y$ normal, con medias $\mu_1$, $\mu_2$ y
+varianzas $\sigma_1^2$, $\sigma_2^2$, de las que se obtienen muestras aleatorias de tamaños
+$n_1$ y $n_2$, con valores observados $y_{ij}$, $i=1,2$, $j=1,\ldots,n_i$. El interés está en
+la diferencia de medias $\delta=\mu_1-\mu_2$. El \textbf{modelo lineal} es
+\[
+  y_{ij} = \mu_i + \varepsilon_{ij},
+\]
+donde $y_{ij}$ es el $j$-ésimo valor observado en la población $i$, $\mu_i$ es la media de la
+población $i$ y los $\varepsilon_{ij}$ son observaciones de una variable aleatoria
+$\Normal(0,\sigma^2)$. Obsérvese que \textbf{se supone que las dos poblaciones tienen la misma
+varianza} $\sigma^2$ ($\sigma_1^2=\sigma_2^2=\sigma^2$).
+
+\paragraph{Contraste $H_0\colon \mu_1=\mu_2$ frente a $H_1\colon \mu_1\neq\mu_2$.}
+\begin{itemize}
+  \item \textbf{No restringido}: $y_{ij}=\mu_i+\varepsilon_{ij}$. Minimizando
+    $\sum_i\sum_j (y_{ij}-\est{\mu}_i)^2$ se obtienen $\est{\mu}_1=\media{y}_1$ y
+    $\est{\mu}_2=\media{y}_2$ (las medias de cada muestra).
+  \item \textbf{Restringido} ($H_0$ cierta): $y_{ij}=\mu+\varepsilon_{ij}$, con estimador
+    mínimo cuadrático $\est{\mu}=\media{y}$ (la media de todas las observaciones).
+\end{itemize}
+
+\begin{proposicion}[Descomposición de la variabilidad (dos medias)][prop:desc-dos-medias]
+  $\SC{restringido} = \SC{no restringido} + \SC{hipótesis}$, donde
+  \begin{itemize}
+    \item $\SC{restringido} = \sum_i\sum_j (y_{ij}-\media{y})^2$, con $n_1+n_2-1$ g.l.;
+    \item $\SC{no restringido} = \sum_j (y_{1j}-\media{y}_1)^2 + \sum_j (y_{2j}-\media{y}_2)^2
+      = SS_1+SS_2$, con $n_1+n_2-2$ g.l.;
+    \item $\SC{hipótesis} = n_1(\media{y}_1-\media{y})^2 + n_2(\media{y}_2-\media{y})^2$, con
+      1 g.l. (modelo sin restricciones: 2 parámetros; con restricciones: 1 parámetro).
+  \end{itemize}
+\end{proposicion}
+
+\paragraph{Medias cuadráticas y estadístico $F$.}
+\[
+  \MC{no restringido} = \frac{SS_1+SS_2}{n_1+n_2-2}, \qquad
+  \MC{hipótesis} = n_1(\media{y}_1-\media{y})^2 + n_2(\media{y}_2-\media{y})^2 .
+\]
+Ambas estiman $\sigma^2$ si $H_0$ es cierta, y entonces
+\[
+  F = \frac{\MC{hipótesis}}{\MC{no restringido}} \bajoHo \Fdist{1}{n_1+n_2-2} .
+\]
+Si $H_0$ no es cierta, $F$ tiende a ser mayor. \textbf{Se rechaza $H_0$ si
+$F_{\text{obs}} > F_{1,\,n_1+n_2-2;\,1-\alpha}$}.
+
+\begin{nota}
+  $\MC{no restringido}$ es la varianza combinada $s_p^2$ del contraste $t$ para dos muestras
+  con varianzas iguales, y $F=t^2$. De nuevo, el enfoque del modelo lineal conduce al contraste
+  clásico.
+\end{nota}
+
+% ------------------------------------------------------------------------------
+\subsection{Inferencias para varias medias: el ANOVA}
+\label{sec:t1-anova}
+
+El modelo anterior se generaliza al caso de $k>2$ medias. Suponiendo que los datos son
+muestras aleatorias independientes de tamaños $n_i$ de $k$ poblaciones normales, el modelo
+lineal es
+\[
+  y_{ij} = \mu_i + \varepsilon_{ij}, \qquad i=1,\ldots,k,\quad j=1,\ldots,n_i,
+\]
+donde $y_{ij}$ es el $j$-ésimo valor observado en la población $i$, $\mu_i$ es la media de la
+población $i$ y los $\varepsilon_{ij}$ son observaciones de una variable aleatoria
+$\Normal(0,\sigma^2)$ (misma varianza en todas las poblaciones).
+
+\begin{definicion}[ANOVA][def:anova]
+  Este modelo se conoce como \textbf{análisis de la varianza (ANOVA)}. Se denota por
+  $N=\sum_{i=1}^k n_i$ el número total de observaciones.
+\end{definicion}
+
+\paragraph{Contraste.}
+\[
+  H_0\colon \mu_i=\mu_j \ \ \forall i\neq j
+  \qquad\text{frente a}\qquad
+  H_1\colon \mu_i\neq\mu_j \ \text{para uno o más pares}.
+\]
+\begin{itemize}
+  \item \textbf{No restringido}: minimizando $\sum_i\sum_j (y_{ij}-\est{\mu}_i)^2$ se obtiene
+    $\est{\mu}_i=\media{y}_i$, $i=1,\ldots,k$.
+  \item \textbf{Restringido}: $y_{ij}=\mu+\varepsilon_{ij}$, con $\est{\mu}=\media{y}$.
+\end{itemize}
+
+\begin{proposicion}[Descomposición de la variabilidad (ANOVA)][prop:desc-anova]
+  $\SC{restringido} = \SC{no restringido} + \SC{hipótesis}$, donde
+  \begin{itemize}
+    \item $\SC{restringido} = \sum_i\sum_j (y_{ij}-\media{y})^2$, con $N-1$ g.l.;
+    \item $\SC{no restringido} = \sum_j (y_{1j}-\media{y}_1)^2+\cdots+\sum_j (y_{kj}-\media{y}_k)^2
+      = SS_1+\cdots+SS_k$, con $N-k$ g.l.;
+    \item $\SC{hipótesis} = \sum_i n_i(\media{y}_i-\media{y})^2$, con $k-1$ g.l. (modelo sin
+      restricciones: $k$ parámetros; con restricciones: 1 parámetro).
+  \end{itemize}
+\end{proposicion}
+
+\paragraph{Medias cuadráticas y estadístico $F$.}
+\[
+  \MC{no restringido} = \frac{SS_1+\cdots+SS_k}{N-k}, \qquad
+  \MC{hipótesis} = \frac{\sum_i n_i(\media{y}_i-\media{y})^2}{k-1}.
+\]
+Ambas estiman $\sigma^2$ si $H_0$ es cierta, y entonces
+\[
+  F = \frac{\MC{hipótesis}}{\MC{no restringido}} \bajoHo \Fdist{k-1}{N-k} .
+\]
+Si $H_0$ no es cierta, $F$ tiende a ser mayor. \textbf{Se rechaza $H_0$ si
+$F_{\text{obs}} > F_{k-1,\,N-k;\,1-\alpha}$}.
+
+\begin{nota}
+  El caso de dos medias es el ANOVA con $k=2$ y $N=n_1+n_2$.
+\end{nota}
+
+\begin{resumen}[Resumen de los tres contrastes]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{tabular}{lccc}
+    \toprule
+    & \textbf{Una media} & \textbf{Dos medias} & \textbf{$k$ medias (ANOVA)} \\
+    \midrule
+    $H_0$ & $\mu=\mu_0$ & $\mu_1=\mu_2$ & $\mu_1=\cdots=\mu_k$ \\
+    \midrule
+    $\SC{restringido}$ & $\sum_i(y_i-\mu_0)^2$ & $\sum_i\sum_j(y_{ij}-\media{y})^2$
+      & $\sum_i\sum_j(y_{ij}-\media{y})^2$ \\
+    \quad g.l. & $n$ & $n_1+n_2-1$ & $N-1$ \\
+    $\SC{no restringido}$ & $\sum_i(y_i-\media{y})^2$ & $SS_1+SS_2$ & $SS_1+\cdots+SS_k$ \\
+    \quad g.l. & $n-1$ & $n_1+n_2-2$ & $N-k$ \\
+    $\SC{hipótesis}$ & $n(\media{y}-\mu_0)^2$ & $\sum_{i=1}^{2} n_i(\media{y}_i-\media{y})^2$
+      & $\sum_{i=1}^{k} n_i(\media{y}_i-\media{y})^2$ \\
+    \quad g.l. & $1$ & $1$ & $k-1$ \\
+    \midrule
+    $F$ bajo $H_0$ & $\Fdist{1}{n-1}$ & $\Fdist{1}{n_1+n_2-2}$ & $\Fdist{k-1}{N-k}$ \\
+    \bottomrule
+  \end{tabular}
+  \par\medskip\raggedright
+  En todos los casos $F=\MC{hipótesis}/\MC{no restringido}$ y se rechaza $H_0$ si
+  $F_{\text{obs}}$ supera el cuantil $1-\alpha$ de la distribución $F$ correspondiente.
+\end{resumen}

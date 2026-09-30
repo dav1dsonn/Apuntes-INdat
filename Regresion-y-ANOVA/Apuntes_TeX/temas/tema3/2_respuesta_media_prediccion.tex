@@ -1,0 +1,235 @@
+% ==============================================================================
+%  3.2  Inferencias sobre la respuesta media
+%  3.3  Inferencias sobre una nueva observación
+% ==============================================================================
+\section{Inferencias sobre la respuesta media}
+\label{sec:t3-respuesta-media}
+
+Un objetivo habitual de los modelos de regresión es estimar la respuesta media para un valor
+dado $x_h$ de $X$. En el \cref{ej:arboles}, interesa estimar el volumen medio de madera de los
+árboles con un determinado diámetro, para decidir si merece la pena talarlos.
+
+Denotamos $\E(Y_h)=\E(Y\cond X=x_h)=\beta_0+\beta_1x_h$. Su \textbf{estimador puntual} es el
+valor de la recta ajustada en $x_h$:
+\[
+  \est{Y}_h = \est{\beta}_0 + \est{\beta}_1x_h .
+\]
+
+\begin{teorema}[Distribución de $\est{Y}_h$][teo:t3-dist-Yh]
+  \begin{gather*}
+    \est{Y}_h \sim \Normal\!\left(\E(Y_h),\ \sigma^2\left(\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right)\right),
+    \\
+    \frac{\est{Y}_h-\E(Y_h)}{\raizMSE{\frac1n+\frac{(x_h-\media{X})^2}{\SSX}}} \sim \tdist{n-2}.
+  \end{gather*}
+\end{teorema}
+
+\begin{demostracion}
+  \emph{Normalidad}: $\est{Y}_h$ es combinación lineal de $\est{\beta}_0$ y $\est{\beta}_1$, y por
+  tanto de las $Y_i$, que son normales independientes.
+
+  \emph{Insesgadez}: $\E(\est{Y}_h)=\E(\est{\beta}_0)+\E(\est{\beta}_1)x_h=\beta_0+\beta_1x_h=\E(Y_h)$.
+
+  \emph{Varianza}: usando $\est{\beta}_0=\media{Y}-\est{\beta}_1\media{X}$, se escribe
+  $\est{Y}_h=\media{Y}+\est{\beta}_1(x_h-\media{X})$. Entonces
+  \[
+    \Var(\est{Y}_h) = \Var(\media{Y}) + (x_h-\media{X})^2\Var(\est{\beta}_1)
+    + 2(x_h-\media{X})\Cov(\media{Y},\est{\beta}_1).
+  \]
+  Como $\media{Y}=\sum\frac1nY_i$ y $\est{\beta}_1=\sum k_iY_i$ con las $Y_i$ independientes,
+  \[
+    \Cov(\media{Y},\est{\beta}_1) = \sumi \frac1n\,k_i\,\sigma^2 = \frac{\sigma^2}{n}\sumi k_i = 0 .
+  \]
+  Por tanto,
+  \(
+    \Var(\est{Y}_h) = \dfrac{\sigma^2}{n} + (x_h-\media{X})^2\dfrac{\sigma^2}{\SSX}
+    = \sigma^2\left(\dfrac1n+\dfrac{(x_h-\media{X})^2}{\SSX}\right).
+  \)
+  Al sustituir $\sigma^2$ por $MSE$ se obtiene la distribución $\tdist{n-2}$.
+\end{demostracion}
+
+\begin{resumen}[IC de nivel $1-\alpha$ para la respuesta media $\E(Y_h)$]
+  \[
+    \E(Y_h) \in \left(\est{Y}_h \pm \tq{n-2}{1-\alpha/2}
+    \raizMSE{\frac1n+\frac{(x_h-\media{X})^2}{\SSX}}\right).
+  \]
+\end{resumen}
+
+La varianza de $\est{Y}_h$ es tanto menor cuanto más próximo está $x_h$ a la media muestral
+$\media{X}$: los intervalos más precisos se obtienen en el punto $(\media{X},\media{Y})$ y se
+ensanchan al alejarse de él.
+
+% ------------------------------------------------------------------------------
+\section{Inferencias sobre una nueva observación}
+\label{sec:t3-prediccion}
+
+Se quiere ahora predecir el valor de una \textbf{nueva observación} de $Y$, $\Ynew$, cuando
+$X=x_h$. Por ejemplo, se mide el diámetro de un árbol concreto, 10.2 pulgadas, y se quiere
+predecir el volumen de madera de \emph{ese} árbol.
+
+\begin{itemize}
+  \item La nueva observación corresponde a un nuevo individuo, al que se asume aplicable el
+    modelo de regresión ajustado.
+  \item Hay que distinguir entre la predicción de la respuesta media, $\E(Y_h)$, y la de una
+    nueva observación, $\Ynew$:
+    \begin{itemize}
+      \item $\E(Y_h)$ es la media de la distribución de $Y$ condicionada a $X=x_h$;
+      \item $\Ynew$ es un valor de una variable aleatoria con la distribución de $Y$
+        condicionada a $X=x_h$, y difícilmente coincidirá con $\E(Y_h)$.
+    \end{itemize}
+\end{itemize}
+El \textbf{estimador puntual} es el mismo que para la respuesta media,
+\[
+  \est{Y}_{h(\mathrm{new})} = \est{Y}_h = \est{\beta}_0 + \est{\beta}_1x_h ,
+\]
+pero el error que se comete es distinto, y por tanto también su distribución.
+
+\paragraph{Parámetros conocidos.} Si $\beta_0$, $\beta_1$ y $\sigma^2$ fueran conocidos, la única
+fuente de incertidumbre sería la variabilidad de $Y$ alrededor de su media:
+$\Ynew\sim\Normal(\beta_0+\beta_1x_h,\sigma^2)$, y un intervalo de nivel $1-\alpha$ sería
+$\E(Y_h)\pm z_{1-\alpha/2}\,\sigma$.
+
+\begin{ejemplo}[Volumen de madera con parámetros conocidos]
+  Supongamos $\beta_0=-45.57$, $\beta_1=6.916$ y $\sigma^2=36.587$ ($\sigma=6.049$).
+  Para un árbol
+  de diámetro $x_h=10.2$ pulgadas, el volumen medio es
+  $\E(Y_h)=-45.57+6.916\cdot10.2=24.97$ pies cúbicos. Si el modelo es adecuado (errores normales,
+  independientes y con varianza constante), el volumen de ese árbol sigue una
+  $\Normal(24.97,\ 36.587)$, y un intervalo del 95\,\% para él es
+  \[
+    24.97 \pm 1.96\cdot6.049 = (13.11,\ 36.83).
+  \]
+\end{ejemplo}
+
+\paragraph{Parámetros desconocidos.} En la práctica los parámetros se estiman, y al estimar
+$\E(Y_h)$ se comete un error: el centro del intervalo para $\Ynew$ es a su vez incierto (no se
+conoce con certeza la localización de la distribución de $Y$). Hay dos fuentes de
+variabilidad:
+\begin{enumerate}
+  \item la asociada a la estimación de la respuesta media $\E(Y_h)$;
+  \item la asociada a la distribución de $Y$ alrededor de su media.
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1cm, y=2.2cm]
+    \draw[-{Stealth}] (-4.8,0) -- (4.8,0);
+    \foreach \c in {-2,2} {
+      \draw[thick, domain=\c-2.6:\c+2.6, samples=60] plot (\x, {exp(-(\x-\c)^2/1.3)});
+      \draw[dashed] (\c,0) -- (\c,1);
+      \draw (\c-1.5,0) -- (\c-1.5,1.35);
+      \draw (\c+1.5,0) -- (\c+1.5,1.35);
+      \draw[{Stealth}-{Stealth}] (\c-1.5,1.25) -- (\c+1.5,1.25);
+      \node[font=\scriptsize, fill=white, align=center] at (\c,1.25)
+        {límites de predicción\\ si $\E(Y_h)$ está aquí};
+    }
+    \draw (0,0.05) -- (0,-0.05) node[below, font=\small] {$\est{Y}_h$};
+    \draw[{Stealth}-{Stealth}] (-2,-0.45) -- (2,-0.45)
+      node[midway, below, font=\scriptsize] {límites de confianza para $\E(Y_h)$};
+  \end{tikzpicture}
+  \caption{La predicción de una nueva observación combina la incertidumbre sobre
+    $\E(Y_h)$ con la variabilidad de $Y$ alrededor de su media.}
+\end{figure}
+
+La cantidad relevante es el \textbf{error de predicción} $\Ynew-\est{Y}_h$.
+Como $\Ynew$ es
+independiente de las observaciones de la muestra, y por tanto de $\est{Y}_h$,
+\begin{align*}
+  \Var(\Ynew-\est{Y}_h) &= \Var(\Ynew) + \Var(\est{Y}_h)
+  = \sigma^2 + \sigma^2\left(\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right) \\
+  &= \sigma^2\left(1+\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right),
+\end{align*}
+y el error de predicción tiene media $\E(Y_h)-\E(Y_h)=0$.
+
+\begin{teorema}[Intervalo de predicción][teo:t3-prediccion]
+  \begin{gather*}
+    \Ynew-\est{Y}_h \sim \Normal\!\left(0,\ \sigma^2\left(1+\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right)\right),
+    \\
+    \frac{\Ynew-\est{Y}_h}{\raizMSE{1+\frac1n+\frac{(x_h-\media{X})^2}{\SSX}}} \sim \tdist{n-2},
+  \end{gather*}
+  y el \textbf{intervalo de predicción} de nivel $1-\alpha$ para $\Ynew$ es
+  \[
+    \Ynew \in \left(\est{Y}_h \pm \tq{n-2}{1-\alpha/2}
+    \raizMSE{1+\frac1n+\frac{(x_h-\media{X})^2}{\SSX}}\right).
+  \]
+\end{teorema}
+
+El intervalo para una nueva observación tiene el mismo centro que el de la respuesta media, pero
+mayor varianza. Por tanto, el IC para la respuesta media está siempre contenido en el intervalo de
+predicción.
+
+\subsection{Media de \texorpdfstring{$m$}{m} nuevas observaciones}
+
+En ocasiones interesa predecir la media $\Ymnew$ de $m$ nuevas observaciones de $Y$ para
+$X=x_h$. Se asume que el modelo es aplicable a los $m$ nuevos individuos, que son por tanto
+independientes. Las fuentes de variabilidad son la estimación de $\E(Y_h)$ y la variabilidad de
+la media de $m$ observaciones de $Y\cond X=x_h$, con $\Var(\Ymnew)=\sigma^2/m$. Así,
+\begin{align*}
+  \Var(\Ymnew-\est{Y}_h) &= \frac{\sigma^2}{m} + \sigma^2\left(\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right) \\
+  &= \sigma^2\left(\frac1m+\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right).
+\end{align*}
+
+\begin{resumen}[Intervalo de predicción para la media de $m$ nuevas observaciones]
+  \begin{gather*}
+    \frac{\Ymnew-\est{Y}_h}{\raizMSE{\frac1m+\frac1n+\frac{(x_h-\media{X})^2}{\SSX}}}\sim\tdist{n-2},
+    \\
+    \Ymnew \in \left(\est{Y}_h \pm \tq{n-2}{1-\alpha/2}
+    \raizMSE{\frac1m+\frac1n+\frac{(x_h-\media{X})^2}{\SSX}}\right).
+  \end{gather*}
+  Con $m=1$ se recupera el intervalo de predicción del \cref{teo:t3-prediccion}.
+\end{resumen}
+
+\subsection{Predicción inversa}
+
+En ocasiones interesa \textbf{predecir el valor de $X$} a partir de un valor observado de $Y$,
+utilizando el modelo de $Y$ sobre $X$.
+
+\begin{ejemplo}[Calibración de un aparato de medida][ej:t3-calibracion]
+  Se realiza un experimento con 12 individuos para evaluar un aparato que mide la concentración
+  de azúcar (galactosa) en sangre. A partir de concentraciones conocidas ($X$) se registran las
+  mediciones del aparato ($Y$) y se ajusta el modelo
+  \[
+    \est{Y} = -0.1 + 1.017\,X .
+  \]
+  Para un nuevo individuo solo se dispone de la medición del aparato, $\Ynew$, y se quiere
+  estimar su verdadera concentración $\Xnew$.
+\end{ejemplo}
+
+Despejando en la recta ajustada se obtiene
+$\est{X}=(Y+0.1)/1.017=0.098+0.983\,Y$. Esta recta \emph{no} es la recta de regresión de $X$
+sobre $Y$: la de $X$ sobre $Y$ se obtendría minimizando las desviaciones en la dirección de $X$,
+con pendiente $SS_{XY}/SS_Y$, mientras que al despejar se obtiene pendiente
+$1/\est{\beta}_1=\SSX/SS_{XY}$; ambas coinciden solo si $r_{XY}^2=1$. Además, en este problema $X$
+es la variable controlada (no aleatoria) e $Y$ la aleatoria, por lo que el modelo adecuado es el
+de $Y$ sobre $X$. La estimación de $X$ se hace despejando en él, lo que se denomina
+\textbf{predicción inversa}.
+
+\begin{definicion}[Predicción inversa][def:t3-prediccion-inversa]
+  Conocido el modelo estimado $\est{Y}=\est{\beta}_0+\est{\beta}_1X$ y observado $\Ynew$ en un
+  nuevo individuo, el estimador puntual de $\Xnew$ es
+  \[
+    \est{X}_{h(\mathrm{new})} = \frac{\Ynew-\est{\beta}_0}{\est{\beta}_1}, \qquad \est{\beta}_1\neq0 .
+  \]
+\end{definicion}
+
+Para hacer inferencia sobre $\Xnew$ se usan las siguientes propiedades (aproximadas, ya que
+$\est{X}_{h(\mathrm{new})}$ es un cociente de variables aleatorias):
+\begin{itemize}
+  \item es aproximadamente normal;
+  \item es aproximadamente insesgado:
+    \[
+      \E\big(\est{X}_{h(\mathrm{new})}\big)\approx
+      \frac{\E(\Ynew)-\E(\est{\beta}_0)}{\E(\est{\beta}_1)}
+      = \frac{\beta_0+\beta_1\Xnew-\beta_0}{\beta_1} = \Xnew ;
+    \]
+  \item su varianza es aproximadamente
+    $\Var\big(\est{X}_{h(\mathrm{new})}\big)\approx
+    \dfrac{\sigma^2}{\beta_1^2}\left(1+\dfrac1n+\dfrac{(\Xnew-\media{X})^2}{\SSX}\right)$.
+\end{itemize}
+
+\begin{resumen}[IC aproximado de nivel $1-\alpha$ para $\Xnew$]
+  \[
+    \Xnew \in \left(\est{X}_{h(\mathrm{new})} \pm \tq{n-2}{1-\alpha/2}
+    \sqrt{\frac{MSE}{\est{\beta}_1^2}\left(1+\frac1n+
+    \frac{\big(\est{X}_{h(\mathrm{new})}-\media{X}\big)^2}{\SSX}\right)}\,\right).
+  \]
+\end{resumen}

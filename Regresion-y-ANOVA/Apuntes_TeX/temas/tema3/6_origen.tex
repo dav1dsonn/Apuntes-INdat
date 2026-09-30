@@ -1,0 +1,61 @@
+% ==============================================================================
+%  3.8  Regresión por el origen
+% ==============================================================================
+\section{Regresión por el origen}
+\label{sec:t3-origen}
+
+A veces se impone la restricción de que, cuando $X=0$, el valor esperado de $Y$ sea cero. Se
+estiman entonces \textbf{regresiones que pasan por el origen}, es decir, rectas sin \emph{intercept}:
+\[
+  Y_i = \beta_1'X_i + \varepsilon_i, \qquad \varepsilon_i\iid\Normal(0,\sigma^2),\quad i=1,\ldots,n .
+\]
+Hay que ser cautelosos al imponer esta restricción, sobre todo cuando en la muestra no se
+observan valores de $X$ cercanos a 0.
+
+\paragraph{Estimación por mínimos cuadrados.} Se busca $\est{\beta}_1'$ que minimice
+$Q=\sumi (Y_i-\beta_1'X_i)^2$. Derivando,
+\[
+  \frac{\partial Q}{\partial\beta_1'} = -2\sumi X_i(Y_i-\beta_1'X_i) = 0
+  \quad\Longrightarrow\quad
+  \sumi X_iY_i = \est{\beta}_1'\sumi X_i^2 ,
+\]
+de donde
+\(
+  \est{\beta}_1' = \dfrac{\sumi X_iY_i}{\sumi X_i^2}.
+\)
+
+\paragraph{Distribución en el muestreo.} $\est{\beta}_1'=\sum c_iY_i$ con
+$c_i=X_i/\sum X_j^2$, combinación lineal de normales independientes, con
+$\E(\est{\beta}_1')=\sum c_i\beta_1'X_i=\beta_1'$ y $\Var(\est{\beta}_1')=\sigma^2\sum c_i^2$. Así,
+\[
+  \est{\beta}_1' \sim \Normal\!\left(\beta_1',\ \frac{\sigma^2}{\sumi X_i^2}\right).
+\]
+Un estimador insesgado de $\sigma^2$ es
+\[
+  MSE = \frac{SSE}{n-1} = \frac{\sumi e_i^2}{n-1} = \frac{\sumi \big(Y_i-\est{\beta}_1'X_i\big)^2}{n-1},
+\]
+donde $SSE$ tiene $n-1$ grados de libertad (y no $n-2$), ya que solo se estima un parámetro,
+$\beta_1'$.
+
+\begin{resumen}[Inferencias en la regresión por el origen]
+  \[
+    \frac{\est{\beta}_1'-\beta_1'}{\sqrt{MSE\big/\sum_{i=1}^n X_i^2}} \sim \tdist{n-1};
+    \qquad\text{para } H_0\colon\beta_1'=0:\quad
+    \frac{\est{\beta}_1'}{\sqrt{MSE\big/\sum_{i=1}^n X_i^2}} \bajoHo \tdist{n-1}.
+  \]
+\end{resumen}
+
+\paragraph{Ejemplos de uso.} Hay situaciones en las que tiene sentido añadir la restricción
+$\beta_0=0$: la relación entre el número de artículos producidos en una hora y el número de
+defectuosos en ese periodo, entre dimensiones de un producto, entre calorías ingeridas y
+consumidas, o entre la cantidad de dinero invertida y su retorno.
+
+\paragraph{Inconvenientes.} Es una restricción muy fuerte:
+\begin{itemize}
+  \item no se obtiene la ``mejor'' recta que se ajusta a los datos, sino la mejor de las que
+    pasan por el punto $(0,0)$;
+  \item en el modelo con \emph{intercept} se cumple $\sum e_i=\sum(Y_i-\est{Y}_i)=0$, pero al forzar la
+    recta por el origen esto en general deja de ser cierto; la descomposición
+    $SST=SSR+SSE$ ya no se verifica y puede ocurrir que $SSE>SST$, con lo que
+    $R^2=1-SSE/SST<0$. Por ello $R^2$ deja de ser útil como medida de la bondad del ajuste.
+\end{itemize}

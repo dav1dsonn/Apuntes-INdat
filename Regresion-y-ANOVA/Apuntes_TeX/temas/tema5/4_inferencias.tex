@@ -1,0 +1,165 @@
+% ==============================================================================
+%  5.4  Inferencias sobre los parámetros
+%  5.5  Inferencias sobre la respuesta media y predicción
+% ==============================================================================
+\section{Inferencias sobre los parámetros de la regresión}
+\label{sec:t5-parametros}
+
+La distribución de $\bhat=\XtXi\vect{X}\T\vect{Y}$ se obtiene a partir del siguiente resultado
+sobre la normal multivariante.
+
+\begin{teorema}[Transformaciones lineales de la normal multivariante][teo:t5-normal-lineal]
+  Sea $\vect{U}\sim\Normal(\vect{\mu},\vect{\Sigma})$ un vector normal multivariante y
+  $\vect{V}=\vect{c}+\vect{D}\vect{U}$ una transformación lineal de $\vect{U}$, donde $\vect{c}$ es
+  un vector y $\vect{D}$ una matriz. Entonces
+  \[
+    \vect{V}\sim\Normal\big(\vect{c}+\vect{D}\vect{\mu},\ \vect{D}\vect{\Sigma}\vect{D}\T\big).
+  \]
+\end{teorema}
+
+\begin{teorema}[Distribución de $\bhat$][teo:t5-dist-beta]
+  \[
+    \bhat\sim\Normal\big(\vect{\beta},\ \sigma^2\XtXi\big).
+  \]
+\end{teorema}
+
+\begin{demostracion}
+  Se tiene $\vect{Y}\sim\Normal(\vect{X}\vect{\beta},\sigma^2\vect{I})$ y, tomando
+  $\vect{D}=\XtXi\vect{X}\T$, $\bhat=\vect{D}\vect{Y}$ es una transformación lineal de $\vect{Y}$.
+  Por el \cref{teo:t5-normal-lineal}, $\bhat$ es normal, con
+  \begin{align*}
+    \E(\bhat) &= \vect{D}\vect{X}\vect{\beta}
+      = \underbrace{\XtXi\vect{X}\T\vect{X}}_{\vect{I}}\vect{\beta} = \vect{\beta}, \\
+    \Var(\bhat) &= \vect{D}\,\sigma^2\vect{I}\,\vect{D}\T
+      = \sigma^2\big(\XtXi\vect{X}\T\big)\big(\XtXi\vect{X}\T\big)\T \\
+      &= \sigma^2\XtXi\underbrace{\XtX\big(\XtXi\big)\T}_{\vect{I}} = \sigma^2\XtXi ,
+  \end{align*}
+  ya que $\XtX$ y su inversa son simétricas: $\big(\XtXi\big)\T=\XtXi$ y
+  $\XtX\big(\XtXi\big)\T=\vect{I}$.
+\end{demostracion}
+
+Como $MSE$ es un estimador insesgado de $\sigma^2$ (\cref{prop:t2-mse}), la matriz de
+varianzas-covarianzas de $\bhat$ se estima por
+\[
+  \widehat{\Var}(\bhat) = MSE\,\XtXi .
+\]
+
+\begin{proposicion}[Varianzas en la regresión simple][prop:t5-var-simple]
+  Con la expresión de $\XtXi$ de la \cref{prop:t5-simple},
+  \[
+    \Var(\bhat) = \sigma^2\begin{pmatrix}
+      \dfrac1n+\dfrac{\media{X}^2}{\SSX} & -\dfrac{\media{X}}{\SSX}\\[10pt]
+      -\dfrac{\media{X}}{\SSX} & \dfrac{1}{\SSX}
+    \end{pmatrix}:
+  \]
+  la diagonal contiene las varianzas de $\est{\beta}_0$ y $\est{\beta}_1$ del Tema 3
+  (\cref{teo:t3-dist-b0,teo:t3-dist-b1}), y fuera de ella aparece su covarianza,
+  $\Cov(\est{\beta}_0,\est{\beta}_1)=-\sigma^2\media{X}/\SSX$.
+\end{proposicion}
+
+\section{Inferencias sobre la respuesta media y predicción}
+\label{sec:t5-respuesta-media}
+
+\subsection{Respuesta media}
+
+Dado el vector $\vect{X}_h=(1,\ x_h)\T$, la respuesta media en $\vect{X}_h$ es
+\[
+  \E(Y_h) = \E(Y\cond \vect{X}_h) = \vect{X}_h\T\vect{\beta},
+\]
+y su estimador es
+\[
+  \est{Y}_h = \vect{X}_h\T\bhat .
+\]
+$\est{Y}_h$ estima el parámetro $\E(Y_h)=\vect{X}_h\T\vect{\beta}=\beta_0+\beta_1x_h$, la media de la
+distribución de $Y$ condicionada a $\vect{X}_h$, y no el valor de una observación concreta
+(\cref{sec:t3-respuesta-media}). La estimación tiene sentido siempre que $\vect{X}_h$ tome valores
+que podrían haberse dado en la muestra considerada, es decir, dentro del \emph{scope} del modelo:
+la región de valores cubierta conjuntamente por todas las variables independientes.
+
+\begin{proposicion}[Distribución de $\est{Y}_h$][prop:t5-Yh]
+  Bajo los supuestos del modelo, el estimador $\est{Y}_h=\vect{X}_h\T\bhat$ de $\E(Y_h)$ es:
+  \begin{itemize}
+    \item normal, puesto que $\bhat$ lo es;
+    \item insesgado: $\E(\est{Y}_h)=\E(\vect{X}_h\T\bhat)=\vect{X}_h\T\vect{\beta}=\E(Y_h)$;
+    \item de varianza
+      $\Var(\est{Y}_h)=\vect{X}_h\T\Var(\bhat)\vect{X}_h=\sigma^2\vect{X}_h\T\XtXi\vect{X}_h$.
+  \end{itemize}
+  La varianza estimada es
+  \[
+    \widehat{\Var}(\est{Y}_h) = \vect{X}_h\T\widehat{\Var}(\bhat)\vect{X}_h
+    = MSE\cdot\vect{X}_h\T\XtXi\vect{X}_h .
+  \]
+\end{proposicion}
+
+En la regresión simple, el mismo cálculo que el de $h_{ik}$ en la \cref{prop:t5-simple} da
+\[
+  \vect{X}_h\T\XtXi\vect{X}_h=\frac1n+\frac{(x_h-\media{X})^2}{\SSX},
+\]
+que es la expresión del \cref{teo:t3-dist-Yh}.
+
+\subsection{Predicción de una nueva observación}
+
+El objetivo es predecir una nueva observación de $Y$, $\Ynew$, cuando se conocen los valores de
+la variable independiente, $\vect{X}_h$.
+\begin{itemize}
+  \item La nueva observación puede verse como el resultado de una nueva repetición del
+    experimento, independiente de los resultados anteriores en los que se basa el análisis de
+    regresión.
+  \item Se asume que el modelo de regresión subyacente sigue siendo apropiado para la nueva
+    observación.
+\end{itemize}
+
+Para hacer inferencias sobre $\Ynew$ es necesario conocer un estimador y la distribución del
+error que se comete (\cref{sec:t3-prediccion}).
+\begin{itemize}
+  \item El estimador puntual sigue siendo $\est{Y}_h=\vect{X}_h\T\bhat$.
+  \item Al estimar la respuesta media $\E(Y_h)$ se estima la media de la distribución de $Y$; al
+    predecir una nueva respuesta $\Ynew$ se quiere predecir un resultado individual de la
+    distribución de $Y$, que se situará alrededor de su media.
+  \item Hay que tener en cuenta dos fuentes de variación: la variación en la posible ubicación
+    del centro de la distribución de $Y$ y la variación dentro de la distribución de
+    probabilidad de $Y$.
+\end{itemize}
+Como $\Ynew$ es independiente de la muestra, y por tanto de $\est{Y}_h$, la varianza del error de
+predicción es
+\begin{align*}
+  \Var(\Ynew-\est{Y}_h) &= \Var(\Ynew)+\Var(\est{Y}_h)
+  = \sigma^2+\sigma^2\vect{X}_h\T\XtXi\vect{X}_h \\
+  &= \sigma^2\big(1+\vect{X}_h\T\XtXi\vect{X}_h\big),
+\end{align*}
+con estimador
+\[
+  \widehat{\Var}(\Ynew-\est{Y}_h) = MSE\big(1+\vect{X}_h\T\XtXi\vect{X}_h\big).
+\]
+
+\paragraph{Media de $m$ nuevas observaciones.} Para predecir la media $\Ymnew$ de $m$ nuevas
+observaciones en $\vect{X}_h$: la varianza asociada a una observación es $\sigma^2$ y la asociada a
+la media de $m$ observaciones es $\sigma^2/m$. La varianza del error de predicción es la suma de la
+varianza de esa media y la de la estimación de la respuesta media:
+\[
+  \Var(\Ymnew-\est{Y}_h) = \sigma^2\left(\frac1m+\vect{X}_h\T\XtXi\vect{X}_h\right).
+\]
+
+\subsection{Intervalos de confianza y de predicción}
+
+Sustituyendo $\sigma^2$ por $MSE$, los estadísticos tipificados siguen una $\tdist{n-2}$ y se
+obtienen, en forma matricial, los mismos intervalos y contrastes del Tema 3.
+
+\begin{resumen}[Inferencias en forma matricial (nivel $1-\alpha$)]
+  Sea $c_{jj}$, $j=0,1$, el elemento $j$-ésimo de la diagonal de $\XtXi$.
+  \begin{itemize}
+    \item Coeficientes:
+      $\displaystyle \beta_j\in\left(\est{\beta}_j\pm\tq{n-2}{1-\alpha/2}\sqrt{MSE\,c_{jj}}\right)$;
+      para $H_0\colon\beta_j=b_j$,
+      $\displaystyle t^*=\frac{\est{\beta}_j-b_j}{\sqrt{MSE\,c_{jj}}}\bajoHo\tdist{n-2}$.
+    \item Respuesta media:
+      $\displaystyle \E(Y_h)\in\left(\est{Y}_h\pm\tq{n-2}{1-\alpha/2}
+      \sqrt{MSE\cdot\vect{X}_h\T\XtXi\vect{X}_h}\right)$.
+    \item Nueva observación:
+      $\displaystyle \Ynew\in\left(\est{Y}_h\pm\tq{n-2}{1-\alpha/2}
+      \sqrt{MSE\big(1+\vect{X}_h\T\XtXi\vect{X}_h\big)}\right)$.
+    \item Media de $m$ nuevas observaciones:
+      $\displaystyle \Ymnew\in\left(\est{Y}_h\pm\tq{n-2}{1-\alpha/2}
+      \sqrt{MSE\left(\tfrac1m+\vect{X}_h\T\XtXi\vect{X}_h\right)}\right)$.
+  \end{itemize}
+\end{resumen}

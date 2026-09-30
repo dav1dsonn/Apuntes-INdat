@@ -1,0 +1,21 @@
+{
+  "latex-workshop.latex.recipes": [
+    { "name": "latexmk (latexmkrc del proyecto)", "tools": ["latexmk-proyecto"] }
+  ],
+  "latex-workshop.latex.tools": [
+    { "name": "latexmk-proyecto", "command": "latexmk", "args": [], "env": {} }
+  ],
+  "latex-workshop.latex.rootFile.doNotPrompt": true,
+  "latex-workshop.latex.search.rootFiles.include": ["main.tex"],
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.latex.jobname": "Apuntes_RANO",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "workbench.editorAssociations": {
+    "*.pdf": "latex-workshop-pdf-hook"
+  },
+  "latex-workshop.formatting.latex": "none",
+  "[latex]": {
+    "editor.formatOnSave": false
+  }
+}

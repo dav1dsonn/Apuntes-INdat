@@ -1,0 +1,44 @@
+% ==============================================================================
+%  5.3  El análisis de la varianza en notación matricial
+% ==============================================================================
+\section{El análisis de la varianza}
+\label{sec:t5-anova}
+
+Las sumas de cuadrados de la descomposición de la variabilidad (\cref{teo:t3-sst}) se escriben
+matricialmente como formas cuadráticas en $\vect{Y}$. Sea $\vect{J}$ la matriz $n\times n$ con
+todos sus elementos iguales a 1, de modo que $\vect{Y}\T\vect{J}\vect{Y}=\big(\sum Y_i\big)^2=n^2\media{Y}^2$.
+
+\begin{proposicion}[Sumas de cuadrados en forma matricial][prop:t5-sumas]
+  \begin{itemize}
+    \item Variabilidad total:
+      \[
+        SST = \sumi (Y_i-\media{Y})^2 = \sumi Y_i^2-n\media{Y}^2
+        = \vect{Y}\T\vect{Y}-\frac1n\vect{Y}\T\vect{J}\vect{Y}
+        = \vect{Y}\T\left(\vect{I}-\frac1n\vect{J}\right)\vect{Y} .
+      \]
+    \item Variabilidad explicada por la regresión:
+      \[
+        SSR = \sumi (\est{Y}_i-\media{Y})^2
+        = \bhat\T\vect{X}\T\vect{Y}-\frac1n\vect{Y}\T\vect{J}\vect{Y}
+        = \vect{Y}\T\left(\vect{H}-\frac1n\vect{J}\right)\vect{Y} .
+      \]
+    \item Variabilidad residual:
+      \begin{align*}
+        SSE &= \sumi (Y_i-\est{Y}_i)^2 = \sumi e_i^2 = \vect{e}\T\vect{e}
+        = (\vect{Y}-\vect{X}\bhat)\T(\vect{Y}-\vect{X}\bhat) \\
+        &= \vect{Y}\T\vect{Y}-\bhat\T\vect{X}\T\vect{Y}
+        = \vect{Y}\T(\vect{I}-\vect{H})\vect{Y} .
+      \end{align*}
+  \end{itemize}
+  Se cumple que $SST=SSR+SSE$.
+\end{proposicion}
+
+En forma matricial, la descomposición es inmediata: las matrices de las tres formas cuadráticas
+verifican $\vect{I}-\frac1n\vect{J}=\big(\vect{H}-\frac1n\vect{J}\big)+(\vect{I}-\vect{H})$.
+
+Si $SSR$ es grande, usar el modelo de regresión lineal es muy distinto de usar la media para
+predecir la respuesta: el modelo de regresión mejora mucho la calidad de la predicción. Si
+$SSR$ es pequeño, usar el modelo de regresión es solo un poco mejor que usar la media. Esta idea
+se formaliza con el contraste de la regresión y con el coeficiente de determinación
+(\cref{sec:t3-anova,sec:t3-correlacion}), que se calculan igual a partir de estas sumas de
+cuadrados; en particular, $MSE=SSE/(n-2)$ es el estimador insesgado de $\sigma^2$.

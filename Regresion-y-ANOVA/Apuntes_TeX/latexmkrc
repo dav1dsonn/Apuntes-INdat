@@ -1,0 +1,12 @@
+# Configuración de latexmk para este proyecto
+$pdf_mode = 1;                 # pdflatex
+$aux_dir  = 'build';           # archivos auxiliares aquí
+$out_dir  = 'build';           # PDF en build/
+@default_files = ('main.tex');
+$pdflatex = 'pdflatex -synctex=1 -interaction=nonstopmode -file-line-error %O %S';
+$jobname = 'Apuntes_RANO';
+
+# \include escribe el .aux de cada tema en build/temas/temaN/: crear esas carpetas si no
+# existen (necesario al compilar por primera vez, p. ej. tras descargar el repositorio)
+use File::Path qw(make_path);
+make_path(map { "build/$_" } grep { -d $_ } glob('temas/tema*'));

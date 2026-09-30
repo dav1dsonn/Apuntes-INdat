@@ -1,0 +1,231 @@
+% ==============================================================================
+%  2.3  Estimación por mínimos cuadrados. Propiedades de los estimadores
+% ==============================================================================
+\section{Estimación por mínimos cuadrados}
+\label{sec:t2-mc}
+
+``Ajustar'' la recta de regresión es encontrar los \textbf{mejores estimadores} de los
+coeficientes $\beta_0$ y $\beta_1$, para lo que es necesario fijar un criterio que permita
+comparar rectas.
+
+\begin{ejemplo}[Dos rectas para tres puntos][ej:t2-tres-puntos]
+  Se dispone de una muestra de $n=3$ puntos, $(20,5)$, $(55,12)$ y $(30,10)$, y se consideran
+  dos rectas:
+  \[
+    M_1\colon\ \est{Y} = 9 + 0\cdot X,
+    \qquad
+    M_2\colon\ \est{Y} = 2.81 + 0.177X .
+  \]
+  \begin{center}
+    \begin{minipage}[t]{0.46\linewidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=5.5cm, height=4.5cm, xmin=0, xmax=70, ymin=0, ymax=14,
+            xtick={20,40,60}, ytick={3,6,9,12}, tick label style={font=\scriptsize}]
+          \addplot[recta, domain=5:68] {9};
+          \addplot[puntos, mark size=1.6pt] coordinates {(20,5) (55,12) (30,10)};
+          \draw[red] (axis cs:20,5) -- (axis cs:20,9);
+          \draw[red] (axis cs:55,12) -- (axis cs:55,9);
+          \draw[red] (axis cs:30,10) -- (axis cs:30,9);
+        \end{axis}
+      \end{tikzpicture}\\[2pt]
+      {\small Recta $M_1$: $Q_1=26$.}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.46\linewidth}
+      \centering
+      \begin{tikzpicture}
+        \begin{axis}[width=5.5cm, height=4.5cm, xmin=0, xmax=70, ymin=0, ymax=14,
+            xtick={20,40,60}, ytick={3,6,9,12}, tick label style={font=\scriptsize}]
+          \addplot[recta, domain=5:68] {2.8077+0.17692*x};
+          \addplot[puntos, mark size=1.6pt] coordinates {(20,5) (55,12) (30,10)};
+          \draw[red] (axis cs:20,5) -- (axis cs:20,6.346);
+          \draw[red] (axis cs:55,12) -- (axis cs:55,12.538);
+          \draw[red] (axis cs:30,10) -- (axis cs:30,8.115);
+        \end{axis}
+      \end{tikzpicture}\\[2pt]
+      {\small Recta $M_2$: $Q_2=5.7$.}
+    \end{minipage}
+  \end{center}
+  Los segmentos rojos son las desviaciones $y_i-\est{y}_i$. La suma de sus cuadrados es:
+  \[
+    Q_1 = (-4)^2+3^2+1^2 = 26,
+    \qquad
+    Q_2 = (-1.35)^2+(-0.54)^2+1.88^2 \approx 5.7 .
+  \]
+  Existen infinitas rectas que podrían ajustarse, una por cada par $(\beta_0,\beta_1)$. Según
+  el criterio de mínimos cuadrados (\cref{def:t2-mc}) es preferible la de menor suma de
+  cuadrados de las desviaciones, $M_2$ ($Q_2=5.7<26=Q_1$). De hecho, $M_2$ es la recta de
+  mínimos cuadrados de estos datos (\cref{ej:t2-tres-puntos-mc}).
+\end{ejemplo}
+
+\subsection{El criterio de mínimos cuadrados}
+
+\begin{definicion}[Estimadores de mínimos cuadrados][def:t2-mc]
+  Dadas las observaciones $(x_i,y_i)$, las desviaciones de $y_i$ respecto de su valor esperado
+  son $y_i-(\beta_0+\beta_1x_i)$. Los \textbf{estimadores mínimo cuadráticos} (MC) de $\beta_0$
+  y $\beta_1$ son los valores $\est{\beta}_0$, $\est{\beta}_1$ que minimizan la suma de los
+  cuadrados de las $n$ desviaciones:
+  \[
+    Q(\beta_0,\beta_1) = \sumi (y_i-\beta_0-\beta_1x_i)^2,
+    \qquad
+    (\est{\beta}_0,\est{\beta}_1) = \arg\min_{\beta_0,\beta_1} Q(\beta_0,\beta_1).
+  \]
+\end{definicion}
+
+\paragraph{Ecuaciones normales.} Derivando $Q$ e igualando a cero:
+\begin{align*}
+  \frac{\partial Q}{\partial\beta_0} &= -2\sumi (y_i-\beta_0-\beta_1x_i) = 0
+  &&\Longrightarrow\quad \sumi y_i = n\est{\beta}_0 + \est{\beta}_1\sumi x_i, \\
+  \frac{\partial Q}{\partial\beta_1} &= -2\sumi x_i(y_i-\beta_0-\beta_1x_i) = 0
+  &&\Longrightarrow\quad \sumi x_iy_i = \est{\beta}_0\sumi x_i + \est{\beta}_1\sumi x_i^2 .
+\end{align*}
+Dividiendo la primera entre $n$ se obtiene $\est{\beta}_0$; sustituyéndolo en la segunda,
+$\sumi x_iy_i - n\media{x}\,\media{y} = \est{\beta}_1\left(\sumi x_i^2 - n\media{x}^2\right)$,
+y como $\sumi x_iy_i - n\media{x}\,\media{y}=SS_{XY}$ y $\sumi x_i^2 - n\media{x}^2=SS_X$:
+
+\begin{teorema}[Estimadores de mínimos cuadrados][teo:t2-estimadores-mc]
+  \[
+    \boxed{\ \est{\beta}_0 = \media{y} - \est{\beta}_1\media{x}\ }
+    \qquad\qquad
+    \boxed{\ \est{\beta}_1 = \frac{\sumi (x_i-\media{x})(y_i-\media{y})}{\sumi (x_i-\media{x})^2}
+    = \frac{SS_{XY}}{SS_X}\ }
+  \]
+  donde $\media{x}$ e $\media{y}$ son las medias de las $x_i$ y de las $y_i$ y $SS_X=SS_{xx}$,
+  $SS_{XY}=SS_{xy}$ con la notación de la \cref{def:SS-MS}.
+\end{teorema}
+
+\begin{ejemplo}[Tres puntos: recta de mínimos cuadrados][ej:t2-tres-puntos-mc]
+  Para los datos del \cref{ej:t2-tres-puntos}: $\media{x}=35$, $\media{y}=9$,
+  \[
+    SS_X = (-15)^2+20^2+(-5)^2 = 650, \qquad
+    SS_{XY} = (-15)(-4)+(20)(3)+(-5)(1) = 115,
+  \]
+  así que $\est{\beta}_1 = 115/650 = 0.177$ y $\est{\beta}_0 = 9-0.177\cdot35 = 2.81$: es la
+  recta $M_2$.
+\end{ejemplo}
+
+\subsection{Propiedades de los estimadores: teorema de Gauss--Markov}
+
+La justificación de que los estimadores mínimo cuadráticos son los ``mejores'' la proporciona
+el siguiente teorema.
+
+\begin{teorema}[Gauss--Markov][teo:gauss-markov]
+  En las condiciones del modelo de regresión, los estimadores mínimo cuadráticos
+  $\est{\beta}_0$ y $\est{\beta}_1$:
+  \begin{itemize}
+    \item son \textbf{insesgados}: $\E[\est{\beta}_0]=\beta_0$ y $\E[\est{\beta}_1]=\beta_1$;
+    \item tienen \textbf{mínima varianza} entre todos los estimadores \textbf{lineales
+      insesgados} de $\beta_0$ y $\beta_1$.
+  \end{itemize}
+\end{teorema}
+
+El significado de cada término del teorema es el siguiente:
+\begin{itemize}
+  \item \emph{Lineal}: el estimador es combinación lineal de las observaciones,
+    $\sum_i c_iY_i$ con $c_i$ constantes. Los estimadores MC lo son; por ejemplo,
+    $\est{\beta}_1=\sum_i k_iY_i$ con $k_i=(x_i-\media{x})/SS_X$.
+  \item \emph{Insesgado}: su esperanza, sobre todas las muestras posibles, coincide con el
+    parámetro.
+  \item \emph{Mínima varianza}: entre todos los estimadores lineales insesgados, los MC son los
+    de menor variabilidad muestral, es decir, los más precisos.
+\end{itemize}
+Por ello se denominan \textbf{mejores estimadores lineales insesgados} (ELIO; en inglés,
+BLUE: \emph{Best Linear Unbiased Estimators}).
+
+\paragraph{Estimación de la respuesta media.} A partir de los coeficientes estimados se obtiene
+la \textbf{recta de regresión estimada} $\est{Y}=\est{\beta}_0+\est{\beta}_1X$, donde $\est{Y}$ es el
+valor estimado de la recta para un valor $X$ del regresor.
+\begin{itemize}
+  \item $\E(Y)=\beta_0+\beta_1X$ es la media de la distribución de $Y$ condicionada al valor
+    $X$: la \textbf{respuesta media}.
+  \item $\est{Y}$ es un estimador puntual de $\E(Y)$, y es el \textbf{estimador insesgado de
+    varianza mínima en la clase de los estimadores lineales insesgados} (extensión del teorema
+    de Gauss--Markov).
+\end{itemize}
+
+En consecuencia, cada valor ajustado $\est{y}_i=\est{\beta}_0+\est{\beta}_1x_i$ es la
+\textbf{estimación de la respuesta media} $\E(Y\cond X=x_i)$, es decir, el valor esperado de la
+respuesta para los individuos con $X=x_i$ según el modelo ajustado. No es una predicción exacta
+de $y_i$: ambos difieren en el residuo $e_i$. En el ejemplo de los conductores,
+$\est{y}=396$ es la distancia media estimada para los conductores de 60 años.
+
+\subsection{Propiedades de la recta de regresión ajustada}
+
+\begin{proposicion}[Propiedades de la recta de regresión][prop:t2-propiedades-recta]
+  Para la recta ajustada por mínimos cuadrados:
+  \begin{enumerate}
+    \item La suma de los residuos es 0: $\sumi e_i=0$.
+    \item La suma de los residuos al cuadrado, $\sumi e_i^2$, es mínima.
+    \item La suma de los valores observados es igual a la de los ajustados:
+      $\sumi y_i=\sumi \est{y}_i$.
+    \item $\sumi x_ie_i=0$.
+    \item $\sumi \est{y}_ie_i=0$.
+    \item La recta de regresión pasa por el punto $(\media{x},\media{y})$.
+  \end{enumerate}
+\end{proposicion}
+
+\begin{demostracion}
+  Se parte de que $e_i=y_i-\est{\beta}_0-\est{\beta}_1x_i$ y de que $\est{\beta}_0$ y
+  $\est{\beta}_1$ cumplen las ecuaciones normales:
+  \[
+    \text{(EN1)}\ \ \sumi (y_i-\est{\beta}_0-\est{\beta}_1x_i)=0,
+    \qquad
+    \text{(EN2)}\ \ \sumi x_i(y_i-\est{\beta}_0-\est{\beta}_1x_i)=0 .
+  \]
+  \begin{enumerate}
+    \item Es exactamente (EN1): $\sumi e_i=0$.
+    \item $\sumi e_i^2 = Q(\est{\beta}_0,\est{\beta}_1)$, y $(\est{\beta}_0,\est{\beta}_1)$ es,
+      por definición (\cref{def:t2-mc}), el punto que minimiza $Q$.
+    \item Como $y_i=\est{y}_i+e_i$, sumando y usando 1:
+      $\sumi y_i=\sumi\est{y}_i+\sumi e_i=\sumi\est{y}_i$.
+    \item Es exactamente (EN2): $\sumi x_ie_i=0$.
+    \item Usando 1 y 4:
+      $\sumi \est{y}_ie_i=\sumi(\est{\beta}_0+\est{\beta}_1x_i)e_i
+      =\est{\beta}_0\sumi e_i+\est{\beta}_1\sumi x_ie_i = 0$.
+    \item Evaluando la recta en $x=\media{x}$ y usando
+      $\est{\beta}_0=\media{y}-\est{\beta}_1\media{x}$:
+      $\est{\beta}_0+\est{\beta}_1\media{x}=\media{y}-\est{\beta}_1\media{x}+\est{\beta}_1\media{x}
+      =\media{y}$.
+  \end{enumerate}
+\end{demostracion}
+
+\subsection{Estimación de \texorpdfstring{$\sigma^2$}{sigma cuadrado}}
+\label{sec:t2-sigma}
+
+\paragraph{Caso general.} Sea $Y$ una variable aleatoria con varianza $\sigma^2$. Un buen
+estimador de $\sigma^2$ es la varianza muestral corregida, que es una suma de cuadrados
+dividida por sus grados de libertad (\cref{def:SS-MS}):
+\[
+  \est{\sigma}^2 = S_Y^2 = \frac{1}{n-1}\sumi (y_i-\media{y})^2 = \frac{SS_Y}{n-1}.
+\]
+Se divide entre $n-1$ porque \textbf{se pierde un grado de libertad al estimar la media
+poblacional} mediante $\media{Y}$.
+
+\begin{nota}[Grados de libertad]
+  Las $n$ desviaciones $y_i-\media{y}$ no son libres, ya que siempre suman 0: conocidas $n-1$
+  de ellas, la última queda determinada. En general, cada parámetro que se estima a partir de
+  los datos para calcular las desviaciones resta un grado de libertad.
+\end{nota}
+
+\paragraph{En el modelo de regresión.}
+\begin{itemize}
+  \item Cada $Y_i$ es una variable aleatoria con varianza $\sigma^2$ (la misma que el error
+    $\varepsilon_i$), por lo que $\sigma^2$ se estima como una suma de cuadrados dividida por
+    sus grados de libertad.
+  \item Ahora, sin embargo, \textbf{la media de cada $Y_i$ depende de $X_i$}, de modo que la
+    desviación de cada $y_i$ debe calcularse respecto de \emph{su} media estimada, $\est{y}_i$;
+    es decir, a partir de los residuos $e_i=y_i-\est{y}_i$.
+  \item La suma de cuadrados correspondiente es la \textbf{suma de cuadrados del error}:
+    \[
+      SSE = \sumi (y_i-\est{y}_i)^2 = \sumi e_i^2 .
+    \]
+  \item $SSE$ tiene $n-2$ grados de libertad: se pierden 2 al estimar $\beta_0$ y $\beta_1$,
+    necesarios para obtener los $\est{y}_i$.
+\end{itemize}
+
+\begin{proposicion}[Estimador insesgado de $\sigma^2$][prop:t2-mse]
+  Un estimador insesgado de $\sigma^2$ es la \textbf{media cuadrática del error}:
+  \[
+    MSE = \frac{SSE}{n-2} = \frac{1}{n-2}\sumi (y_i-\est{y}_i)^2 = \frac{1}{n-2}\sumi e_i^2 .
+  \]
+\end{proposicion}

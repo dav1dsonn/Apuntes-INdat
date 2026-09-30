@@ -1,0 +1,159 @@
+% ==============================================================================
+%  5.2  Estimación de los coeficientes de regresión. La matriz hat
+% ==============================================================================
+\section{Estimación de los coeficientes de regresión}
+\label{sec:t5-estimacion}
+
+El modelo se ajusta por el método de mínimos cuadrados (\cref{sec:t2-mc}). Para un valor dado de
+$\vect{\beta}$, los errores son $\vect{\varepsilon}=\vect{Y}-\vect{X}\vect{\beta}$, y la suma de
+sus cuadrados se escribe como un producto escalar:
+\[
+  \sumi \varepsilon_i^2 =
+  \begin{pmatrix} \varepsilon_1 & \varepsilon_2 & \cdots & \varepsilon_n \end{pmatrix}
+  \begin{pmatrix} \varepsilon_1\\ \varepsilon_2\\ \vdots\\ \varepsilon_n \end{pmatrix}
+  = \vect{\varepsilon}\T\vect{\varepsilon} .
+\]
+Se trata, por tanto, de minimizar en $\vect{\beta}$
+\[
+  \vect{\varepsilon}\T\vect{\varepsilon} = (\vect{Y}-\vect{X}\vect{\beta})\T(\vect{Y}-\vect{X}\vect{\beta}) .
+\]
+Derivando respecto de $\vect{\beta}$,
+\[
+  \frac{\partial}{\partial\vect{\beta}}
+  \Big((\vect{Y}-\vect{X}\vect{\beta})\T(\vect{Y}-\vect{X}\vect{\beta})\Big)
+  = -2\vect{X}\T(\vect{Y}-\vect{X}\vect{\beta}),
+\]
+e igualando a $\vect{0}$ se obtienen las \textbf{ecuaciones normales}.
+
+\begin{teorema}[Estimador de mínimos cuadrados][teo:t5-mc]
+  Las ecuaciones normales son
+  \[
+    (\XtX)\,\bhat = \vect{X}\T\vect{Y},
+  \]
+  y, si $\XtX$ es invertible, su solución es
+  \[
+    \boxed{\ \bhat = \XtXi\vect{X}\T\vect{Y}\ } .
+  \]
+\end{teorema}
+
+\begin{nota}
+  $\XtX$ es invertible si las columnas de $\vect{X}$ son linealmente independientes; en la
+  regresión simple, si no todos los $X_i$ son iguales ($\SSX>0$).
+\end{nota}
+
+\subsection{Valores ajustados, residuos y matriz hat}
+
+Una vez estimados los coeficientes se obtienen el vector de \textbf{valores ajustados} y el
+vector de \textbf{residuos} (\cref{def:t2-ajuste}):
+\[
+  \est{\vect{Y}}_{n\times1} = \begin{pmatrix} \est{Y}_1\\ \vdots\\ \est{Y}_n \end{pmatrix},
+  \qquad
+  \vect{e}_{n\times1} = \begin{pmatrix} e_1\\ \vdots\\ e_n \end{pmatrix}.
+\]
+Los valores ajustados se calculan como
+\[
+  \est{\vect{Y}} = \vect{X}\bhat = \vect{X}\XtXi\vect{X}\T\vect{Y},
+\]
+y los residuos $e_i=Y_i-\est{Y}_i$ se escriben matricialmente como
+\[
+  \vect{e} = \vect{Y}-\est{\vect{Y}} = \vect{Y}-\vect{X}\bhat
+  = \vect{Y}-\vect{X}\XtXi\vect{X}\T\vect{Y}
+  = \big(\vect{I}-\vect{X}\XtXi\vect{X}\T\big)\vect{Y} .
+\]
+
+\begin{definicion}[Matriz hat][def:t5-hat]
+  La \textbf{matriz hat} es
+  \[
+    \vect{H}_{n\times n} = \vect{X}\XtXi\vect{X}\T \in\R^{n\times n} .
+  \]
+  Con ella,
+  \[
+    \est{\vect{Y}} = \vect{H}\vect{Y}, \qquad \vect{e} = (\vect{I}-\vect{H})\vect{Y} .
+  \]
+\end{definicion}
+
+La matriz hat desempeña un papel muy importante en la identificación de puntos influyentes: su
+elemento $(i,k)$ es el coeficiente $h_{ik}$ de $Y_k$ en el valor ajustado $\est{Y}_i$
+(\cref{prop:t4-hik}), y su diagonal contiene los leverages $h_{ii}$ (\cref{def:t4-leverage}).
+
+\begin{proposicion}[Propiedades de la matriz hat][prop:t5-hat]
+  La matriz hat es \textbf{simétrica} e \textbf{idempotente}:
+  \[
+    \vect{H}\T=\vect{H}, \qquad \vect{H}\vect{H}=\vect{H},
+  \]
+  y por tanto $\vect{H}\T\vect{H}=\vect{H}\vect{H}=\vect{H}$. La matriz de varianzas-covarianzas de
+  los residuos es
+  \[
+    \Var(\vect{e}) = \sigma^2(\vect{I}-\vect{H}) .
+  \]
+\end{proposicion}
+
+\subsection{Propiedades de los residuos en forma matricial}
+
+El modelo impone que los errores $\varepsilon_i$ sean independientes, normales y con la misma
+varianza. Los errores no son observables; los residuos $e_i$ sí lo son, y se utilizan como
+estimadores de los $\varepsilon_i$. Sin embargo, los residuos no son independientes entre sí y sus
+varianzas no son iguales (\cref{prop:t4-prop-residuos}):
+\begin{itemize}
+  \item de $\Var(\vect{e})=\sigma^2(\vect{I}-\vect{H})$, la varianza de $e_i$ es el elemento $i$ de
+    la diagonal,
+    \[
+      \Var(e_i) = \sigma^2(1-h_{ii}),
+    \]
+    que depende del $i$-ésimo elemento de la diagonal de la matriz hat, el leverage de la
+    observación $i$, que se utiliza para detectar observaciones atípicas o potencialmente
+    influyentes (\cref{sec:t4-outliers-x});
+  \item la covarianza entre $e_i$ y $e_j$ es el elemento $(i,j)$ de $\sigma^2(\vect{I}-\vect{H})$,
+    \[
+      \Cov(e_i,e_j) = \sigma^2(-h_{ij}) = -\sigma^2h_{ij}, \qquad i\neq j .
+    \]
+\end{itemize}
+Se tendría $\Var(e_i)=\sigma^2$ y $\Cov(e_i,e_j)=0$ solo si $\vect{H}=\vect{0}$, lo que no tiene
+sentido, ya que entonces $\est{\vect{Y}}=\vect{H}\vect{Y}=\vect{0}$.
+
+\subsection{El caso de la regresión simple}
+
+\begin{proposicion}[Estimadores y matriz hat en la regresión simple][prop:t5-simple]
+  Con $\vect{X}$ la matriz de diseño de la \cref{def:t5-modelo},
+  \[
+    \XtX = \begin{pmatrix} n & \sumi X_i\\ \sumi X_i & \sumi X_i^2 \end{pmatrix},
+    \qquad
+    \XtXi = \begin{pmatrix}
+      \dfrac1n+\dfrac{\media{X}^2}{\SSX} & -\dfrac{\media{X}}{\SSX}\\[10pt]
+      -\dfrac{\media{X}}{\SSX} & \dfrac{1}{\SSX}
+    \end{pmatrix},
+  \]
+  y se obtienen:
+  \begin{enumerate}
+    \item los estimadores de mínimos cuadrados del Tema 2 (\cref{teo:t2-estimadores-mc}),
+      $\est{\beta}_1=SS_{XY}/\SSX$ y $\est{\beta}_0=\media{Y}-\est{\beta}_1\media{X}$;
+    \item los elementos de la matriz hat del Tema 4 (\cref{prop:t4-hik}),
+      $h_{ik}=\frac1n+\frac{(X_i-\media{X})(X_k-\media{X})}{\SSX}$.
+  \end{enumerate}
+\end{proposicion}
+
+\begin{demostracion}
+  El determinante de $\XtX$ es $n\sum X_i^2-\big(\sum X_i\big)^2=n\SSX$, así que
+  \[
+    \XtXi = \frac{1}{n\SSX}\begin{pmatrix} \sumi X_i^2 & -\sumi X_i\\ -\sumi X_i & n \end{pmatrix},
+  \]
+  y, usando $\sum X_i^2=\SSX+n\media{X}^2$ y $\sum X_i=n\media{X}$, se obtiene la expresión del
+  enunciado.
+  \begin{enumerate}
+    \item Como $\vect{X}\T\vect{Y}=\big(\sum Y_i,\ \sum X_iY_i\big)\T=\big(n\media{Y},\ \sum X_iY_i\big)\T$,
+      \begin{align*}
+        \est{\beta}_1 &= -\frac{\media{X}}{\SSX}\,n\media{Y}+\frac{1}{\SSX}\sumi X_iY_i
+          = \frac{\sumi X_iY_i-n\media{X}\,\media{Y}}{\SSX} = \frac{SS_{XY}}{\SSX}, \\
+        \est{\beta}_0 &= \left(\frac1n+\frac{\media{X}^2}{\SSX}\right)n\media{Y}
+          - \frac{\media{X}}{\SSX}\sumi X_iY_i
+          = \media{Y}-\media{X}\,\frac{\sumi X_iY_i-n\media{X}\,\media{Y}}{\SSX}
+          = \media{Y}-\est{\beta}_1\media{X} .
+      \end{align*}
+    \item La fila $i$ de $\vect{X}$ es $(1,\ X_i)$, luego
+      \begin{align*}
+        h_{ik} &= (1,\ X_i)\XtXi\begin{pmatrix} 1\\ X_k \end{pmatrix}
+          = \frac1n+\frac{\media{X}^2-\media{X}X_i-\media{X}X_k+X_iX_k}{\SSX} \\
+        &= \frac1n+\frac{(X_i-\media{X})(X_k-\media{X})}{\SSX} .
+      \end{align*}
+  \end{enumerate}
+\end{demostracion}

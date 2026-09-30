@@ -1,0 +1,43 @@
+% ==============================================================================
+%  Apuntes de Regresión y ANOVA (RANO) — bloque de REGRESIÓN (Temas 1–6)
+%  Archivo principal: compila este archivo con latexmk.
+%
+%  Estructura prevista (ampliable):
+%    - bloque_regresion.tex : lista de temas de regresión (Temas 1–6).
+%    - más adelante, bloque_anova.tex (Temas 7…) con su propio documento
+%      (índice «Índice — ANOVA») y un documento global que incluya ambos bloques.
+% ==============================================================================
+\documentclass[11pt,a4paper,oneside]{report}
+
+\input{preambulo/paquetes}
+\input{preambulo/entornos}
+\input{preambulo/comandos}
+
+% --- Compilar solo algunos temas (más rápido mientras se trabaja) -------------
+% Descomenta y deja solo los temas que quieras. Las referencias cruzadas
+% a los temas excluidos se conservan gracias a los .aux.
+% \includeonly{temas/tema1/tema1}
+
+\begin{document}
+
+\pagenumbering{roman}
+\input{portada}
+\input{aviso}
+
+{\hypersetup{linkcolor=black}%
+ \renewcommand{\contentsname}{Índice --- Regresión}%
+ \tableofcontents}
+\cleardoublepage
+\pagenumbering{arabic}
+
+% ------------------------------------------------------------------------------
+%  TEMAS DE REGRESIÓN (la lista está en bloque_regresion.tex)
+% ------------------------------------------------------------------------------
+\input{bloque_regresion}
+
+% ------------------------------------------------------------------------------
+%  BIBLIOGRAFÍA / MATERIAL DE REFERENCIA
+% ------------------------------------------------------------------------------
+\include{bibliografia}
+
+\end{document}

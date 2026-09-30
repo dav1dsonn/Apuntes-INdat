@@ -1,0 +1,129 @@
+% ==============================================================================
+%  4.6  Soluciones cuando el modelo no es válido
+% ==============================================================================
+\section{Soluciones cuando el modelo no es válido}
+\label{sec:t4-soluciones}
+
+Cuando el modelo no es válido hay, básicamente, dos opciones:
+\begin{itemize}
+  \item utilizar una metodología más apropiada, que con frecuencia será más complicada;
+  \item encontrar una transformación de los datos para la que el modelo de regresión lineal sea
+    adecuado.
+\end{itemize}
+Un modelo ajustado con alguna de las variables transformadas es un modelo nuevo, que requiere
+el cumplimiento de las hipótesis: también es necesario validar los modelos transformados.
+
+Según la hipótesis que falle, las soluciones habituales son las siguientes.
+\begin{itemize}
+  \item \textbf{Relación no lineal}:
+    \begin{itemize}
+      \item transformar $Y$, $X$ o ambas, de forma que se linealice la relación entre ellas;
+      \item introducir términos polinómicos de orden mayor o nuevas variables independientes.
+        Por ejemplo, podría ajustarse una función de regresión cuadrática,
+        \[
+          Y_i = \beta_0+\beta_1X_i+\beta_2X_i^2+\varepsilon_i ,
+        \]
+        o exponencial,
+        \[
+          Y_i = \beta_0\beta_1^{X_i}+\varepsilon_i .
+        \]
+    \end{itemize}
+  \item \textbf{Varianza no constante}:
+    \begin{itemize}
+      \item transformar $Y$;
+      \item utilizar otros métodos de ajuste, como el de mínimos cuadrados ponderados.
+    \end{itemize}
+  \item \textbf{Errores no normales}: transformar $Y$. Con frecuencia la falta de normalidad y la
+    heterogeneidad de varianzas se presentan juntas; lo habitual es buscar primero una
+    transformación que estabilice la varianza.
+\end{itemize}
+
+Muchas veces, transformaciones sencillas de $X$, de $Y$ o de ambas permiten que los modelos
+lineales resulten adecuados con las variables transformadas.
+
+\subsection{Transformaciones para linealizar relaciones no lineales}
+
+Supongamos que es razonable considerar que los errores son normales y con varianza constante.
+\begin{itemize}
+  \item Las transformaciones de $Y$ podrían modificar la forma de su distribución y, por tanto,
+    la de los errores, incluidas la normalidad y la homogeneidad de varianzas.
+  \item Las transformaciones de $X$ pueden ayudar a linealizar la relación sin afectar a la
+    distribución de $Y$.
+\end{itemize}
+En este caso conviene, por tanto, transformar $X$. Las transformaciones adecuadas dependen de la
+forma de la relación observada en el diagrama de dispersión:
+\begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{ll}
+    \toprule
+    Patrón de la relación & Transformaciones de $X$ \\
+    \midrule
+    Creciente, cada vez más lentamente (cóncava) & $X'=\log_{10}X$, \quad $X'=\sqrt{X}$ \\
+    Creciente, cada vez más rápidamente (convexa) & $X'=X^2$, \quad $X'=\exp(X)$ \\
+    Decreciente, cada vez más lentamente (convexa) & $X'=1/X$, \quad $X'=\exp(-X)$ \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\begin{nota}
+  Puede ser necesario incluir alguna constante en la transformación para que tenga sentido en
+  todos los valores observados. Por ejemplo, $X'=\sqrt{X+k}$, con $k$ tal que $X+k\ge0$.
+\end{nota}
+
+\subsection{Transformaciones para la heterogeneidad de varianzas y la falta de normalidad}
+
+Con frecuencia la falta de normalidad y la heterogeneidad de varianzas aparecen juntas. En ese
+caso se transforma $Y$ para modificar la forma de su distribución, y a veces también se consigue
+linealizar la relación. Una transformación muy utilizada es el \textbf{logaritmo}.
+
+\begin{ejemplo}[Transformación logarítmica][ej:t4-log]
+  \begin{itemize}
+    \item El histograma de una variable de gastos es muy asimétrico a la derecha: la mayoría de
+      los valores se concentran cerca de 0 y unos pocos son muy grandes. El histograma del
+      logaritmo de los gastos es, en cambio, aproximadamente simétrico y con forma de campana.
+    \item Al representar el salario de los empleados de una empresa frente a su antigüedad (en
+      años), la relación es creciente y aproximadamente lineal, pero la dispersión de los
+      salarios aumenta con la antigüedad. En el gráfico de residuos frente a valores ajustados se
+      observa que la dispersión de los residuos crece con $\est{y}_i$ (forma de embudo). Si se
+      ajusta el modelo con $\log(\text{salario})$ como respuesta, la relación con la antigüedad
+      sigue siendo lineal y los residuos presentan una dispersión aproximadamente constante.
+  \end{itemize}
+\end{ejemplo}
+
+Además del logaritmo, hay otras transformaciones útiles de $Y$, como la raíz cuadrada o la
+inversa, que forman parte de la familia de transformaciones potencia. Para elegir la
+transformación que mejor soluciona el problema se utiliza la transformación de Box--Cox, que
+selecciona dentro de esa familia la más adecuada a los datos.
+
+\begin{definicion}[Transformación de Box--Cox][def:t4-boxcox]
+  La \textbf{transformación de Box--Cox} es la familia de transformaciones no lineales, para
+  $y>0$,
+  \[
+    g_\lambda(y) =
+    \begin{cases}
+      \dfrac{y^\lambda-1}{\lambda} & \text{si } \lambda\neq0, \\[8pt]
+      \log(y) & \text{si } \lambda=0 .
+    \end{cases}
+  \]
+  Cuando $Y$ puede tomar valores negativos, se utiliza
+  \[
+    g_\lambda(y) =
+    \begin{cases}
+      \dfrac{(y+k)^\lambda-1}{\lambda} & \text{si } \lambda\neq0, \\[8pt]
+      \log(y+k) & \text{si } \lambda=0 ,
+    \end{cases}
+  \]
+  con $k$ tal que $y+k>0$ para todos los valores observados.
+\end{definicion}
+
+\begin{itemize}
+  \item La transformación depende del parámetro $\lambda$, que puede elegirse maximizando la
+    verosimilitud, suponiendo que para algún $\lambda$ dado las variables transformadas siguen una
+    distribución $\Normal(\mu,\sigma^2)$. En la práctica se representa la log-verosimilitud en
+    función de $\lambda$ y se toma el valor que la maximiza, junto con un intervalo de confianza
+    del 95\,\% para $\lambda$. Por ejemplo, si el máximo se alcanza en $\lambda\approx0$ y el
+    intervalo es aproximadamente $(-0.5,\,0.5)$, se elige la transformación logarítmica.
+  \item $\lambda=1$ corresponde a la transformación $y'=y-1$, que solo supone un cambio en el
+    \emph{intercept} del modelo y no en la forma de la distribución; es decir, equivale a no
+    transformar.
+\end{itemize}

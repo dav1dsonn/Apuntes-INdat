@@ -1,0 +1,97 @@
+% ==============================================================================
+%  2.4  Estimación por máxima verosimilitud. Propiedades de los estimadores
+% ==============================================================================
+\section{Estimación por máxima verosimilitud}
+\label{sec:t2-mv}
+
+Si además se utiliza que los errores siguen una distribución \textbf{normal}, los parámetros
+$\beta_0$, $\beta_1$ y $\sigma^2$ pueden estimarse por el \textbf{método de máxima
+verosimilitud} (MV).
+
+\paragraph{Verosimilitud.} En el modelo de regresión lineal simple,
+$Y_i\sim\Normal(\beta_0+\beta_1X_i,\sigma^2)$ (\cref{prop:t2-dist-Y}), con densidad
+\[
+  f_i = \frac{1}{\sqrt{2\pi}\,\sigma}
+        \exp\left\{-\frac12\left(\frac{Y_i-(\beta_0+\beta_1X_i)}{\sigma}\right)^2\right\}.
+\]
+Como las $Y_i$ son independientes, la \textbf{función de verosimilitud} de la muestra
+$(Y_1,\ldots,Y_n)$ es el producto de las densidades:
+\begin{align*}
+  L(\beta_0,\beta_1,\sigma^2)
+  &= \prod_{i=1}^{n} \frac{1}{(2\pi\sigma^2)^{1/2}}
+     \exp\left\{-\frac{1}{2\sigma^2}(Y_i-\beta_0-\beta_1X_i)^2\right\} \\
+  &= \frac{1}{(2\pi\sigma^2)^{n/2}}
+     \exp\left\{-\frac{1}{2\sigma^2}\sumi (Y_i-\beta_0-\beta_1X_i)^2\right\}.
+\end{align*}
+La \textbf{log-verosimilitud} es
+\[
+  \ln L(\beta_0,\beta_1,\sigma^2)
+  = -\frac{n}{2}\ln(2\pi) - \frac{n}{2}\ln(\sigma^2)
+    - \frac{1}{2\sigma^2}\sumi (Y_i-\beta_0-\beta_1X_i)^2 .
+\]
+
+\paragraph{Maximización.} Se buscan los valores de $\beta_0$, $\beta_1$ y $\sigma^2$ que
+maximizan $L$ o, equivalentemente, $\ln L$. Derivando respecto de cada parámetro e igualando a
+0 se obtiene:
+\begin{align*}
+  \frac{\partial \ln L}{\partial\beta_0} &= \frac{1}{\sigma^2}\sumi (Y_i-\beta_0-\beta_1X_i) = 0
+  &&\Longrightarrow\ \sumi \big(Y_i-\est{\beta}_0-\est{\beta}_1X_i\big) = 0, \\
+  \frac{\partial \ln L}{\partial\beta_1} &= \frac{1}{\sigma^2}\sumi X_i(Y_i-\beta_0-\beta_1X_i) = 0
+  &&\Longrightarrow\ \sumi X_i\big(Y_i-\est{\beta}_0-\est{\beta}_1X_i\big) = 0, \\
+  \frac{\partial \ln L}{\partial\sigma^2} &= -\frac{n}{2\sigma^2}
+     + \frac{1}{2\sigma^4}\sumi (Y_i-\beta_0-\beta_1X_i)^2 = 0
+  &&\Longrightarrow\ \frac{n}{2\est{\sigma}^2}
+     = \frac{1}{2\est{\sigma}^4}\sumi \big(Y_i-\est{\beta}_0-\est{\beta}_1X_i\big)^2 .
+\end{align*}
+
+\begin{nota}
+  Las dos primeras ecuaciones coinciden con \textbf{las ecuaciones normales} de mínimos
+  cuadrados. Para cualquier $\sigma^2$ fijo, maximizar $\ln L$ en $(\beta_0,\beta_1)$ equivale a
+  minimizar $\sum (Y_i-\beta_0-\beta_1X_i)^2=Q$, ya que es el único término que depende de
+  ellos y aparece con signo negativo.
+\end{nota}
+
+\begin{teorema}[Estimadores de máxima verosimilitud][teo:t2-emv]
+  \begin{itemize}
+    \item De las dos primeras ecuaciones:
+      \[
+        \est{\beta}_0 = \media{y}-\est{\beta}_1\media{x},
+        \qquad
+        \est{\beta}_1 = \frac{\sumi (x_i-\media{x})(y_i-\media{y})}{\sumi (x_i-\media{x})^2}
+        = \frac{SS_{XY}}{SS_X}.
+      \]
+      Son \textbf{los mismos estimadores que los de mínimos cuadrados}
+      (\cref{teo:t2-estimadores-mc}) y, por tanto, tienen sus mismas propiedades.
+    \item De la tercera:
+      \[
+        \est{\sigma}^2 = \frac1n\sumi \big(y_i-\est{\beta}_0-\est{\beta}_1x_i\big)^2
+        = \frac1n\sumi e_i^2 = \frac{SSE}{n}.
+      \]
+  \end{itemize}
+\end{teorema}
+
+\paragraph{El estimador de $\sigma^2$.}
+\begin{itemize}
+  \item El estimador máximo verosímil de $\sigma^2$ es \textbf{sesgado}: como
+    $\est{\sigma}^2=\frac{n-2}{n}MSE$ y $MSE$ es insesgado (\cref{prop:t2-mse}),
+    $\E[\est{\sigma}^2]=\frac{n-2}{n}\sigma^2<\sigma^2$ (subestima $\sigma^2$).
+  \item Habitualmente se usa $MSE$ como estimador insesgado:
+    $MSE=\dfrac{n}{n-2}\,\est{\sigma}^2$.
+  \item Si $n$ es grande, $\frac{n}{n-2}\approx1$ y la diferencia entre ambos es pequeña.
+\end{itemize}
+
+\begin{resumen}[Resumen: mínimos cuadrados frente a máxima verosimilitud]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{lcc}
+    \toprule
+    & \textbf{Mínimos cuadrados} & \textbf{Máxima verosimilitud} \\
+    \midrule
+    Requiere normalidad de los errores & No & Sí \\
+    $\est{\beta}_1$ & $SS_{XY}/SS_X$ & $SS_{XY}/SS_X$ \\
+    $\est{\beta}_0$ & $\media{y}-\est{\beta}_1\media{x}$ & $\media{y}-\est{\beta}_1\media{x}$ \\
+    $\sigma^2$ & $MSE=\dfrac{SSE}{n-2}$ (insesgado) & $\est{\sigma}^2=\dfrac{SSE}{n}$ (sesgado) \\
+    \bottomrule
+  \end{tabular}
+\end{resumen}

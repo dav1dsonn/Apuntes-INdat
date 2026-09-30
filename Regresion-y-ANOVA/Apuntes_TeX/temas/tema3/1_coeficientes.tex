@@ -1,0 +1,326 @@
+% ==============================================================================
+%  3.1  Inferencias sobre los coeficientes de regresión
+% ==============================================================================
+\section{Inferencias sobre los coeficientes de regresión}
+\label{sec:t3-coeficientes}
+
+En todo el tema se supone que es aplicable el modelo de regresión lineal simple con errores
+normales (\cref{def:rls}):
+\[
+  Y_i = \beta_0 + \beta_1X_i + \varepsilon_i, \qquad
+  \varepsilon_i \iid \Normal(0,\sigma^2), \quad i=1,\ldots,n .
+\]
+Hacer inferencias sobre $\beta_0$ y $\beta_1$ consiste en cuantificar la incertidumbre de sus
+estimaciones mediante intervalos de confianza y en resolver contrastes de hipótesis sobre sus
+valores. Los contrastes de mayor interés son los de la forma $H_0\colon\beta_i=0$, y en
+particular
+\[
+  H_0\colon \beta_1 = 0 \qquad\text{frente a}\qquad H_1\colon \beta_1\neq 0 .
+\]
+Si $\beta_1=0$, entonces $\E(Y)=\beta_0+0\cdot X=\beta_0$: la recta de regresión es
+horizontal y la media de $Y$ no varía con $X$, es decir, \textbf{no hay relación lineal entre
+$X$ e $Y$}. Conviene precisar que $\beta_1=0$ indica ausencia de relación \emph{lineal}, no
+ausencia de relación: puede existir una relación de otro tipo (por ejemplo, cuadrática) con
+pendiente de la recta de regresión nula.
+
+Para resolver estos contrastes y construir los intervalos es necesario conocer la distribución
+en el muestreo de los estimadores $\est{\beta}_0$ y $\est{\beta}_1$, es decir, la distribución de
+los valores que toman en muestras repetidas con los valores de $X$ fijos.
+
+\subsection{Distribución en el muestreo de \texorpdfstring{$\est{\beta}_1$}{beta1}}
+
+\begin{proposicion}[$\est{\beta}_1$ como combinación lineal de las $Y_i$][prop:t3-ki]
+  El estimador $\est{\beta}_1 = SS_{XY}/\SSX$ puede escribirse como
+  \[
+    \est{\beta}_1 = \sumi k_iY_i,
+    \qquad
+    k_i = \frac{X_i-\media{X}}{\sumi (X_i-\media{X})^2} = \frac{X_i-\media{X}}{\SSX},
+  \]
+  donde los $k_i$ son constantes que dependen únicamente de las $X_i$. Además:
+  \[
+    \text{(i) } \sumi k_i = 0, \qquad
+    \text{(ii) } \sumi k_iX_i = 1, \qquad
+    \text{(iii) } \sumi k_i^2 = \frac{1}{\SSX}.
+  \]
+\end{proposicion}
+
+\begin{demostracion}
+  Como $\sumi (X_i-\media{X})=0$, se tiene $\sumi (X_i-\media{X})\media{Y}=0$ y por tanto
+  \[
+    SS_{XY} = \sumi (X_i-\media{X})(Y_i-\media{Y}) = \sumi (X_i-\media{X})Y_i,
+  \]
+  luego
+  \(
+    \est{\beta}_1 = \sumi \frac{X_i-\media{X}}{\SSX}\,Y_i = \sumi k_iY_i .
+  \)
+  Propiedades de los $k_i$:
+  \begin{enumerate}[label=(\roman*)]
+    \item $\sumi k_i = \frac{1}{\SSX}\sumi (X_i-\media{X}) = 0$.
+    \item $\sumi k_iX_i = \frac{1}{\SSX}\sumi (X_i-\media{X})X_i
+      = \frac{1}{\SSX}\sumi (X_i-\media{X})(X_i-\media{X}) = \frac{\SSX}{\SSX} = 1$,
+      donde se ha restado $\media{X}\sumi (X_i-\media{X})=0$.
+    \item $\sumi k_i^2 = \frac{1}{\SSX^2}\sumi (X_i-\media{X})^2 = \frac{\SSX}{\SSX^2}
+      = \frac{1}{\SSX}$.
+  \end{enumerate}
+\end{demostracion}
+
+\begin{teorema}[Distribución de $\est{\beta}_1$][teo:t3-dist-b1]
+  \[
+    \est{\beta}_1 \sim \Normal\!\left(\beta_1,\ \frac{\sigma^2}{\SSX}\right),
+    \qquad
+    \frac{\est{\beta}_1-\beta_1}{\sqrt{MSE/\SSX}} \sim \tdist{n-2} .
+  \]
+\end{teorema}
+
+\begin{demostracion}
+  \begin{itemize}
+    \item \emph{Normalidad}: $\est{\beta}_1=\sum k_iY_i$ es combinación lineal de variables
+      normales independientes, luego es normal.
+    \item \emph{Insesgadez}: usando (i) y (ii),
+      \[
+        \E(\est{\beta}_1) = \sumi k_i\E(Y_i) = \sumi k_i(\beta_0+\beta_1X_i)
+        = \beta_0\sumi k_i + \beta_1\sumi k_iX_i = \beta_0\cdot0+\beta_1\cdot1 = \beta_1 .
+      \]
+    \item \emph{Varianza}: como las $Y_i$ son independientes con varianza $\sigma^2$ y los $k_i$
+      son constantes, usando (iii),
+      \[
+        \Var(\est{\beta}_1) = \sumi k_i^2\Var(Y_i) = \sigma^2\sumi k_i^2 = \frac{\sigma^2}{\SSX}.
+      \]
+  \end{itemize}
+  Al estimar $\sigma^2$ por $MSE$, insesgado (\cref{prop:t2-mse}), se obtiene el estimador
+  insesgado $\widehat{\Var}(\est{\beta}_1)=MSE/\SSX$, y el estadístico tipificado con él sigue
+  una $\tdist{n-2}$ ($n-2$ son los grados de libertad de $MSE$).
+\end{demostracion}
+
+\subsection{Intervalo de confianza para \texorpdfstring{$\beta_1$}{beta1}}
+
+Del \cref{teo:t3-dist-b1},
+\[
+  P\left(\tq{n-2}{\alpha/2} \le \frac{\est{\beta}_1-\beta_1}{\sqrt{MSE/\SSX}}
+  \le \tq{n-2}{1-\alpha/2}\right) = 1-\alpha .
+\]
+Por la simetría de la $t$ de Student, $\tq{n-2}{\alpha/2}=-\tq{n-2}{1-\alpha/2}$; despejando
+$\beta_1$,
+\[
+  1-\alpha = P\left(\est{\beta}_1-\tq{n-2}{1-\alpha/2}\sqrt{\frac{MSE}{\SSX}}
+  \le \beta_1 \le
+  \est{\beta}_1+\tq{n-2}{1-\alpha/2}\sqrt{\frac{MSE}{\SSX}}\right).
+\]
+
+\begin{resumen}[Intervalo de confianza de nivel $1-\alpha$ para $\beta_1$]
+  \[
+    \beta_1 \in \left(\est{\beta}_1 \pm \tq{n-2}{1-\alpha/2}\sqrt{\frac{MSE}{\SSX}}\right).
+  \]
+  La cantidad $\sqrt{MSE/\SSX}$ es el \textbf{error estándar} de $\est{\beta}_1$.
+\end{resumen}
+
+\begin{ejemplo}[Volumen de madera][ej:arboles]
+  Se quiere estimar la cosecha potencial de madera de un bosque. En una muestra de árboles se
+  toman medidas no destructivas: HT (altura, en pies), DBH (diámetro del tronco a la altura del
+  pecho, en pulgadas) y D16 (diámetro del tronco a 16 pies de altura, en pulgadas), con el fin
+  de predecir el volumen de madera VOL (pies cúbicos) de cada árbol. Con $n=20$ árboles se
+  ajusta un modelo de regresión lineal simple con respuesta VOL y regresor DBH, por ser la
+  medida más fácil de obtener:
+  \[
+    \est{Y} = -45.57 + 6.916\,X, \qquad MSE = 36.587, \qquad \SSX = 64.512 .
+  \]
+  \begin{center}
+    \begin{tikzpicture}
+      \begin{axis}[width=7cm, height=5cm, xlabel={DBH (pulgadas)}, ylabel={VOL (pies$^3$)},
+          xmin=9.5, xmax=20, ymin=15, ymax=105, label style={font=\small},
+          tick label style={font=\footnotesize}]
+        \addplot[puntos, mark size=1.3pt] table[x=dbh, y=vol] {datos/tema3/arboles.dat};
+        \addplot[recta, domain=10:19.3] {-45.57+6.916*x};
+      \end{axis}
+    \end{tikzpicture}\\
+    {\footnotesize (Datos reconstruidos a partir del gráfico de las diapositivas.)}
+  \end{center}
+  \textbf{IC del 95\,\% para $\beta_1$.} Con $\tq{18}{0.975}=2.101$ y error estándar
+  $\sqrt{36.587/64.512}=0.7531$,
+  \[
+    \beta_1 \in (6.916 \pm 2.101\cdot0.7531) = (6.916\pm1.582) = (5.334,\ 8.498).
+  \]
+  Con una confianza del 95\,\%, el incremento medio poblacional del volumen de madera por cada
+  pulgada de aumento del diámetro a la altura del pecho está entre 5.334 y 8.498 pies cúbicos.
+  Como $0\notin(5.334,\,8.498)$, se rechaza $H_0\colon\beta_1=0$ a nivel $\alpha=0.05$: existe
+  relación lineal entre DBH y VOL.
+\end{ejemplo}
+
+\subsection{Contrastes de hipótesis para \texorpdfstring{$\beta_1$}{beta1}}
+
+Todos se basan en el estadístico del \cref{teo:t3-dist-b1}.
+
+\paragraph{Contraste bilateral.} El más relevante es $H_0\colon\beta_1=0$ frente a
+$H_1\colon\beta_1\neq0$, ya que si no se rechaza $H_0$ se concluye que no hay relación lineal
+entre $X$ e $Y$. Se calcula el valor observado del estadístico
+\[
+  t^* = \frac{\est{\beta}_1-0}{\sqrt{MSE/\SSX}}
+\]
+y se compara con el cuantil de la $\tdist{n-2}$:
+\begin{itemize}
+  \item si $|t^*|\le\tq{n-2}{1-\alpha/2}$, no se rechaza $H_0$ a nivel $\alpha$;
+  \item si $|t^*|>\tq{n-2}{1-\alpha/2}$, se rechaza $H_0$ a nivel $\alpha$.
+\end{itemize}
+
+\paragraph{Contraste unilateral.} Para $H_0\colon\beta_1\le0$ frente a $H_1\colon\beta_1>0$ se usa
+el mismo estadístico, comparándolo ahora con el cuantil $1-\alpha$:
+\begin{itemize}
+  \item si $t^*\le\tq{n-2}{1-\alpha}$, no se rechaza $H_0$ a nivel $\alpha$;
+  \item si $t^*>\tq{n-2}{1-\alpha}$, se rechaza $H_0$ a nivel $\alpha$.
+\end{itemize}
+(Análogamente para $H_1\colon\beta_1<0$, rechazando si $t^*<-\tq{n-2}{1-\alpha}$.)
+
+\paragraph{Valor específico $b_1$.} Para $H_0\colon\beta_1=b_1$ frente a $H_1\colon\beta_1\neq b_1$
+(o las versiones unilaterales) se usa
+\[
+  t^* = \frac{\est{\beta}_1-b_1}{\sqrt{MSE/\SSX}},
+\]
+con las mismas reglas de decisión.
+
+\begin{ejemplo}[Volumen de madera: contrastes sobre $\beta_1$]
+  \begin{itemize}
+    \item \emph{Bilateral}, $H_0\colon\beta_1=0$:
+      $t^* = 6.916/0.7531 = 9.18$. Como $|t^*|>\tq{18}{0.975}=2.101$, se rechaza $H_0$: hay
+      relación lineal entre el diámetro del tronco y el volumen de madera.
+    \item \emph{Unilateral}, $H_0\colon\beta_1\le0$ frente a $H_1\colon\beta_1>0$: el estadístico
+      es el mismo, $t^*=9.18>\tq{18}{0.95}=1.73$, y se rechaza $H_0$: $\beta_1$ es positivo, es
+      decir, el volumen aumenta significativamente con el diámetro.
+    \item \emph{Valor específico}, $H_0\colon\beta_1=6$ frente a $H_1\colon\beta_1\neq6$:
+      $t^* = (6.916-6)/0.7531 = 1.22 \le 2.101$, y no se rechaza $H_0$: no hay evidencia de que
+      el incremento medio de volumen por pulgada de diámetro sea distinto de 6 pies cúbicos.
+  \end{itemize}
+\end{ejemplo}
+
+\subsection{Inferencias sobre \texorpdfstring{$\beta_0$}{beta0}}
+
+\begin{teorema}[Distribución de $\est{\beta}_0$][teo:t3-dist-b0]
+  El estimador $\est{\beta}_0=\media{Y}-\est{\beta}_1\media{X}$ verifica
+  \[
+    \est{\beta}_0 \sim \Normal\!\left(\beta_0,\ \sigma^2\left(\frac1n+\frac{\media{X}^2}{\SSX}\right)\right),
+    \qquad
+    \frac{\est{\beta}_0-\beta_0}{\raizMSE{\frac1n+\frac{\media{X}^2}{\SSX}}} \sim \tdist{n-2}.
+  \]
+\end{teorema}
+
+\begin{demostracion}
+  \emph{Normalidad.} Como $\media{Y}=\sum\frac1nY_i$ y $\est{\beta}_1=\sum k_iY_i$,
+  \[
+    \est{\beta}_0 = \sumi\left(\frac1n - \media{X}k_i\right)Y_i
+    = \sumi\left(\frac1n - \frac{\media{X}(X_i-\media{X})}{\SSX}\right)Y_i ,
+  \]
+  combinación lineal de normales independientes, luego normal.
+
+  \emph{Insesgadez.}
+  \[
+    \E(\est{\beta}_0) = \frac1n\sumi\E(Y_i) - \E(\est{\beta}_1)\media{X}
+    = \frac1n\left(n\beta_0+\beta_1\sumi X_i\right) - \beta_1\media{X}
+    = \beta_0 + \beta_1\media{X} - \beta_1\media{X} = \beta_0 .
+  \]
+
+  \emph{Varianza.} Por la independencia de las $Y_i$ y usando (i) y (iii) de la
+  \cref{prop:t3-ki},
+  \[
+    \Var(\est{\beta}_0) = \sigma^2\sumi\left(\frac1n-\media{X}k_i\right)^2
+    = \sigma^2\left(\frac{n}{n^2} - \frac{2\media{X}}{n}\sumi k_i + \media{X}^2\sumi k_i^2\right)
+    = \sigma^2\left(\frac1n + \frac{\media{X}^2}{\SSX}\right).
+  \]
+  Sustituyendo $\sigma^2$ por $MSE$ se obtiene el estimador insesgado
+  $\widehat{\Var}(\est{\beta}_0)=MSE\left(\frac1n+\frac{\media{X}^2}{\SSX}\right)$ y la
+  distribución $\tdist{n-2}$ del estadístico tipificado.
+\end{demostracion}
+
+\begin{resumen}[Inferencias sobre $\beta_0$]
+  \begin{itemize}
+    \item IC de nivel $1-\alpha$:
+      $\displaystyle \beta_0 \in \left(\est{\beta}_0 \pm \tq{n-2}{1-\alpha/2}
+      \raizMSE{\frac1n+\frac{\media{X}^2}{\SSX}}\right)$.
+    \item Contraste de $H_0\colon\beta_0=b_0$:
+      $\displaystyle t^* = \frac{\est{\beta}_0-b_0}{\raizMSE{\frac1n+\frac{\media{X}^2}{\SSX}}}$.
+      En el contraste bilateral se rechaza $H_0$ si $|t^*|>\tq{n-2}{1-\alpha/2}$; en el
+      unilateral ($H_1\colon\beta_0>b_0$), si $t^*>\tq{n-2}{1-\alpha}$.
+  \end{itemize}
+\end{resumen}
+
+\subsection{Consideraciones sobre las inferencias}
+
+\begin{itemize}
+  \item \textbf{Normalidad.} Aunque las $Y_i$ no sean normales, las distribuciones de
+    $\est{\beta}_0$ y $\est{\beta}_1$ son aproximadamente normales, en las condiciones del
+    teorema central del límite.
+  \item Se asume que $X$ es constante, y las inferencias son válidas en el \textbf{rango de
+    valores de $X$ observado} en la muestra.
+  \item Las varianzas de $\est{\beta}_0$ y $\est{\beta}_1$ dependen de $\SSX=\sum(X_i-\media{X})^2$:
+    \textbf{mayor dispersión en $X$ implica menor variabilidad de los estimadores}. Esto es útil
+    al planificar la recogida de datos.
+\end{itemize}
+
+\subsection{Inferencia simultánea: el problema de las comparaciones múltiples}
+\label{sec:t3-bonferroni}
+
+Hasta ahora se ha hecho inferencia sobre cada coeficiente por separado, fijando un nivel de
+significación (por ejemplo, $\alpha=0.05$) en cada contraste o intervalo. Si las inferencias
+fueran independientes podría garantizarse ese nivel para cada coeficiente, pero no lo son, y
+aparece el problema de las \textbf{comparaciones múltiples}:
+\begin{itemize}
+  \item la confianza conjunta de varios IC simultáneos es menor que la de cada uno (menor del
+    95\,\%);
+  \item el nivel de significación del contraste simultáneo es mayor que el de cada contraste
+    (mayor que 0.05): aumentan los falsos positivos.
+\end{itemize}
+
+\begin{ejemplo}[Probabilidad de algún falso positivo]
+  Al lanzar un par de dados, llamemos ``error de tipo I'' a obtener dos unos, con probabilidad
+  $\alpha=\frac16\cdot\frac16\approx0.028$. En una sola tirada la probabilidad de ese resultado
+  es $\alpha$, pero al repetir las tiradas es cada vez más probable que alguna dé dos unos.
+
+  Del mismo modo, si se realizan 20 contrastes independientes, cada uno a nivel $\alpha=0.05$,
+  \begin{align*}
+    P(\text{al menos un contraste significativo por azar})
+    &= 1 - P(\text{ninguno significativo por azar}) \\
+    &= 1-(1-0.05)^{20} \approx 0.64 .
+  \end{align*}
+\end{ejemplo}
+
+Una solución a este problema es el \textbf{ajuste de Bonferroni}: modificar el nivel de
+significación o de confianza de cada inferencia individual para conseguir el nivel deseado en la
+inferencia simultánea.
+
+\begin{proposicion}[Desigualdad de Bonferroni][prop:bonferroni]
+  Para sucesos $A_1,\ldots,A_m$,
+  \(
+    P\left(\bigcup_{i=1}^m A_i\right) \le \sum_{i=1}^m P(A_i).
+  \)
+\end{proposicion}
+
+\paragraph{Caso de $\beta_0$ y $\beta_1$.} Sea $A_0$ ($A_1$) el suceso ``el IC individual de
+nivel $1-\alpha$ para $\beta_0$ ($\beta_1$) no contiene a $\beta_0$ ($\beta_1$)'', de modo que
+$P(A_0)=P(A_1)=\alpha$. La probabilidad de que \emph{ambos} intervalos contengan a su parámetro
+es
+\[
+  P(\overline{A_0}\cap\overline{A_1}) = 1-P(A_0\cup A_1)
+  = 1-P(A_0)-P(A_1)+P(A_0\cap A_1) \ \ge\ 1-2\alpha ,
+\]
+porque $P(A_0\cap A_1)\ge0$. Así, dos IC individuales del 95\,\% garantizan una confianza
+simultánea de al menos el 90\,\%, y dos IC individuales del 97.5\,\% garantizan una confianza
+simultánea del 95\,\%.
+
+\paragraph{Caso general.} Se construyen $m$ intervalos individuales de nivel $1-\alpha^*$,
+\[
+  C_i\colon\quad \beta_i \in \left(\est{\beta}_i \pm \tq{n-2}{1-\alpha^*/2}
+  \sqrt{\widehat{\Var}(\est{\beta}_i)}\right),
+  \qquad P(\beta_i\in C_i)=1-\alpha^* .
+\]
+Por la desigualdad de Bonferroni, la confianza simultánea cumple
+\[
+  P\left(\bigcap_{i=1}^m C_i\right)
+  = 1-P\left(\bigcup_{i=1}^m \overline{C_i}\right)
+  \ \ge\ 1-\sum_{i=1}^m P(\overline{C_i}) = 1-m\alpha^* .
+\]
+
+\begin{resumen}[Ajuste de Bonferroni]
+  Para garantizar un nivel de confianza simultáneo $1-\alpha$ en $m$ intervalos (o un nivel de
+  significación global $\alpha$ en $m$ contrastes) basta tomar en cada uno
+  \[
+    \alpha^* = \frac{\alpha}{m}.
+  \]
+\end{resumen}
