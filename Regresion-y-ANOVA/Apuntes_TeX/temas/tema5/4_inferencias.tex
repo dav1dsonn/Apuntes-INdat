@@ -26,16 +26,24 @@ sobre la normal multivariante.
 \begin{demostracion}
   Se tiene $\vect{Y}\sim\Normal(\vect{X}\vect{\beta},\sigma^2\vect{I})$ y, tomando
   $\vect{D}=\XtXi\vect{X}\T$, $\bhat=\vect{D}\vect{Y}$ es una transformación lineal de $\vect{Y}$.
-  Por el \cref{teo:t5-normal-lineal}, $\bhat$ es normal, con
+  Por el \cref{teo:t5-normal-lineal} (con $\vect{c}=\vect{0}$), $\bhat$ es normal.
+
+  \emph{Esperanza.}
   \begin{align*}
-    \E(\bhat) &= \vect{D}\vect{X}\vect{\beta}
-      = \underbrace{\XtXi\vect{X}\T\vect{X}}_{\vect{I}}\vect{\beta} = \vect{\beta}, \\
-    \Var(\bhat) &= \vect{D}\,\sigma^2\vect{I}\,\vect{D}\T
-      = \sigma^2\big(\XtXi\vect{X}\T\big)\big(\XtXi\vect{X}\T\big)\T \\
-      &= \sigma^2\XtXi\underbrace{\XtX\big(\XtXi\big)\T}_{\vect{I}} = \sigma^2\XtXi ,
+    \E(\bhat) &= \vect{D}\,\E(\vect{Y}) = \vect{D}\vect{X}\vect{\beta} \\
+    &= \underbrace{\XtXi\vect{X}\T\vect{X}}_{\vect{I}}\,\vect{\beta} \\
+    &= \vect{\beta} .
   \end{align*}
-  ya que $\XtX$ y su inversa son simétricas: $\big(\XtXi\big)\T=\XtXi$ y
-  $\XtX\big(\XtXi\big)\T=\vect{I}$.
+
+  \emph{Varianza.} $\XtX$ es simétrica, y por tanto también lo es su inversa:
+  $\big(\XtXi\big)\T=\XtXi$. Entonces
+  \begin{align*}
+    \Var(\bhat) &= \vect{D}\,\Var(\vect{Y})\,\vect{D}\T = \vect{D}\,\sigma^2\vect{I}\,\vect{D}\T \\
+    &= \sigma^2\big(\XtXi\vect{X}\T\big)\big(\XtXi\vect{X}\T\big)\T \\
+    &= \sigma^2\XtXi\vect{X}\T\vect{X}\big(\XtXi\big)\T \\
+    &= \sigma^2\XtXi\underbrace{\XtX\,\XtXi}_{\vect{I}} \\
+    &= \sigma^2\XtXi .
+  \end{align*}
 \end{demostracion}
 
 Como $MSE$ es un estimador insesgado de $\sigma^2$ (\cref{prop:t2-mse}), la matriz de
@@ -142,8 +150,10 @@ varianza de esa media y la de la estimación de la respuesta media:
 
 \subsection{Intervalos de confianza y de predicción}
 
-Sustituyendo $\sigma^2$ por $MSE$, los estadísticos tipificados siguen una $\tdist{n-2}$ y se
-obtienen, en forma matricial, los mismos intervalos y contrastes del Tema 3.
+Sustituyendo $\sigma^2$ por $MSE$, los estadísticos tipificados siguen una $\tdist{n-2}$ (por el
+mismo argumento que en el \cref{teo:t3-dist-b1}: $SSE/\sigma^2\sim\chisq{n-2}$, independiente de
+$\bhat$ y de $\Ynew$) y se obtienen, en forma matricial, los mismos intervalos y contrastes del
+Tema 3.
 
 \begin{resumen}[Inferencias en forma matricial (nivel $1-\alpha$)]
   Sea $c_{jj}$, $j=0,1$, el elemento $j$-ésimo de la diagonal de $\XtXi$.

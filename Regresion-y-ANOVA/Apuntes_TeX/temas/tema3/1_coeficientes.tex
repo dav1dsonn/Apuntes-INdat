@@ -18,10 +18,15 @@ particular
   H_0\colon \beta_1 = 0 \qquad\text{frente a}\qquad H_1\colon \beta_1\neq 0 .
 \]
 Si $\beta_1=0$, entonces $\E(Y)=\beta_0+0\cdot X=\beta_0$: la recta de regresión es
-horizontal y la media de $Y$ no varía con $X$, es decir, \textbf{no hay relación lineal entre
-$X$ e $Y$}. Conviene precisar que $\beta_1=0$ indica ausencia de relación \emph{lineal}, no
-ausencia de relación: puede existir una relación de otro tipo (por ejemplo, cuadrática) con
-pendiente de la recta de regresión nula.
+horizontal y la media de $Y$ no varía con $X$. Más aún, bajo el modelo las $Y_i$ son
+independientes con $Y_i\sim\Normal(\beta_0+\beta_1X_i,\sigma^2)$ (\cref{prop:t2-dist-Y}); si
+$\beta_1=0$, todas siguen la misma distribución $\Normal(\beta_0,\sigma^2)$, que no depende de
+$X$, de modo que \textbf{no hay relación de ningún tipo entre $X$ e $Y$}.
+
+Esta conclusión presupone que el modelo es correcto. Si falla la hipótesis de linealidad, $Y$
+puede depender de $X$ de forma no lineal (por ejemplo, cuadrática) aunque la recta que mejor se
+ajusta a los datos tenga pendiente nula; por eso es necesario validar el modelo
+(\cref{sec:t4-objetivos}).
 
 Para resolver estos contrastes y construir los intervalos es necesario conocer la distribución
 en el muestreo de los estimadores $\est{\beta}_0$ y $\est{\beta}_1$, es decir, la distribución de
@@ -45,23 +50,42 @@ los valores que toman en muestras repetidas con los valores de $X$ fijos.
 \end{proposicion}
 
 \begin{demostracion}
-  Como $\sumi (X_i-\media{X})=0$, se tiene $\sumi (X_i-\media{X})\media{Y}=0$ y por tanto
+  \emph{Expresión de $\est{\beta}_1$.} La suma de las desviaciones respecto de la media es nula:
   \[
-    SS_{XY} = \sumi (X_i-\media{X})(Y_i-\media{Y}) = \sumi (X_i-\media{X})Y_i,
+    \sumi (X_i-\media{X}) = \sumi X_i - n\media{X} = n\media{X}-n\media{X} = 0 .
   \]
-  luego
-  \(
-    \est{\beta}_1 = \sumi \frac{X_i-\media{X}}{\SSX}\,Y_i = \sumi k_iY_i .
-  \)
-  Propiedades de los $k_i$:
-  \begin{enumerate}[label=(\roman*)]
-    \item $\sumi k_i = \frac{1}{\SSX}\sumi (X_i-\media{X}) = 0$.
-    \item $\sumi k_iX_i = \frac{1}{\SSX}\sumi (X_i-\media{X})X_i
-      = \frac{1}{\SSX}\sumi (X_i-\media{X})(X_i-\media{X}) = \frac{\SSX}{\SSX} = 1$,
-      donde se ha restado $\media{X}\sumi (X_i-\media{X})=0$.
-    \item $\sumi k_i^2 = \frac{1}{\SSX^2}\sumi (X_i-\media{X})^2 = \frac{\SSX}{\SSX^2}
-      = \frac{1}{\SSX}$.
-  \end{enumerate}
+  Por tanto,
+  \begin{align*}
+    SS_{XY} &= \sumi (X_i-\media{X})(Y_i-\media{Y}) \\
+            &= \sumi (X_i-\media{X})Y_i - \media{Y}\sumi (X_i-\media{X}) \\
+            &= \sumi (X_i-\media{X})Y_i ,
+  \end{align*}
+  y dividiendo por $\SSX$,
+  \begin{align*}
+    \est{\beta}_1 &= \frac{SS_{XY}}{\SSX}
+      = \sumi \frac{X_i-\media{X}}{\SSX}\,Y_i \\
+    &= \sumi k_iY_i .
+  \end{align*}
+
+  \emph{Propiedad (i).}
+  \[
+    \sumi k_i = \frac{1}{\SSX}\sumi (X_i-\media{X}) = 0 .
+  \]
+
+  \emph{Propiedad (ii).} Restando el término nulo $\media{X}\displaystyle\sumi (X_i-\media{X})$,
+  \begin{align*}
+    \sumi k_iX_i &= \frac{1}{\SSX}\sumi (X_i-\media{X})X_i \\
+    &= \frac{1}{\SSX}\left(\sumi (X_i-\media{X})X_i - \media{X}\sumi (X_i-\media{X})\right) \\
+    &= \frac{1}{\SSX}\sumi (X_i-\media{X})(X_i-\media{X}) \\
+    &= \frac{\SSX}{\SSX} = 1 .
+  \end{align*}
+
+  \emph{Propiedad (iii).}
+  \begin{align*}
+    \sumi k_i^2 &= \sumi \frac{(X_i-\media{X})^2}{\SSX^2} \\
+    &= \frac{1}{\SSX^2}\sumi (X_i-\media{X})^2 \\
+    &= \frac{\SSX}{\SSX^2} = \frac{1}{\SSX} .
+  \end{align*}
 \end{demostracion}
 
 \begin{teorema}[Distribución de $\est{\beta}_1$][teo:t3-dist-b1]
@@ -73,23 +97,42 @@ los valores que toman en muestras repetidas con los valores de $X$ fijos.
 \end{teorema}
 
 \begin{demostracion}
-  \begin{itemize}
-    \item \emph{Normalidad}: $\est{\beta}_1=\sum k_iY_i$ es combinación lineal de variables
-      normales independientes, luego es normal.
-    \item \emph{Insesgadez}: usando (i) y (ii),
-      \[
-        \E(\est{\beta}_1) = \sumi k_i\E(Y_i) = \sumi k_i(\beta_0+\beta_1X_i)
-        = \beta_0\sumi k_i + \beta_1\sumi k_iX_i = \beta_0\cdot0+\beta_1\cdot1 = \beta_1 .
-      \]
-    \item \emph{Varianza}: como las $Y_i$ son independientes con varianza $\sigma^2$ y los $k_i$
-      son constantes, usando (iii),
-      \[
-        \Var(\est{\beta}_1) = \sumi k_i^2\Var(Y_i) = \sigma^2\sumi k_i^2 = \frac{\sigma^2}{\SSX}.
-      \]
-  \end{itemize}
+  \emph{Normalidad.} Por la \cref{prop:t3-ki}, $\est{\beta}_1$ es combinación lineal de las
+  $Y_i$, que son normales independientes; luego es normal.
+
+  \emph{Insesgadez.} Usando las propiedades (i) y (ii) de los $k_i$,
+  \begin{align*}
+    \E(\est{\beta}_1) &= \E\left(\sumi k_iY_i\right) = \sumi k_i\E(Y_i) \\
+    &= \sumi k_i(\beta_0+\beta_1X_i) \\
+    &= \beta_0\sumi k_i + \beta_1\sumi k_iX_i \\
+    &= \beta_0\cdot0+\beta_1\cdot1 = \beta_1 .
+  \end{align*}
+
+  \emph{Varianza.} Las $Y_i$ son independientes con varianza $\sigma^2$ y los $k_i$ son
+  constantes, así que las covarianzas se anulan; usando la propiedad (iii),
+  \begin{align*}
+    \Var(\est{\beta}_1) &= \Var\left(\sumi k_iY_i\right) = \sumi k_i^2\Var(Y_i) \\
+    &= \sigma^2\sumi k_i^2 \\
+    &= \frac{\sigma^2}{\SSX} .
+  \end{align*}
   Al estimar $\sigma^2$ por $MSE$, insesgado (\cref{prop:t2-mse}), se obtiene el estimador
-  insesgado $\widehat{\Var}(\est{\beta}_1)=MSE/\SSX$, y el estadístico tipificado con él sigue
-  una $\tdist{n-2}$ ($n-2$ son los grados de libertad de $MSE$).
+  insesgado $\widehat{\Var}(\est{\beta}_1)=MSE/\SSX$.
+
+  \emph{Distribución $t$.} Se utiliza que
+  \[
+    \frac{(n-2)MSE}{\sigma^2} = \frac{SSE}{\sigma^2} \sim \chisq{n-2}
+  \]
+  y que $SSE$ es independiente de $\est{\beta}_0$ y $\est{\beta}_1$ (resultado que se admite sin
+  demostración). Entonces
+  \begin{align*}
+    \frac{\est{\beta}_1-\beta_1}{\sqrt{MSE/\SSX}}
+    &= \frac{\dfrac{\est{\beta}_1-\beta_1}{\sqrt{\sigma^2/\SSX}}}
+            {\sqrt{\dfrac{MSE}{\sigma^2}}}
+     = \frac{\dfrac{\est{\beta}_1-\beta_1}{\sqrt{\sigma^2/\SSX}}}
+            {\sqrt{\dfrac{SSE/\sigma^2}{n-2}}} ,
+  \end{align*}
+  que es el cociente entre una $\Normal(0,1)$ y la raíz de una $\chisq{n-2}$ independiente
+  dividida por sus grados de libertad; luego sigue una $\tdist{n-2}$.
 \end{demostracion}
 
 \subsection{Intervalo de confianza para \texorpdfstring{$\beta_1$}{beta1}}
@@ -203,30 +246,41 @@ con las mismas reglas de decisión.
 \end{teorema}
 
 \begin{demostracion}
-  \emph{Normalidad.} Como $\media{Y}=\sum\frac1nY_i$ y $\est{\beta}_1=\sum k_iY_i$,
-  \[
-    \est{\beta}_0 = \sumi\left(\frac1n - \media{X}k_i\right)Y_i
-    = \sumi\left(\frac1n - \frac{\media{X}(X_i-\media{X})}{\SSX}\right)Y_i ,
-  \]
-  combinación lineal de normales independientes, luego normal.
+  \emph{Normalidad.} Escribiendo $\media{Y}$ y $\est{\beta}_1$ como combinaciones lineales de
+  las $Y_i$ (\cref{prop:t3-ki}),
+  \begin{align*}
+    \est{\beta}_0 &= \media{Y}-\est{\beta}_1\media{X}
+      = \sumi \frac1n\,Y_i - \media{X}\sumi k_iY_i \\
+    &= \sumi\left(\frac1n - \media{X}k_i\right)Y_i \\
+    &= \sumi\left(\frac1n - \frac{\media{X}(X_i-\media{X})}{\SSX}\right)Y_i ,
+  \end{align*}
+  que es combinación lineal de normales independientes; luego es normal.
 
-  \emph{Insesgadez.}
-  \[
-    \E(\est{\beta}_0) = \frac1n\sumi\E(Y_i) - \E(\est{\beta}_1)\media{X}
-    = \frac1n\left(n\beta_0+\beta_1\sumi X_i\right) - \beta_1\media{X}
-    = \beta_0 + \beta_1\media{X} - \beta_1\media{X} = \beta_0 .
-  \]
+  \emph{Insesgadez.} Como $\E(\est{\beta}_1)=\beta_1$,
+  \begin{align*}
+    \E(\est{\beta}_0) &= \E(\media{Y}) - \media{X}\,\E(\est{\beta}_1) \\
+    &= \frac1n\sumi\E(Y_i) - \beta_1\media{X} \\
+    &= \frac1n\sumi(\beta_0+\beta_1X_i) - \beta_1\media{X} \\
+    &= \beta_0 + \beta_1\media{X} - \beta_1\media{X} \\
+    &= \beta_0 .
+  \end{align*}
 
-  \emph{Varianza.} Por la independencia de las $Y_i$ y usando (i) y (iii) de la
-  \cref{prop:t3-ki},
-  \[
-    \Var(\est{\beta}_0) = \sigma^2\sumi\left(\frac1n-\media{X}k_i\right)^2
-    = \sigma^2\left(\frac{n}{n^2} - \frac{2\media{X}}{n}\sumi k_i + \media{X}^2\sumi k_i^2\right)
-    = \sigma^2\left(\frac1n + \frac{\media{X}^2}{\SSX}\right).
-  \]
+  \emph{Varianza.} Por la independencia de las $Y_i$ y usando las propiedades (i) y (iii) de
+  la \cref{prop:t3-ki},
+  \begin{align*}
+    \Var(\est{\beta}_0) &= \sumi\left(\frac1n-\media{X}k_i\right)^2\Var(Y_i) \\
+    &= \sigma^2\sumi\left(\frac{1}{n^2} - \frac{2\media{X}}{n}\,k_i + \media{X}^2k_i^2\right) \\
+    &= \sigma^2\left(\frac{n}{n^2} - \frac{2\media{X}}{n}\sumi k_i
+       + \media{X}^2\sumi k_i^2\right) \\
+    &= \sigma^2\left(\frac1n - 0 + \frac{\media{X}^2}{\SSX}\right)
+     = \sigma^2\left(\frac1n + \frac{\media{X}^2}{\SSX}\right).
+  \end{align*}
   Sustituyendo $\sigma^2$ por $MSE$ se obtiene el estimador insesgado
-  $\widehat{\Var}(\est{\beta}_0)=MSE\left(\frac1n+\frac{\media{X}^2}{\SSX}\right)$ y la
-  distribución $\tdist{n-2}$ del estadístico tipificado.
+  \[
+    \widehat{\Var}(\est{\beta}_0)=MSE\left(\frac1n+\frac{\media{X}^2}{\SSX}\right)
+  \]
+  y, por el mismo argumento que en el \cref{teo:t3-dist-b1}, la distribución $\tdist{n-2}$ del
+  estadístico tipificado.
 \end{demostracion}
 
 \begin{resumen}[Inferencias sobre $\beta_0$]
@@ -258,9 +312,12 @@ con las mismas reglas de decisión.
 \label{sec:t3-bonferroni}
 
 Hasta ahora se ha hecho inferencia sobre cada coeficiente por separado, fijando un nivel de
-significación (por ejemplo, $\alpha=0.05$) en cada contraste o intervalo. Si las inferencias
-fueran independientes podría garantizarse ese nivel para cada coeficiente, pero no lo son, y
-aparece el problema de las \textbf{comparaciones múltiples}:
+significación (por ejemplo, $\alpha=0.05$) en cada contraste o intervalo. Ese nivel está
+garantizado para cada coeficiente por separado, pero no para el conjunto de las inferencias:
+aunque fueran independientes, la confianza conjunta de dos intervalos del 95\,\% sería
+$0.95^2\approx0.90$; y como $\est{\beta}_0$ y $\est{\beta}_1$ no son independientes (salvo si
+$\media{X}=0$, \cref{prop:t5-var-simple}), ni siquiera puede calcularse como un producto.
+Aparece así el problema de las \textbf{comparaciones múltiples}:
 \begin{itemize}
   \item la confianza conjunta de varios IC simultáneos es menor que la de cada uno (menor del
     95\,\%);
@@ -268,10 +325,11 @@ aparece el problema de las \textbf{comparaciones múltiples}:
     (mayor que 0.05): aumentan los falsos positivos.
 \end{itemize}
 
-\begin{ejemplo}[Probabilidad de algún falso positivo]
+\begin{ejemplo}[Probabilidad de falso positivo]
   Al lanzar un par de dados, llamemos ``error de tipo I'' a obtener dos unos, con probabilidad
   $\alpha=\frac16\cdot\frac16\approx0.028$. En una sola tirada la probabilidad de ese resultado
-  es $\alpha$, pero al repetir las tiradas es cada vez más probable que alguna dé dos unos.
+  es $\alpha$,
+  pero al repetir las tiradas es cada vez más probable que alguna dé dos unos.
 
   Del mismo modo, si se realizan 20 contrastes independientes, cada uno a nivel $\alpha=0.05$,
   \begin{align*}
@@ -302,7 +360,7 @@ es
 \]
 porque $P(A_0\cap A_1)\ge0$. Así, dos IC individuales del 95\,\% garantizan una confianza
 simultánea de al menos el 90\,\%, y dos IC individuales del 97.5\,\% garantizan una confianza
-simultánea del 95\,\%.
+simultánea de al menos el 95\,\%.
 
 \paragraph{Caso general.} Se construyen $m$ intervalos individuales de nivel $1-\alpha^*$,
 \[

@@ -86,7 +86,8 @@ $\beta_0+\beta_1X_i$ (los $X_i$ son conocidos), y de la variable aleatoria $\var
       \Cov(Y_i,Y_j)=\Cov(\beta_0+\beta_1X_i+\varepsilon_i,\ \beta_0+\beta_1X_j+\varepsilon_j)
       =\Cov(\varepsilon_i,\varepsilon_j)=0,
     \]
-    por la independencia de los errores. Al ser normales, $Y_i$ e $Y_j$ son además
+    por la independencia de los errores. Además, $Y_i$ e $Y_j$ son independientes, ya que cada
+    una es función únicamente de su propio error y $\varepsilon_i$ y $\varepsilon_j$ son
     independientes.
 \end{itemize}
 
@@ -226,11 +227,12 @@ valor de $X$ en la observación $i$ respecto de su media) en lugar de $X_i$:
 
 \begin{demostracion}[Comprobación]
   Sumando y restando $\beta_1\media{X}$ en el modelo original,
-  \[
-    Y_i = \beta_0 + \beta_1X_i + \varepsilon_i
-        = \underbrace{(\beta_0 + \beta_1\media{X})}_{\beta_0^*}
+  \begin{align*}
+    Y_i &= \beta_0 + \beta_1X_i + \varepsilon_i \\
+        &= \beta_0 + \beta_1\media{X} - \beta_1\media{X} + \beta_1X_i + \varepsilon_i \\
+        &= \underbrace{(\beta_0 + \beta_1\media{X})}_{\beta_0^*}
           + \beta_1(X_i-\media{X}) + \varepsilon_i .
-  \]
+  \end{align*}
   Ambos modelos representan la misma recta, expresada respecto de un origen distinto en el
   eje $X$.
 \end{demostracion}

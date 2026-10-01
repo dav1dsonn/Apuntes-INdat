@@ -33,24 +33,26 @@ deben reflejar las propiedades supuestas para los $\varepsilon_i$}.
   Usando $\est{\beta}_0=\media{Y}-\est{\beta}_1\media{X}$ y la expresión de $\est{\beta}_1$
   (\cref{teo:t2-estimadores-mc}),
   \begin{align*}
-    \est{Y}_i &= \est{\beta}_0 + \est{\beta}_1x_i
-      = \media{Y} - \est{\beta}_1\media{X} + \est{\beta}_1x_i
-      = \media{Y} + \est{\beta}_1(x_i-\media{X}) \\
+    \est{Y}_i &= \est{\beta}_0 + \est{\beta}_1x_i \\
+    &= \media{Y} - \est{\beta}_1\media{X} + \est{\beta}_1x_i \\
+    &= \media{Y} + \est{\beta}_1(x_i-\media{X}) \\
     &= \media{Y} + \frac{\sumk (x_k-\media{X})(Y_k-\media{Y})}{\SSX}\,(x_i-\media{X}) \\
     &= \media{Y} + \frac{\sumk Y_k(x_k-\media{X})(x_i-\media{X})}{\SSX}
-      - \media{Y}\,\frac{\sumk (x_k-\media{X})(x_i-\media{X})}{\SSX}.
+      - \media{Y}\,\frac{\sumk (x_k-\media{X})(x_i-\media{X})}{\SSX} .
   \end{align*}
   El último término es nulo, ya que
-  \[
-    \sumk (x_k-\media{X})(x_i-\media{X}) = (x_i-\media{X})\sumk (x_k-\media{X})
-    = (x_i-\media{X})\left(\sumk x_k - n\media{X}\right) = 0 .
-  \]
-  Por tanto, escribiendo $\media{Y}=\sumk\frac1nY_k$,
-  \[
-    \est{Y}_i = \media{Y} + \frac{\sumk (x_k-\media{X})(x_i-\media{X})Y_k}{\SSX}
-    = \sumk \left(\frac1n + \frac{(x_i-\media{X})(x_k-\media{X})}{\SSX}\right)Y_k
-    = \sumk h_{ik}Y_k .
-  \]
+  \begin{align*}
+    \sumk (x_k-\media{X})(x_i-\media{X}) &= (x_i-\media{X})\sumk (x_k-\media{X}) \\
+    &= (x_i-\media{X})\left(\sumk x_k - n\media{X}\right) \\
+    &= (x_i-\media{X})\cdot0 = 0 .
+  \end{align*}
+  Por tanto, escribiendo también $\media{Y}$ como suma,
+  \begin{align*}
+    \est{Y}_i &= \media{Y} + \frac{\sumk (x_k-\media{X})(x_i-\media{X})Y_k}{\SSX} \\
+    &= \sumk \frac1n\,Y_k + \sumk \frac{(x_i-\media{X})(x_k-\media{X})}{\SSX}\,Y_k \\
+    &= \sumk \left(\frac1n + \frac{(x_i-\media{X})(x_k-\media{X})}{\SSX}\right)Y_k \\
+    &= \sumk h_{ik}Y_k .
+  \end{align*}
 \end{demostracion}
 
 \begin{definicion}[Leverage][def:t4-leverage]
@@ -167,7 +169,7 @@ libertad:
 Conocer esta distribución es muy útil, porque proporciona una referencia para decidir qué
 residuos son demasiado grandes (o pequeños) y corresponden, por tanto, a observaciones que no
 están bien ajustadas por el modelo: aproximadamente el 95\,\% de los $r_i$ deben estar entre
-$-2$ y $2$, y casi todos (más del 99\,\%) entre $-3$ y $3$.
+$-2$ y $2$, y casi todos (en torno al 99\,\%) entre $-3$ y $3$.
 
 En muestras grandes los leverages son pequeños (su media es $2/n$) y $e_i^*\approx r_i$.
 

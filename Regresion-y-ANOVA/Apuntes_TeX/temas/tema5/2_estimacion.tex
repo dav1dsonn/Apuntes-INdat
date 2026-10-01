@@ -133,26 +133,51 @@ sentido, ya que entonces $\est{\vect{Y}}=\vect{H}\vect{Y}=\vect{0}$.
 \end{proposicion}
 
 \begin{demostracion}
-  El determinante de $\XtX$ es $n\sum X_i^2-\big(\sum X_i\big)^2=n\SSX$, así que
+  \emph{Inversa de $\XtX$.} Se usan las identidades
   \[
-    \XtXi = \frac{1}{n\SSX}\begin{pmatrix} \sumi X_i^2 & -\sumi X_i\\ -\sumi X_i & n \end{pmatrix},
+    \sumi X_i = n\media{X},
+    \qquad
+    \sumi X_i^2 = \SSX + n\media{X}^2 .
   \]
-  y, usando $\sum X_i^2=\SSX+n\media{X}^2$ y $\sum X_i=n\media{X}$, se obtiene la expresión del
-  enunciado.
+  El determinante de $\XtX$ es
+  \begin{align*}
+    \det(\XtX) &= n\sumi X_i^2-\left(\sumi X_i\right)^2 \\
+    &= n\left(\SSX+n\media{X}^2\right) - n^2\media{X}^2 \\
+    &= n\SSX ,
+  \end{align*}
+  así que
+  \begin{align*}
+    \XtXi &= \frac{1}{n\SSX}\begin{pmatrix} \sumi X_i^2 & -\sumi X_i\\[4pt] -\sumi X_i & n \end{pmatrix} \\[4pt]
+    &= \frac{1}{n\SSX}\begin{pmatrix} \SSX+n\media{X}^2 & -n\media{X}\\ -n\media{X} & n \end{pmatrix} ,
+  \end{align*}
+  que, dividiendo cada elemento por $n\SSX$, es la expresión del enunciado.
   \begin{enumerate}
-    \item Como $\vect{X}\T\vect{Y}=\big(\sum Y_i,\ \sum X_iY_i\big)\T=\big(n\media{Y},\ \sum X_iY_i\big)\T$,
+    \item Como
+      \[
+        \vect{X}\T\vect{Y} = \begin{pmatrix} \sumi Y_i\\[4pt] \sumi X_iY_i \end{pmatrix}
+        = \begin{pmatrix} n\media{Y}\\[4pt] \sumi X_iY_i \end{pmatrix},
+      \]
+      el producto $\bhat=\XtXi\vect{X}\T\vect{Y}$ da, para la pendiente,
       \begin{align*}
-        \est{\beta}_1 &= -\frac{\media{X}}{\SSX}\,n\media{Y}+\frac{1}{\SSX}\sumi X_iY_i
-          = \frac{\sumi X_iY_i-n\media{X}\,\media{Y}}{\SSX} = \frac{SS_{XY}}{\SSX}, \\
-        \est{\beta}_0 &= \left(\frac1n+\frac{\media{X}^2}{\SSX}\right)n\media{Y}
-          - \frac{\media{X}}{\SSX}\sumi X_iY_i
-          = \media{Y}-\media{X}\,\frac{\sumi X_iY_i-n\media{X}\,\media{Y}}{\SSX}
-          = \media{Y}-\est{\beta}_1\media{X} .
+        \est{\beta}_1 &= -\frac{\media{X}}{\SSX}\,n\media{Y}+\frac{1}{\SSX}\sumi X_iY_i \\
+        &= \frac{\sumi X_iY_i-n\media{X}\,\media{Y}}{\SSX} \\
+        &= \frac{SS_{XY}}{\SSX} ,
       \end{align*}
-    \item La fila $i$ de $\vect{X}$ es $(1,\ X_i)$, luego
+      y, para el \emph{intercept},
       \begin{align*}
-        h_{ik} &= (1,\ X_i)\XtXi\begin{pmatrix} 1\\ X_k \end{pmatrix}
-          = \frac1n+\frac{\media{X}^2-\media{X}X_i-\media{X}X_k+X_iX_k}{\SSX} \\
+        \est{\beta}_0 &= \left(\frac1n+\frac{\media{X}^2}{\SSX}\right)n\media{Y}
+          - \frac{\media{X}}{\SSX}\sumi X_iY_i \\
+        &= \media{Y} + \frac{n\media{X}^2\,\media{Y}}{\SSX} - \frac{\media{X}}{\SSX}\sumi X_iY_i \\
+        &= \media{Y}-\media{X}\,\frac{\sumi X_iY_i-n\media{X}\,\media{Y}}{\SSX} \\
+        &= \media{Y}-\est{\beta}_1\media{X} .
+      \end{align*}
+    \item La fila $i$ de $\vect{X}$ es $(1,\ X_i)$ y $h_{ik}$ es el elemento $(i,k)$ de
+      $\vect{H}=\vect{X}\XtXi\vect{X}\T$, luego
+      \begin{align*}
+        h_{ik} &= (1,\ X_i)\XtXi\begin{pmatrix} 1\\ X_k \end{pmatrix} \\
+        &= \frac1n+\frac{\media{X}^2}{\SSX}-\frac{\media{X}X_k}{\SSX}
+           -\frac{\media{X}X_i}{\SSX}+\frac{X_iX_k}{\SSX} \\
+        &= \frac1n+\frac{\media{X}^2-\media{X}X_i-\media{X}X_k+X_iX_k}{\SSX} \\
         &= \frac1n+\frac{(X_i-\media{X})(X_k-\media{X})}{\SSX} .
       \end{align*}
   \end{enumerate}

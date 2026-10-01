@@ -24,27 +24,44 @@ valor de la recta ajustada en $x_h$:
 \end{teorema}
 
 \begin{demostracion}
-  \emph{Normalidad}: $\est{Y}_h$ es combinación lineal de $\est{\beta}_0$ y $\est{\beta}_1$, y por
-  tanto de las $Y_i$, que son normales independientes.
+  \emph{Normalidad.} $\est{Y}_h$ es combinación lineal de $\est{\beta}_0$ y $\est{\beta}_1$, y por
+  tanto de las $Y_i$, que son normales independientes; luego es normal.
 
-  \emph{Insesgadez}: $\E(\est{Y}_h)=\E(\est{\beta}_0)+\E(\est{\beta}_1)x_h=\beta_0+\beta_1x_h=\E(Y_h)$.
+  \emph{Insesgadez.}
+  \begin{align*}
+    \E(\est{Y}_h) &= \E(\est{\beta}_0)+\E(\est{\beta}_1)\,x_h \\
+    &= \beta_0+\beta_1x_h \\
+    &= \E(Y_h) .
+  \end{align*}
 
-  \emph{Varianza}: usando $\est{\beta}_0=\media{Y}-\est{\beta}_1\media{X}$, se escribe
-  $\est{Y}_h=\media{Y}+\est{\beta}_1(x_h-\media{X})$. Entonces
+  \emph{Varianza.} Usando $\est{\beta}_0=\media{Y}-\est{\beta}_1\media{X}$,
+  \begin{align*}
+    \est{Y}_h &= \est{\beta}_0+\est{\beta}_1x_h \\
+    &= \media{Y}-\est{\beta}_1\media{X}+\est{\beta}_1x_h \\
+    &= \media{Y}+\est{\beta}_1(x_h-\media{X}) ,
+  \end{align*}
+  y, como $x_h$ y $\media{X}$ son constantes,
   \[
-    \Var(\est{Y}_h) = \Var(\media{Y}) + (x_h-\media{X})^2\Var(\est{\beta}_1)
-    + 2(x_h-\media{X})\Cov(\media{Y},\est{\beta}_1).
+    \Var(\est{Y}_h) = \Var(\media{Y}) + (x_h-\media{X})^2\,\Var(\est{\beta}_1)
+    + 2(x_h-\media{X})\Cov(\media{Y},\est{\beta}_1) .
   \]
-  Como $\media{Y}=\sum\frac1nY_i$ y $\est{\beta}_1=\sum k_iY_i$ con las $Y_i$ independientes,
-  \[
-    \Cov(\media{Y},\est{\beta}_1) = \sumi \frac1n\,k_i\,\sigma^2 = \frac{\sigma^2}{n}\sumi k_i = 0 .
-  \]
-  Por tanto,
-  \(
-    \Var(\est{Y}_h) = \dfrac{\sigma^2}{n} + (x_h-\media{X})^2\dfrac{\sigma^2}{\SSX}
-    = \sigma^2\left(\dfrac1n+\dfrac{(x_h-\media{X})^2}{\SSX}\right).
-  \)
-  Al sustituir $\sigma^2$ por $MSE$ se obtiene la distribución $\tdist{n-2}$.
+  La covarianza es nula: escribiendo $\media{Y}$ y $\est{\beta}_1$ como combinaciones lineales de
+  las $Y_i$, que son independientes con varianza $\sigma^2$, y usando
+  la propiedad (i) de los $k_i$ (\cref{prop:t3-ki}),
+  \begin{align*}
+    \Cov(\media{Y},\est{\beta}_1) &= \Cov\left(\sumi \frac1n\,Y_i,\ \sumi k_iY_i\right) \\
+    &= \sumi \frac1n\,k_i\,\Var(Y_i) \\
+    &= \frac{\sigma^2}{n}\sumi k_i = 0 .
+  \end{align*}
+  Por tanto, con $\Var(\media{Y})=\sigma^2/n$ y $\Var(\est{\beta}_1)=\sigma^2/\SSX$
+  (\cref{teo:t3-dist-b1}),
+  \begin{align*}
+    \Var(\est{Y}_h) &= \frac{\sigma^2}{n} + (x_h-\media{X})^2\,\frac{\sigma^2}{\SSX} \\
+    &= \sigma^2\left(\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right).
+  \end{align*}
+  Al sustituir $\sigma^2$ por $MSE$ se obtiene la distribución $\tdist{n-2}$, por el mismo
+  argumento que en el \cref{teo:t3-dist-b1} ($\est{Y}_h$ es función de $\est{\beta}_0$ y
+  $\est{\beta}_1$, independientes de $SSE$).
 \end{demostracion}
 
 \begin{resumen}[IC de nivel $1-\alpha$ para la respuesta media $\E(Y_h)$]
@@ -138,7 +155,10 @@ independiente de las observaciones de la muestra, y por tanto de $\est{Y}_h$,
   = \sigma^2 + \sigma^2\left(\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right) \\
   &= \sigma^2\left(1+\frac1n+\frac{(x_h-\media{X})^2}{\SSX}\right),
 \end{align*}
-y el error de predicción tiene media $\E(Y_h)-\E(Y_h)=0$.
+y el error de predicción tiene media $\E(Y_h)-\E(Y_h)=0$. Es normal, por ser diferencia de
+normales independientes, y es independiente de $SSE$, ya que $\Ynew$ es independiente de la
+muestra y $\est{Y}_h$ lo es de $SSE$; por ello, al sustituir $\sigma^2$ por $MSE$ se obtiene de
+nuevo una $\tdist{n-2}$.
 
 \begin{teorema}[Intervalo de predicción][teo:t3-prediccion]
   \begin{gather*}

@@ -79,9 +79,26 @@ comparar rectas.
   \frac{\partial Q}{\partial\beta_1} &= -2\sumi x_i(y_i-\beta_0-\beta_1x_i) = 0
   &&\Longrightarrow\quad \sumi x_iy_i = \est{\beta}_0\sumi x_i + \est{\beta}_1\sumi x_i^2 .
 \end{align*}
-Dividiendo la primera entre $n$ se obtiene $\est{\beta}_0$; sustituyéndolo en la segunda,
-$\sumi x_iy_i - n\media{x}\,\media{y} = \est{\beta}_1\left(\sumi x_i^2 - n\media{x}^2\right)$,
-y como $\sumi x_iy_i - n\media{x}\,\media{y}=SS_{XY}$ y $\sumi x_i^2 - n\media{x}^2=SS_X$:
+Dividiendo la primera ecuación entre $n$,
+\[
+  \est{\beta}_0 = \media{y} - \est{\beta}_1\media{x} .
+\]
+Sustituyendo en la segunda y usando que la suma de las $x_i$ es $n\media{x}$,
+\begin{align*}
+  \sumi x_iy_i &= \left(\media{y}-\est{\beta}_1\media{x}\right)\sumi x_i + \est{\beta}_1\sumi x_i^2 \\
+  &= n\media{x}\,\media{y} - \est{\beta}_1\,n\media{x}^2 + \est{\beta}_1\sumi x_i^2 ,
+\end{align*}
+de donde
+\[
+  \sumi x_iy_i - n\media{x}\,\media{y} = \est{\beta}_1\left(\sumi x_i^2 - n\media{x}^2\right).
+\]
+Como
+\[
+  \sumi x_iy_i - n\media{x}\,\media{y} = SS_{XY},
+  \qquad
+  \sumi x_i^2 - n\media{x}^2 = SS_X ,
+\]
+se obtiene el siguiente resultado.
 
 \begin{teorema}[Estimadores de mínimos cuadrados][teo:t2-estimadores-mc]
   \[
@@ -167,25 +184,44 @@ $\est{y}=396$ es la distancia media estimada para los conductores de 60 años.
 \begin{demostracion}
   Se parte de que $e_i=y_i-\est{\beta}_0-\est{\beta}_1x_i$ y de que $\est{\beta}_0$ y
   $\est{\beta}_1$ cumplen las ecuaciones normales:
-  \[
-    \text{(EN1)}\ \ \sumi (y_i-\est{\beta}_0-\est{\beta}_1x_i)=0,
-    \qquad
-    \text{(EN2)}\ \ \sumi x_i(y_i-\est{\beta}_0-\est{\beta}_1x_i)=0 .
-  \]
+  \begin{align*}
+    \text{(EN1)}\qquad & \sumi (y_i-\est{\beta}_0-\est{\beta}_1x_i)=0, \\
+    \text{(EN2)}\qquad & \sumi x_i(y_i-\est{\beta}_0-\est{\beta}_1x_i)=0 .
+  \end{align*}
   \begin{enumerate}
-    \item Es exactamente (EN1): $\sumi e_i=0$.
-    \item $\sumi e_i^2 = Q(\est{\beta}_0,\est{\beta}_1)$, y $(\est{\beta}_0,\est{\beta}_1)$ es,
-      por definición (\cref{def:t2-mc}), el punto que minimiza $Q$.
-    \item Como $y_i=\est{y}_i+e_i$, sumando y usando 1:
-      $\sumi y_i=\sumi\est{y}_i+\sumi e_i=\sumi\est{y}_i$.
-    \item Es exactamente (EN2): $\sumi x_ie_i=0$.
-    \item Usando 1 y 4:
-      $\sumi \est{y}_ie_i=\sumi(\est{\beta}_0+\est{\beta}_1x_i)e_i
-      =\est{\beta}_0\sumi e_i+\est{\beta}_1\sumi x_ie_i = 0$.
+    \item Es exactamente (EN1):
+      \[
+        \sumi e_i = \sumi (y_i-\est{\beta}_0-\est{\beta}_1x_i) = 0 .
+      \]
+    \item La suma de los residuos al cuadrado es la función objetivo evaluada en los
+      estimadores,
+      \[
+        \sumi e_i^2 = \sumi (y_i-\est{\beta}_0-\est{\beta}_1x_i)^2 = Q(\est{\beta}_0,\est{\beta}_1),
+      \]
+      y $(\est{\beta}_0,\est{\beta}_1)$ es, por definición (\cref{def:t2-mc}), el punto que
+      minimiza $Q$.
+    \item Como $y_i=\est{y}_i+e_i$, sumando y usando 1,
+      \begin{align*}
+        \sumi y_i &= \sumi (\est{y}_i+e_i) \\
+        &= \sumi\est{y}_i+\sumi e_i \\
+        &= \sumi\est{y}_i .
+      \end{align*}
+    \item Es exactamente (EN2):
+      \[
+        \sumi x_ie_i = \sumi x_i(y_i-\est{\beta}_0-\est{\beta}_1x_i) = 0 .
+      \]
+    \item Usando 1 y 4,
+      \begin{align*}
+        \sumi \est{y}_ie_i &= \sumi(\est{\beta}_0+\est{\beta}_1x_i)e_i \\
+        &= \est{\beta}_0\sumi e_i+\est{\beta}_1\sumi x_ie_i \\
+        &= \est{\beta}_0\cdot0+\est{\beta}_1\cdot0 = 0 .
+      \end{align*}
     \item Evaluando la recta en $x=\media{x}$ y usando
-      $\est{\beta}_0=\media{y}-\est{\beta}_1\media{x}$:
-      $\est{\beta}_0+\est{\beta}_1\media{x}=\media{y}-\est{\beta}_1\media{x}+\est{\beta}_1\media{x}
-      =\media{y}$.
+      $\est{\beta}_0=\media{y}-\est{\beta}_1\media{x}$,
+      \begin{align*}
+        \est{\beta}_0+\est{\beta}_1\media{x} &= \media{y}-\est{\beta}_1\media{x}+\est{\beta}_1\media{x} \\
+        &= \media{y} .
+      \end{align*}
   \end{enumerate}
 \end{demostracion}
 

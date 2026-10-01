@@ -331,7 +331,9 @@ Se basa en el estadístico
   Q = \sum_{j=1}^k \frac{(O_j-E_j)^2}{E_j} \bajoHo \chisq{k-1} \ \text{(aproximadamente)},
 \]
 donde $k$ es el número de niveles de una variable discreta o de clases de una continua, y $O_j$ y
-$E_j$ son las frecuencias observadas y esperadas bajo $F$ en el nivel o clase $j$.
+$E_j$ son las frecuencias observadas y esperadas bajo $F$ en el nivel o clase $j$. Los $k-1$
+grados de libertad corresponden a una $F$ completamente especificada; si se estiman $m$
+parámetros de $F$ a partir de la muestra (por ejemplo, la varianza de los errores), son $k-1-m$.
 
 \paragraph{Test de Kolmogorov--Smirnov.} Es un contraste de bondad de ajuste a distribuciones
 continuas. Se basa en la máxima distancia entre la función de distribución empírica de la

@@ -56,10 +56,14 @@ sumas de cuadrados y de la pendiente estimada se escribe
 \end{proposicion}
 
 \begin{demostracion}
-  Usando $SSR=\est{\beta}_1^2\SSX$ (\cref{sec:t3-anova}) y $SS_Y=SST$,
-  \[
-    r_{XY}^2 = \est{\beta}_1^2\,\frac{\SSX}{SS_Y} = \frac{SSR}{SST} = 1-\frac{SSE}{SST} = R^2 .
-  \]
+  Elevando al cuadrado la última expresión de $r_{XY}$ y usando $SSR=\est{\beta}_1^2\SSX$
+  (\cref{sec:t3-anova}), $SS_Y=SST$ y $SST=SSR+SSE$ (\cref{teo:t3-sst}),
+  \begin{align*}
+    r_{XY}^2 &= \est{\beta}_1^2\,\frac{\SSX}{SS_Y} \\
+    &= \frac{SSR}{SST} \\
+    &= 1-\frac{SSE}{SST} \\
+    &= R^2 .
+  \end{align*}
 \end{demostracion}
 
 \paragraph{Propiedades de $r_{XY}$.}

@@ -99,7 +99,9 @@ $H_1\colon\beta_k\neq0$ de cada coeficiente.
           \item se elige la variable con mayor $p$-valor;
           \item si $p$-valor $>$ \emph{p-to-remove}, se elimina la variable correspondiente, se
             reajusta el modelo sin ella y se vuelve a 3.2;
-          \item si $p$-valor $\le$ \emph{p-to-remove}, no salen más variables y se vuelve a 3.1.
+          \item si $p$-valor $\le$ \emph{p-to-remove}, no salen más variables y se vuelve al
+            paso 3, ahora con los modelos que resultan de añadir al modelo actual cada una de las
+            variables restantes.
         \end{enumerate}
       \item El proceso concluye cuando no entran ni salen más variables.
     \end{enumerate}

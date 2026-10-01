@@ -60,6 +60,7 @@
 % --- Entornos sin numerar -------------------------------------------------------
 \newtcolorbox{demostracion}[1][]{
   baseapuntes, colback=fondoDem,
+  fontupper=\setlength{\jot}{6pt},   % más separación entre líneas de align* (pasos en vertical)
   title={Demostración\ifx\relax#1\relax\else\ (#1)\fi},
   after upper={\par\hfill$\blacksquare$},
 }

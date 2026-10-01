@@ -47,15 +47,22 @@ $Y_i-\media{Y}$, que se descomponen en
 \end{teorema}
 
 \begin{demostracion}
-  Elevando al cuadrado $Y_i-\media{Y}=(Y_i-\est{Y}_i)+(\est{Y}_i-\media{Y})$ y sumando,
-  \[
-    SST = SSE + SSR + 2\sumi e_i(\est{Y}_i-\media{Y}),
-  \]
-  con $e_i=Y_i-\est{Y}_i$. Por las propiedades 1 y 5 de la recta de regresión
-  (\cref{prop:t2-propiedades-recta}), $\sum e_i=0$ y $\sum\est{Y}_ie_i=0$, luego
-  \(
-    \sumi e_i(\est{Y}_i-\media{Y}) = \sumi \est{Y}_ie_i - \media{Y}\sumi e_i = 0 .
-  \)
+  Sea $e_i=Y_i-\est{Y}_i$. Escribiendo $Y_i-\media{Y}=(Y_i-\est{Y}_i)+(\est{Y}_i-\media{Y})$,
+  elevando al cuadrado y sumando,
+  \begin{align*}
+    SST &= \sumi (Y_i-\media{Y})^2 \\
+    &= \sumi \big[(Y_i-\est{Y}_i)+(\est{Y}_i-\media{Y})\big]^2 \\
+    &= \sumi (Y_i-\est{Y}_i)^2 + \sumi (\est{Y}_i-\media{Y})^2
+       + 2\sumi (Y_i-\est{Y}_i)(\est{Y}_i-\media{Y}) \\
+    &= SSE + SSR + 2\sumi e_i(\est{Y}_i-\media{Y}) .
+  \end{align*}
+  El último término es nulo. Por las propiedades 1 y 5 de la recta de regresión
+  (\cref{prop:t2-propiedades-recta}), la suma de los residuos y la de los productos
+  $\est{Y}_ie_i$ son cero, luego
+  \begin{align*}
+    \sumi e_i(\est{Y}_i-\media{Y}) &= \sumi \est{Y}_ie_i - \media{Y}\sumi e_i \\
+    &= 0 - \media{Y}\cdot0 = 0 .
+  \end{align*}
 \end{demostracion}
 
 \subsection{Los tres componentes}
@@ -70,7 +77,8 @@ habitual de la varianza cuando no hay ningún predictor.
 \begin{itemize}
   \item $\est{Y}_i-\media{Y}$ son las desviaciones de la recta ajustada (que tiene en cuenta $X$)
     respecto del mejor predictor sin tener en cuenta $X$.
-  \item Si no hay relación entre $X$ e $Y$ ($\est{\beta}_1=0$), entonces
+  \item Si la recta ajustada es horizontal ($\est{\beta}_1=0$, lo que se espera
+    aproximadamente cuando no hay relación lineal entre $X$ e $Y$), entonces
     $\est{Y}_i=\est{\beta}_0=\media{Y}$ para todo $i$ y $SSR=0$. En otro caso, $SSR>0$.
   \item Tiene \textbf{1 grado de libertad}: aunque hay $n$ desviaciones, todos los $\est{Y}_i$ se
     calculan con la misma recta, con 2 grados de libertad (\emph{intercept} y pendiente), y se pierde
@@ -190,7 +198,8 @@ Toda la información anterior se resume en la \textbf{tabla ANOVA}:
   y el $R^2$ ajustado es $1-\dfrac{SSE/(n-2)}{SST/(n-1)}=1-\dfrac{36.587}{3744.358/19}=0.8143$.
   El coeficiente de determinación $R^2$ se estudia en la \cref{sec:t3-correlacion}.
 
-  Se rechaza $H_0\colon\beta_1=0$, y $F^*=84.34=9.18^2=(t^*)^2$, en concordancia con el
+  Se rechaza $H_0\colon\beta_1=0$, y $F^*=84.34\approx9.18^2=(t^*)^2$ (la diferencia se debe al
+  redondeo de $t^*$), en concordancia con el
   contraste $t$ del \cref{ej:arboles}.
 \end{ejemplo}
 
@@ -231,9 +240,9 @@ la recta ajustada, y es preferible el modelo completo.
 
 \begin{resumen}[F-test general]
   \[
-    F = \frac{(SSE_r-SSE_c)/(gl_r-gl_c)}{SSE_c/gl_c} .
+    F = \frac{(SSE_r-SSE_c)/(gl_r-gl_c)}{SSE_c/gl_c} \bajoHo \Fdist{gl_r-gl_c}{gl_c},
   \]
-  En regresión simple,
+  y se rechaza $H_0$ si $F^*>\Fq{gl_r-gl_c}{gl_c}{1-\alpha}$. En regresión simple,
   \[
     F = \frac{(SST-SSE)/\big((n-1)-(n-2)\big)}{SSE/(n-2)} = \frac{SSR/1}{SSE/(n-2)}
     = \frac{MSR}{MSE},
